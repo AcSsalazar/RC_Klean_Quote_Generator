@@ -8,6 +8,7 @@ export default function InvoiceEstimator() {
   const [areas, setAreas] = useState([{ name: "", square_feet: 0 }]);
   const [equipment, setEquipment] = useState([{ name: "", quantity: 0 }]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [invoiceDetails, setInvoiceDetails] = useState(null); 
   const [options, setOptions] = useState({
     businessTypes: [],
     equipmentTypes: [],
@@ -63,6 +64,16 @@ export default function InvoiceEstimator() {
     setEquipment(newEquipment);
   };
 
+
+  const handleInvoiceDetails = async () => {
+
+
+
+
+
+
+
+  }
   const calculateTotalPrice = async () => {
     try {
       const response = await api.post("invoice/", {

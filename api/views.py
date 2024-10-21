@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Invoice, Area, Equipment, AdditionalService, BusinessType, AreaType, EquipmentType
 from .helpers import calculate_price
-from .serializers import BusinessTypeSerializer, AreaTypeSerializer, EquipmentTypeSerializer
+from .serializers import BusinessTypeSerializer, AreaTypeSerializer, EquipmentTypeSerializer, InvoiceSerializer
 
 class InvoiceCalculateView(APIView):
     def post(self, request):
@@ -82,3 +82,16 @@ class OptionsView(APIView):
             'area_names': AreaTypeSerializer(area_names, many=True).data,
         }
         return Response(data)
+    
+# Vista para generar el detalle de la factura
+class InvoiceDetailView(APIView):
+    def get(self, request, pk):
+        try:
+            # Obtener la factura por ID (pk)
+            invoice = Invoice.objects.get(pk=pk)
+        except Invoice.DoesNotExist:
+            return Response({"error": "Factura no encontrada."}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Serializar los detalles de la factura
+        serializer = InvoiceSerializer(invoice)
+        return Response(serializer.data, status=status.HTTP_200_OK)
