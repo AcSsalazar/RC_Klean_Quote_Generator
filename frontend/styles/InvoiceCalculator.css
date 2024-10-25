@@ -3,12 +3,13 @@
 :root {
   --primary-color: #42a01a;
   --secondary-color: #393571;
-  --background-color: #35373a;
+  --background-color: #2d323b;
   --text-color: #c9e4ec;
   --input-bg: #242424;
   --border-color: #dfe6e9;
   --success-color: #00b894;
   --error-color: #d63031;
+  --section:  #30303bcc;
 }
 
 * {
@@ -57,7 +58,7 @@ body {
 }
 
 .form-section {
-  background-color: var(--background-color);
+  background-color: var(--section);
   border-radius: 10px;
   padding: 1.5rem;
 }

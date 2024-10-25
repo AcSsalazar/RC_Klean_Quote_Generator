@@ -1,10 +1,12 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import InvoiceCalculator from "../components/InvoiceCalculator";
 import Dashboard from "../components/Dashboard";
 import RCFooter from "../components/base/RCFooter";
 import RCHeader from "../components/base/RCHeader";
 const App = () => {
+  const [count, setCount] = useState(0);
   return (
     <BrowserRouter>
       <RCHeader/>
