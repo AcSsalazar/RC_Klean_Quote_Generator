@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
-import api from "../src/utils/api";
+import apiInstance from "../src/utils/axios";  // Importación actualizada
 import "../styles/InvoiceCalculator.css";
 
 export default function InvoiceEstimator() {
@@ -8,17 +8,19 @@ export default function InvoiceEstimator() {
   const [areas, setAreas] = useState([{ name: "", square_feet: 0 }]);
   const [equipment, setEquipment] = useState([{ name: "", quantity: 0 }]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [invoiceDetails, setInvoiceDetails] = useState(null); 
+  const [invoiceDetails, setInvoiceDetails] = useState(null);
+  const [invoiceId, setInvoiceId] = useState(null);
   const [options, setOptions] = useState({
     businessTypes: [],
     equipmentTypes: [],
     areaNames: [],
   });
 
+  // Fetch options for dropdowns on component mount
   useEffect(() => {
     const fetchOptions = async () => {
       try {
-        const response = await api.get("options/");
+        const response = await apiInstance.get("options/");  // Usando apiInstance
         setOptions({
           businessTypes: response.data.business_types || [],
           equipmentTypes: response.data.equipment_types || [],
@@ -64,19 +66,19 @@ export default function InvoiceEstimator() {
     setEquipment(newEquipment);
   };
 
+  // Function to get invoice details after calculation
+  const fetchInvoiceDetails = async () => {
+    try {
+      const response = await apiInstance.get(`/invoice/${invoiceId}/`);  // Usando apiInstance
+      setInvoiceDetails(response.data);
+    } catch (error) {
+      console.error("Error fetching invoice details:", error);
+    }
+  };
 
-  const handleInvoiceDetails = async () => {
-
-
-
-
-
-
-
-  }
   const calculateTotalPrice = async () => {
     try {
-      const response = await api.post("invoice/", {
+      const response = await apiInstance.post("invoice/", {  // Usando apiInstance
         business_type: businessType,
         areas: areas.map((area) => ({
           name: area.name,
@@ -88,6 +90,7 @@ export default function InvoiceEstimator() {
         })),
       });
       setTotalPrice(response.data.total_price);
+      setInvoiceId(response.data.id);
     } catch (error) {
       console.error("Error calculating total price:", error);
     }
@@ -217,10 +220,36 @@ export default function InvoiceEstimator() {
         </button>
 
         {totalPrice > 0 && (
-          <div className="total-price">
-            <h2>Estimated Total</h2>
-            <p>${totalPrice.toFixed(2)}</p>
-          </div>
+          <>
+            <div className="total-price">
+              <h2>Estimated Total</h2>
+              <p>${totalPrice.toFixed(2)}</p>
+            </div>
+
+            <button onClick={fetchInvoiceDetails} className="details-btn">
+              View Invoice Details
+            </button>
+
+            {invoiceDetails && (
+              <div className="invoice-details">
+                <h3>Invoice Details</h3>
+                <p>Business Type: {invoiceDetails.business_type.name}</p>
+                <p>Total Price: ${invoiceDetails.total_price}</p>
+                <h4>Areas:</h4>
+                {invoiceDetails.areas.map((area, index) => (
+                  <p key={index}>
+                    {area.name.name} - {area.square_feet} sq ft
+                  </p>
+                ))}
+                <h4>Equipment:</h4>
+                {invoiceDetails.equipment.map((equip, index) => (
+                  <p key={index}>
+                    {equip.name.name} - Quantity: {equip.quantity}
+                  </p>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

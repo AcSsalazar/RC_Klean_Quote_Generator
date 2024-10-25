@@ -1,9 +1,21 @@
 from django.urls import path
 from .views import InvoiceCalculateView, OptionsView, InvoiceDetailView
+from userauths import views as userauths_views
+from rest_framework_simplejwt.views import TokenRefreshView
+
 
 urlpatterns = [
-    # Ruta para obtener las opciones de negocio, áreas, y equipos
+    # Invoice calculator API end points: para obtener las opciones de negocio, áreas, y equipos
     path('invoice/', InvoiceCalculateView.as_view(), name='invoice'),
     path('options/', OptionsView.as_view(), name='options' ),
-    path('invoices/<int:pk>/', InvoiceDetailView.as_view(), name='invoice_detail'),
+    path('invoice/<int:pk>/', InvoiceDetailView.as_view(), name='invoice_detail'),
+
+    path('', userauths_views.getRoutes),
+
+    # Userauths API Endpoints
+    path('user/token/', userauths_views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('user/token/refresh', TokenRefreshView.as_view(), name='refresh_obtain_pair'),
+    path('user/register/', userauths_views.RegisterView.as_view(), name='auth_register'),
+    path('user/password-reset/<email>/', userauths_views.PasswordEmailVerify.as_view(), name='password_reset'),
+    path('user/password-change/', userauths_views.PasswordChangeView.as_view(), name='password_change'),
 ]

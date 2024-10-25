@@ -18,7 +18,7 @@ class EquipmentTypeSerializer(serializers.ModelSerializer):
 
 # Serializador para las áreas (Area)
 class AreaSerializer(serializers.ModelSerializer):
-    name = serializers.PrimaryKeyRelatedField(queryset=AreaType.objects.all())  # ID del tipo de área
+    name = AreaTypeSerializer()  # id, name del tipo de area
 
     class Meta:
         model = Area
@@ -26,7 +26,7 @@ class AreaSerializer(serializers.ModelSerializer):
 
 # Serializador para el equipo (Equipment)
 class EquipmentSerializer(serializers.ModelSerializer):
-    name = serializers.PrimaryKeyRelatedField(queryset=EquipmentType.objects.all())  # ID del tipo de equipo
+    name = EquipmentTypeSerializer()  # ID del tipo de equipo
 
     class Meta:
         model = Equipment
@@ -43,7 +43,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
     areas = AreaSerializer(many=True)
     equipment = EquipmentSerializer(many=True)
     additional_services = AdditionalServiceSerializer(many=True, required=False)
-    business_type = serializers.PrimaryKeyRelatedField(queryset=BusinessType.objects.all())  # ID del tipo de negocio
+    business_type = BusinessTypeSerializer()  # ID del tipo de negocio
 
     class Meta:
         model = Invoice

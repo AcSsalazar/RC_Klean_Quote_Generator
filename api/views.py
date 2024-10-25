@@ -65,7 +65,7 @@ class InvoiceCalculateView(APIView):
             return Response({"error": f"Error al calcular el precio total: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Devolver el precio total en la respuesta
-        return Response({"total_price": total_price}, status=status.HTTP_200_OK)
+        return Response({"total_price": total_price, "id": invoice.id}, status=status.HTTP_200_OK)
 
 
 class OptionsView(APIView):

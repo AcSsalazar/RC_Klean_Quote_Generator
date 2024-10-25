@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'corsheaders', 
     
     #MY apps
-    'backend.userauths',
+    'userauths',
     'api',
 
 ]

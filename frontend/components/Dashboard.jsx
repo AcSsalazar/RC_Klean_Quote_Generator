@@ -1,92 +1,38 @@
-// src/components/Dashboard.jsx
-
-import React, { useEffect, useState } from "react";
-import api from "../src/utils/api";
-import { useNavigate } from "react-router-dom";
-import "../styles/dashboard.css"; // Importamos los estilos específicos del dashboard
+import React from 'react';
+import { Link } from 'react-router-dom';
+import '../styles/dashboard.css';
 
 function Dashboard() {
-  const navigate = useNavigate();
-  const [businessInfo, setBusinessInfo] = useState(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login");
-    } else {
-      const headers = {
-        Authorization: `Token ${token}`,
-      };
-      api
-        .get("/api/businesses/", { headers })
-        .then((response) => {
-          setBusinessInfo(response.data[0]); // Asumiendo un negocio por usuario
-        })
-        .catch((error) => {
-          alert("Error al obtener la información del negocio");
-        });
-    }
-  }, [navigate]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-  };
-
-  if (!businessInfo) {
-    return <div>Cargando...</div>;
-  }
-
   return (
-    <div className="dashboard-container">
-      <nav className="navbar">
-        <h1 className="logo">Mi Negocio</h1>
-        <button className="logout-button" onClick={handleLogout}>
-          Cerrar Sesión
-        </button>
-      </nav>
+    <div className="dashboard">
+
       <main className="dashboard-main">
-        <section className="business-info">
-          <h2>Información del Negocio</h2>
-          <div className="info-grid">
-            <div>
-              <strong>Nombre:</strong>
-              <p>{businessInfo.business_name}</p>
-            </div>
-            <div>
-              <strong>Industria:</strong>
-              <p>{businessInfo.industry.replace(/_/g, " ")}</p>
-            </div>
-            <div>
-              <strong>Dirección:</strong>
-              <p>{businessInfo.address}</p>
-            </div>
-            <div>
-              <strong>Teléfono:</strong>
-              <p>{businessInfo.phone_number}</p>
-            </div>
-            <div>
-              <strong>Contacto Celular:</strong>
-              <p>{businessInfo.contact_cell}</p>
-            </div>
-            <div>
-              <strong>Contacto Trabajo:</strong>
-              <p>{businessInfo.contact_work_number}</p>
-            </div>
+        <h1>Welcome to Your Invoice Management System</h1>
+        <div className="dashboard-stats">
+          <div className="stat-card">
+            <h3>Total Invoices</h3>
+            <p>254</p>
           </div>
-        </section>
-        <section className="service-summary">
-          <h2>Resumen de Servicios</h2>
-          {/* Aquí puedes agregar componentes o información adicional relacionada con los servicios */}
-          <p>Aquí encontrarás el resumen de tus servicios y cotizaciones.</p>
-        </section>
+          <div className="stat-card">
+            <h3>Pending Payments</h3>
+            <p>$12,543</p>
+          </div>
+          <div className="stat-card">
+            <h3>This Months Revenue</h3>
+            <p>$45,678</p>
+          </div>
+        </div>
+        <div className="dashboard-actions">
+          <Link to="/create-invoice" className="dashboard-button">Create New Invoice</Link>
+          <Link to="/invoices" className="dashboard-button">View All Invoices</Link>
+        </div>
+        <div className="dashboard-nav">
+          <Link to="/login" className="nav-button">Login</Link>
+          <Link to="/register" className="nav-button">Register</Link>
+          <Link to="/" className="nav-button">Home</Link>
+        </div>
       </main>
-      <footer className="dashboard-footer">
-        <p>
-          &copy; {new Date().getFullYear()} Mi Empresa. Todos los derechos
-          reservados.
-        </p>
-      </footer>
+
     </div>
   );
 }

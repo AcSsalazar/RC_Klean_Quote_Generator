@@ -39,7 +39,7 @@ class Area(models.Model):
 class Equipment(models.Model):
     invoice = models.ForeignKey(Invoice, related_name='equipment', on_delete=models.CASCADE)
     name = models.ForeignKey(EquipmentType, on_delete=models.SET_NULL, null=True)
-    quantity = models.IntegerField(default=0)
+    quantity = models.IntegerField(default=1)
 
 # Modelo para Additional Services
 class AdditionalService(models.Model):
