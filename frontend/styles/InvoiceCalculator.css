@@ -3,9 +3,10 @@
 :root {
   --primary-color: #42a01a;
   --secondary-color: #393571;
-  --background-color: #2d323b;
+  --background: rgb(45,50,59);
+    background: linear-gradient(198deg, rgba(45,50,59,1) 44%, rgba(69,56,97,1) 85%);
   --text-color: #c9e4ec;
-  --input-bg: #242424;
+  --input-bg: rgb(36, 36, 36, 0.8);
   --border-color: #dfe6e9;
   --success-color: #00b894;
   --error-color: #d63031;
@@ -35,6 +36,9 @@ body {
 }
 
 .estimator-container {
+
+  border: 10px solid #502c74;
+  border-width: 2px;
   background-color: var(--input-bg);
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(222, 211, 211, 0.1);
@@ -63,11 +67,18 @@ body {
   padding: 1.5rem;
 }
 
+.icons-form {
+color: #c3cac8;
+justify-content: space-between;
+font-size: 30px;
+
+}
+
 h2 {
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--primary-color);
-  margin-bottom: 1rem;
+  margin-bottom: 2px;
 }
 
 .input-group {

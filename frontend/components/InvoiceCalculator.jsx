@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import apiInstance from "../src/utils/axios";  // Importación actualizada
 import "../styles/InvoiceCalculator.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFireBurner, faBroom, faKitchenSet, faFilter } from '@fortawesome/free-solid-svg-icons';
 
 export default function InvoiceEstimator() {
   const [businessType, setBusinessType] = useState("");
@@ -103,6 +105,7 @@ export default function InvoiceEstimator() {
         <div className="form-container">
           <div className="form-section">
             <h2>Business Details</h2>
+            <FontAwesomeIcon icon={faFilter} className="icons-form" />
             <div className="input-group">
               <label htmlFor="business-type">Business Type</label>
               <select
@@ -122,6 +125,7 @@ export default function InvoiceEstimator() {
 
           <div className="form-section">
             <h2>Areas</h2>
+            <FontAwesomeIcon icon={faBroom} className="icons-form" />
             {areas.map((area, index) => (
               <div key={index} className="area-item">
                 <div className="input-group">
@@ -168,6 +172,7 @@ export default function InvoiceEstimator() {
 
           <div className="form-section">
             <h2>Kitchen Equipment</h2>
+            <FontAwesomeIcon icon={faKitchenSet} className="icons-form"/>
             {equipment.map((item, index) => (
               <div key={index} className="equipment-item">
                 <div className="input-group">

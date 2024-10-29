@@ -3,7 +3,7 @@ from userauths.models import User,Profile
 
 class UserAdmin(admin.ModelAdmin):
     search_fields  = ['full_name', 'username', 'email',  'phone']
-    list_display  = ['username', 'email', 'phone']
+    list_display  = ['username', 'email', 'phone', 'business_type']
 
 class ProfileAdmin(admin.ModelAdmin):
     search_fields  = ['user']

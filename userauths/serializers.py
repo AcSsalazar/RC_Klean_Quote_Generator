@@ -79,35 +79,36 @@ class RegisterSerializer(serializers.ModelSerializer):
     
 
 class UserSerializer(serializers.ModelSerializer):
-    business_type = serializers.CharField(source='business_type.name', default="No business type", allow_null=True)
 
     class Meta:
         model = User
         fields = '__all__'
 
+
 class ProfileSerializer(serializers.ModelSerializer):
-    business_type = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ['id', 'full_name', 'country', 'city', 'state', 'address', 'date', 'pid', 'user', 'business_type']
+        fields = '__all__'
 
-    # Unificación de business_type: Si no está en el perfil, se toma del usuario
-    def get_business_type(self, obj):
-        if obj.business_type:
-            return obj.business_type.name
-        elif obj.user.business_type:
-            return obj.user.business_type.name
-        return "No business type"
-
-    # Personalización de la representación para incluir el usuario
+    # def __init__(self, *args, **kwargs):
+    #     super(ProfileSerializer, self).__init__(*args, **kwargs)
+    #     # Customize serialization depth based on the request method.
+    #     request = self.context.get('request')
+    #     if request and request.method == 'POST':
+    #         # When creating a new product FAQ, set serialization depth to 0.
+    #         self.Meta.depth = 0
+    #     else:
+    #         # For other methods, set serialization depth to 3.
+    #         self.Meta.depth = 3
+    
+#to_representation(self, instance): Este método convierte 
+#la instancia del modelo (instance) en una representación de diccionario de Python que será utilizada para la salida serializada.
     def to_representation(self, instance):
         response = super().to_representation(instance)
-        # Incluir los datos del usuario serializado dentro del perfil
         response['user'] = UserSerializer(instance.user).data
         return response
-
     
 
 class PasswordResetSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+    email = serializers.EmailField()                                                                                                             

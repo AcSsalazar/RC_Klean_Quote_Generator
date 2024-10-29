@@ -41,6 +41,7 @@ class User(AbstractUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    business_type = models.ForeignKey(BusinessType, null=True, blank=True, on_delete=models.SET_NULL)
     full_name = models.CharField(max_length=1000, null=True, blank=True)
     country = models.CharField(max_length=1000, null=True, blank=True)
     city = models.CharField(max_length=500, null=True, blank=True)
@@ -74,4 +75,4 @@ def save_user_profile(sender, instance, **kwargs):
 	instance.profile.save()
 
 post_save.connect(create_user_profile, sender=User)
-post_save.connect(save_user_profile, sender=User)
+post_save.connect(save_user_profile, sender=User) 

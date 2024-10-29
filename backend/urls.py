@@ -5,17 +5,19 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from django.conf.urls.static import static
 from django.conf import settings
 
-
 # drf-yasg imports
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from api import views as invoiceviews
 from userauths import views as userauths_views
+
+
 #Para agilizar redaccion de documentacion del backend
 schema_view = get_schema_view(
    openapi.Info(
       title="RC Klean App Documentation",
-      default_version='v1',
+      default_version='v1.0',
       description="Documentación Bacekend API",
       terms_of_service="https://www.google.com/policies/terms/",
       contact=openapi.Contact(email="acsalazar@unal.edu.co"),
@@ -26,9 +28,16 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+           # Admin and documentations URL's
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+
+            # Invoice endpoints
+    path('invoice/', invoiceviews.InvoiceCalculateView.as_view(), name='invoice'),
+    path('options/', invoiceviews.OptionsView.as_view(), name='options' ),
+    path('invoice/<int:pk>/', invoiceviews.InvoiceDetailView.as_view(), name='invoice_detail'),
+
             # Userauths API Endpoints
     path('user/token/', userauths_views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('user/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
