@@ -3,14 +3,13 @@
 :root {
   --primary-color: #42a01a;
   --secondary-color: #393571;
-  --background: rgb(45,50,59);
-    background: linear-gradient(198deg, rgba(45,50,59,1) 44%, rgba(69,56,97,1) 85%);
+  --background: linear-gradient(198deg, rgba(45,50,59,1) 44%, rgba(69,56,97,1) 85%);
   --text-color: #c9e4ec;
-  --input-bg: rgb(36, 36, 36, 0.8);
+  --input-bg: rgba(36, 36, 36, 0.8);
   --border-color: #dfe6e9;
   --success-color: #00b894;
   --error-color: #d63031;
-  --section:  #30303bcc;
+  --section: #30303bcc;
 }
 
 * {
@@ -21,7 +20,7 @@
 
 body {
   font-family: "Poppins", sans-serif;
-  background-color: var(--background-color);
+  background: var(--background);
   color: var(--text-color);
   line-height: 1.6;
 }
@@ -36,15 +35,13 @@ body {
 }
 
 .estimator-container {
-
-  border: 10px solid #502c74;
-  border-width: 2px;
+  border: 2px solid #502c74;
   background-color: var(--input-bg);
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(222, 211, 211, 0.1);
   padding: 2rem;
   width: 100%;
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -57,7 +54,13 @@ body {
 }
 
 .form-container {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-row {
+  display: flex;
   gap: 2rem;
 }
 
@@ -65,20 +68,20 @@ body {
   background-color: var(--section);
   border-radius: 10px;
   padding: 1.5rem;
+  flex: 1;
 }
 
 .icons-form {
-color: #c3cac8;
-justify-content: space-between;
-font-size: 30px;
-
+  color: #c3cac8;
+  font-size: 30px;
+  margin-bottom: 1rem;
 }
 
 h2 {
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--primary-color);
-  margin-bottom: 2px;
+  margin-bottom: 1rem;
 }
 
 .input-group {
@@ -100,7 +103,14 @@ input[type="number"] {
   border: 2px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
+  background-color: var(--input-bg);
+  color: var(--text-color);
   transition: border-color 0.3s ease;
+}
+
+/* Hacer los inputs numéricos más estrechos */
+input[type="number"] {
+  width: 100px;
 }
 
 select:focus,
@@ -109,16 +119,32 @@ input[type="number"]:focus {
   border-color: var(--primary-color);
 }
 
-.area-item,
-.equipment-item {
+.area-item {
   display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: 2fr 100px auto;
   gap: 1rem;
   align-items: end;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--border-color);
 }
+
+.equipment-item {
+  display: grid;
+  grid-template-columns: 2fr 100px auto;
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Hacer los inputs de texto para equipos más anchos */
+.equipment-item .input-group:first-child input,
+.equipment-item .input-group:first-child select {
+  width: 100%;
+}
+
 
 button {
   font-family: "Poppins", sans-serif;
@@ -170,6 +196,12 @@ button:hover {
 .total-price p {
   font-size: 2rem;
   font-weight: 700;
+}
+
+@media (max-width: 1024px) {
+  .form-row {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 768px) {

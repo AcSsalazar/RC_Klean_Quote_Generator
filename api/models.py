@@ -23,6 +23,17 @@ class EquipmentType(models.Model):
 
     def __str__(self):
         return self.name
+    
+# Modelo para los precios base
+class FloorType(models.Model):
+
+    name = models.CharField(max_length=20,  null=True )
+    square_feets = models.DecimalField(max_digits=5, decimal_places=0)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+       return self.name
+
 
 # Modelo para Invoice
 class Invoice(models.Model):
@@ -34,6 +45,7 @@ class Area(models.Model):
     invoice = models.ForeignKey(Invoice, related_name='areas', on_delete=models.CASCADE)
     name = models.ForeignKey(AreaType, on_delete=models.SET_NULL, null=True)
     square_feet = models.IntegerField()
+    floor_type = models.ForeignKey(FloorType, related_name='floor_type', on_delete=models.CASCADE, null=True)
 
 # Modelo para Equipment
 class Equipment(models.Model):

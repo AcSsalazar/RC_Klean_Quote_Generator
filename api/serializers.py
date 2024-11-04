@@ -1,10 +1,11 @@
 from rest_framework import serializers
-from .models import Invoice, Area, Equipment, BusinessType, AreaType, EquipmentType, AdditionalService
+from .models import Invoice, Area, Equipment, BusinessType, AreaType, EquipmentType, AdditionalService, FloorType
 
 class BusinessTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = BusinessType
         fields = ['id', 'name']
+     
 
 class AreaTypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,7 +23,13 @@ class AreaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Area
-        fields = ['name', 'square_feet']
+        fields = ['name', 'square_feet', 'floor_type']
+
+
+class FloorTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FloorType
+        fields = ['id', 'name', 'price', 'square_feets']
 
 # Serializador para el equipo (Equipment)
 class EquipmentSerializer(serializers.ModelSerializer):
@@ -44,10 +51,11 @@ class InvoiceSerializer(serializers.ModelSerializer):
     equipment = EquipmentSerializer(many=True)
     additional_services = AdditionalServiceSerializer(many=True, required=False)
     business_type = BusinessTypeSerializer()  # ID del tipo de negocio
+    floors = FloorTypeSerializer()
 
     class Meta:
         model = Invoice
-        fields = ['id', 'business_type', 'areas', 'equipment', 'additional_services', 'total_price']
+        fields = ['id', 'business_type', 'areas', 'floor_type', 'equipment', 'additional_services', 'total_price']
 
     # Este método crea una factura junto con las áreas, equipos y servicios adicionales.
     def create(self, validated_data):
