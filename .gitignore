@@ -8,6 +8,10 @@ backend/node_modules/
 backend/node_modules
 frontend/node_modules
 
+*/migrations/*.py
+!*/migrations/__init__.py
+
+
 .venv
 venv
 
@@ -32,7 +36,8 @@ node_modules
 *.sw?
 backend/vendor/__pycache__
 backend/store/__pycache__
-store/__pycache__
+api/__pycache__
+
 backend/vendor/migrations/__pycache__
 __pycache__
 backend/userauths/migrations/__pycache__
@@ -42,6 +47,7 @@ backend/customer/__pycache__
 backend/backend/__pycache__
 backend/api/__pycache__/
 backend/api/migrations/__pycache__
+
 #Backend:
 
 # Byte-compiled / optimized / DLL files

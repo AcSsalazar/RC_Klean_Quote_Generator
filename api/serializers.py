@@ -29,7 +29,7 @@ class AreaSerializer(serializers.ModelSerializer):
 class FloorTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = FloorType
-        fields = ['id', 'name', 'price', 'square_feets']
+        fields = ['id', 'name', 'price']
 
 # Serializador para el equipo (Equipment)
 class EquipmentSerializer(serializers.ModelSerializer):
@@ -51,7 +51,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
     equipment = EquipmentSerializer(many=True)
     additional_services = AdditionalServiceSerializer(many=True, required=False)
     business_type = BusinessTypeSerializer()  # ID del tipo de negocio
-    floors = FloorTypeSerializer()
+    floor_type = FloorTypeSerializer()
 
     class Meta:
         model = Invoice

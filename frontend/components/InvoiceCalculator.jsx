@@ -12,7 +12,7 @@ export default function InvoiceEstimator() {
   const [areas, setAreas] = useState([{ name: "", square_feet: 0 }]);
   const [equipment, setEquipment] = useState([{ name: "", quantity: 0 }]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [floors, setFloors] = useState([{ name: "", square_feets: 500 }]);
+  const [floors, setFloors] = useState([{ name: "", square_feet: 500 }]);
   const [invoiceDetails, setInvoiceDetails] = useState(null);
   const [invoiceId, setInvoiceId] = useState(null);
   const [options, setOptions] = useState({
@@ -61,7 +61,7 @@ export default function InvoiceEstimator() {
 //Floor types handle funtions: 
 
 const handleAddFloor = () => {
-  setFloors([...floors, { name: "", square_feets: 500 }]);
+  setFloors([...floors, { name: "", square_feet: 500 }]);
 };
 
 const handleRemoveFloor = (index) => {
@@ -217,7 +217,7 @@ const handleChangeFloor = (index, field, value) => {
                       id={`area-name-${index}`}
                       value={floor.name}
                       onChange={(e) =>
-                        handleAreaChange(index, "name", e.target.value)
+                        handleChangeFloor(index, "name", e.target.value)
                       }
                     >
                       <option value="">Select your floor type</option>
@@ -233,7 +233,7 @@ const handleChangeFloor = (index, field, value) => {
                     <input
                       id={`floor-size-${index}`}
                       type="number"
-                      value={floor.square_feets}
+                      value={floor.price}
                       onChange={(e) =>
                         handleChangeFloor(index, "square_feets", e.target.value)
                       }
