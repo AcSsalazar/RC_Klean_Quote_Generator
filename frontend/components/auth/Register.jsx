@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { register } from "../../utils/auth";
+import { register } from "../../src/utils/auth";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../store/auth";
-import coData from "../../../public/media/co.json"
+import { useAuthStore } from "../../src/RCA/auth";
+import coData from "../../src/media/US.json"
+import "../../components/auth/styles/Register.css"
 
 function Register() {
   const [fullname, setFullname] = useState("");
@@ -25,7 +26,7 @@ function Register() {
       navigate("/");
     }
     // Cargar departamentos únicos desde el archivo JSON
-    const uniqueDepartments = [...new Set(coData.map(item => item.Departamento))];
+    const uniqueDepartments = [...new Set(coData.map(item => item.State))];
     setDepartments(uniqueDepartments);
   }, [isLoggedIn, navigate]);
 
@@ -42,7 +43,7 @@ function Register() {
   const handleDepartmentChange = (event) => {
     const dept = event.target.value;
     setState(dept);
-    const filteredCities = coData.filter(item => item.Departamento === dept);
+    const filteredCities = coData.filter(item => item.State === dept);
     setCities(filteredCities);
     setCity(""); // Resetear ciudad seleccionada al cambiar de departamento
   };
@@ -78,190 +79,165 @@ function Register() {
   };
 
   return (
-    <>
-      <main className="" style={{ marginBottom: 100, marginTop: 50 }}>
-        <div className="container">
-          {/* Section: Login form */}
-          <section className="">
-            <div className="row d-flex justify-content-center">
-              <div className="col-xl-5 col-md-8">
-                <div className="card rounded-5">
-                  <div className="card-body p-4">
-                    <h3 className="text-center">Formulario de registro</h3>
-                    <br />
+    <main style={{ marginBottom: 100, marginTop: 50 }}>
+      <div className="container">
+        <section>
+          <div className="card">
+            <div className="card-body">
+              <h3>Start Form </h3>
 
-                    <div className="tab-content">
-                      <div
-                        className="tab-pane fade show active"
-                        id="pills-login"
-                        role="tabpanel"
-                        aria-labelledby="tab-login"
-                      >
-                        <form onSubmit={handleSubmit}>
-                          {/* Full Name input */}
-                          <div className="form-outline mb-4">
-                            <label className="form-label" htmlFor="Full Name">
-                              Nombre y Apellidos
-                            </label>
-                            <input
-                              type="text"
-                              id="fullname"
-                              onChange={(e) => setFullname(e.target.value)}
-                              placeholder="Ingrese su nombre completo"
-                              required
-                              className="form-control"
-                            />
-                          </div>
-                          {/* Email input */}
-                          <div className="form-outline mb-4">
-                            <label className="form-label" htmlFor="loginName">
-                              Email
-                            </label>
-                            <input
-                              type="email"
-                              id="email"
-                              onChange={(e) => setEmail(e.target.value)}
-                              placeholder="Ingrese correo electrónico"
-                              required
-                              className="form-control"
-                            />
-                          </div>
+              <form onSubmit={handleSubmit}>
+                <div className="form-grid">
+                  {/* Nombre Completo */}
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="fullname">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      id="fullname"
+                      onChange={(e) => setFullname(e.target.value)}
+                      placeholder="Ingrese su nombre completo"
+                      required
+                      className="form-control"
+                    />
+                  </div>
 
-                          {/* Mobile Number input */}
-                          <div className="form-outline mb-4">
-                            <label className="form-label" htmlFor="loginName">
-                              Numero de telefono movil
-                            </label>
-                            <input
-                              type="text"
-                              id="phone"
-                              onChange={(e) => setPhone(e.target.value)}
-                              placeholder="Igrese su numero de celular"
-                              required
-                              className="form-control"
-                            />
-                          </div>
+                  {/* Email */}
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="email">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Ingrese correo electrónico"
+                      required
+                      className="form-control"
+                    />
+                  </div>
 
-                          {/* Department dropdown */}
-                          <div className="form-outline mb-4">
-                            <label className="form-label" htmlFor="department">
-                              Departamento
-                            </label>
-                            <select
-                              id="department"
-                              onChange={handleDepartmentChange}
-                              value={state}
-                              className="form-control"
-                              required
-                            >
-                              <option value="">Seleccione un Departamento</option>
-                              {departments.map((dept, index) => (
-                                <option key={index} value={dept}>
-                                  {dept}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
+                  {/* Número de Teléfono */}
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="phone">
+                      Phone number
+                    </label>
+                    <input
+                      type="text"
+                      id="phone"
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="Ingrese su número de celular"
+                      required
+                      className="form-control"
+                    />
+                  </div>
 
-                          {/* City dropdown */}
-                          <div className="form-outline mb-4">
-                            <label className="form-label" htmlFor="city">
-                              Ciudad
-                            </label>
-                            <select
-                              id="city"
-                              onChange={handleCityChange}
-                              value={city}
-                              className="form-control"
-                              required
-                            >
-                              <option value="">Seleccione una Ciudad</option>
-                              {cities.map((city, index) => (
-                                <option key={index} value={city.Ciudad}>
-                                  {city.Ciudad}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
+                  {/* Departamento */}
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="department">
+                      State
+                    </label>
+                    <select
+                      id="department"
+                      onChange={handleDepartmentChange}
+                      value={state}
+                      className="form-control"
+                      required
+                    >
+                      <option value="">select your state</option>
+                      {departments.map((dept, index) => (
+                        <option key={index} value={dept}>
+                          {dept}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-                          {/* Password input */}
-                          <div className="form-outline mb-4">
-                            <label
-                              className="form-label"
-                              htmlFor="loginPassword"
-                            >
-                              Contraseña
-                            </label>
-                            <input
-                              type="password"
-                              id="password"
-                              onChange={(e) => setPassword(e.target.value)}
-                              placeholder="Ingrese una contraseña"
-                              className="form-control"
-                            />
-                          </div>
-                          
-                          {/* Confirm Password input */}
-                          <div className="form-outline mb-4">
-                            <label
-                              className="form-label"
-                              htmlFor="confirm-password"
-                            >
-                              Confirmar contraseña
-                            </label>
-                            <input
-                              type="password"
-                              id="confirm-password"
-                              onChange={(e) => setPassword2(e.target.value)}
-                              placeholder="Escriba nuevamente su contraseña"
-                              required
-                              className="form-control"
-                            />
-                          </div>
-                          <p className="fw-bold text-danger">
-                            {password2 !== password
-                              ? "Las contraseñas no coinciden"
-                              : ""}
-                          </p>
+                  {/* Ciudad */}
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="city">
+                      City
+                    </label>
+                    <select
+                      id="city"
+                      onChange={handleCityChange}
+                      value={city}
+                      className="form-control"
+                      required
+                    >
+                      <option value="">Select your city</option>
+                      {cities.map((city, index) => (
+                        <option key={index} value={city.City}>
+                          {city.City}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-                          <button
-                            className="btn btn-primary w-100"
-                            type="submit"
-                            disabled={isLoading}
-                          >
-                            {isLoading ? (
-                              <>
-                                <span className="mr-2 ">Procesando espero un instante...</span>
-                                <i className="fas fa-spinner fa-spin" />
-                              </>
-                            ) : (
-                              <>
-                                <span className="mr-2">Registrarse </span>
-                                <i className="fas fa-user-plus" />
-                              </>
-                            )}
-                          </button>
+                  {/* Contraseña */}
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="password">
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      id="password"
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Ingrese una contraseña"
+                      className="form-control"
+                    />
+                  </div>
 
-                          <div className="text-center">
-                            <p className="mt-4">
-                              Ya tiene una cuenta, ingrese aquí?{" "}
-                              <Link to="/login">Iniciar sesion</Link>
-                            </p>
-                          </div>
-                        </form>
-
-                      </div>
-                    </div>
-                    {/* Pills content */}
+                  {/* Confirmar Contraseña */}
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="confirm-password">
+                      Confirm your password
+                    </label>
+                    <input
+                      type="password"
+                      id="confirm-password"
+                      onChange={(e) => setPassword2(e.target.value)}
+                      placeholder="Escriba nuevamente su contraseña"
+                      required
+                      className="form-control"
+                    />
                   </div>
                 </div>
-              </div>
+
+                <p className="fw-bold text-danger text-center">
+                  {password2 !== password ? "Las contraseñas no coinciden" : ""}
+                </p>
+
+                <button
+                  className="btn"
+                  type="submit"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <span>In progress...</span>
+                      <i className="fas fa-spinner fa-spin" />
+                    </>
+                  ) : (
+                    <>
+                      <span>Register</span>
+                      <i className="fas fa-user-plus" />
+                    </>
+                  )}
+                </button>
+                <div className="text-center">
+                  <p className="mt-4">
+                    ¿Have you already account ?{" "}
+                    <Link to="/login">Login</Link>
+                  </p>
+                </div>
+              </form>
             </div>
-          </section>
-          {/* Section: Login form */}
-        </div>
-      </main>
-    </>
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }
 

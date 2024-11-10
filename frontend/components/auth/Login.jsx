@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { login } from "../../utils/auth";
+import { login } from "../../src/utils/auth";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../store/auth";
+import { useAuthStore } from "../../src/RCA/auth";
 import { Link } from "react-router-dom";
 
 const Login = () => {

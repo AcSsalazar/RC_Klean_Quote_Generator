@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+
+.questionnaire-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+  
+  .questionnaire-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .question-box {
+    margin-bottom: 2rem;
+  }
+  
+  .question-box p {
+    font-family: "Roboto Condensed", sans-serif;
+    color:#31353a;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .question-box select {
+    font-family: "Roboto Condensed", sans-serif;
+    background-color: #dce6ff2e;
+    color: #000832;
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #502c74;
+  }
+  
+  .navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .nav-button,
+  .submit-button {
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #272c74; /* Color azul */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .nav-button:hover,
+  .submit-button:hover {
+    background-color: #308fac; /* Azul más oscuro al hacer hover */
+  }
+  
+  .nav-button:disabled,
+  .submit-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  

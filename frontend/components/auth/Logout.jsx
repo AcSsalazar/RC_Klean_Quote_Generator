@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 //import { LoggedOutView } from "../shop/home";
-import { logout } from "../../utils/auth";
+import { logout } from "../../src/utils/auth";
 import { Link } from "react-router-dom";
 
 const Logout = () => {
