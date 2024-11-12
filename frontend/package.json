@@ -22,6 +22,7 @@
     "react-router-dom": "6.10.0",
     "simple-zustand-devtools": "1.0.1",
     "sweetalert2": "^11.12.4",
+    "tailwind": "^4.0.0",
     "zustand": "4.5.2"
   },
   "devDependencies": {
