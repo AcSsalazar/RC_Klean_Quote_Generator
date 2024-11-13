@@ -1,4 +1,5 @@
 from userauths.models import Profile, User
+from api.models import BusinessType
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
@@ -23,15 +24,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
 
         # Add custom claims to the token
-        token['nombre_completo'] = user.full_name
+        #token['full_name'] = user.full_name
         token['email'] = user.email
         token['username'] = user.username
-        try:
-            token['vendor_id'] = user.vendor.id
-        except:
-            token['vendor_id'] = 0
-
-        # ...
 
         # Return the token with custom claims
         return token
@@ -42,11 +37,12 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
 
+
     class Meta:
         # Specify the model that this serializer is associated with
         model = User
         # Define the fields from the model that should be included in the serializer
-        fields = ('full_name', 'email', 'phone', 'password', 'password2', 'business_type', 'city', 'state')
+        fields = ('full_name', 'email', 'phone', 'password', 'password2',  'city', 'business_type', 'zip_code')
 
     def validate(self, attrs):
         # Define a validation method to check if the passwords match
@@ -60,12 +56,14 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # Define a method to create a new user based on validated data
         user = User.objects.create(
-            business_type=validated_data['business_type'],
+            
             full_name=validated_data['full_name'],
             email=validated_data['email'],
             phone=validated_data['phone'],
             city=validated_data['city'],
-            state=validated_data['state'],
+            business_type=validated_data['business_type'],
+            zip_code = validated_data['zip_code'],
+
         )
         email_username, mobile = user.email.split('@')
         user.username = email_username

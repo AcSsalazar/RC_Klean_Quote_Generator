@@ -102,7 +102,17 @@ h3 {
   margin-top: 1.5rem;
   color: #333;
 }
+select,
 
+input[type="number"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+
+
+}
 a {
   color: #308fac;
   text-decoration: none;

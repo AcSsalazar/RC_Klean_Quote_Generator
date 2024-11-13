@@ -7,7 +7,7 @@ class UserAdmin(admin.ModelAdmin):
 
 class ProfileAdmin(admin.ModelAdmin):
     search_fields  = ['user']
-    list_display = ['user', 'full_name']
+    list_display = ['user', 'full_name', 'zip_code', 'business_type']
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Profile, ProfileAdmin)

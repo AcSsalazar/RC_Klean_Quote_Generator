@@ -56,7 +56,7 @@ export const login = async (email, password) => {
 };
 
 // Function to handle user registration
-export const register = async (full_name, email, phone, password, password2, business_type, state, city) => {
+export const register = async (full_name, email, phone, password, password2, city, business_type,  zip_code) => {
     try {
         // Making a POST request to register a new user
         const { data } = await axios.post('user/register/', {
@@ -66,9 +66,9 @@ export const register = async (full_name, email, phone, password, password2, bus
             phone,
             password,
             password2,
+            city,
             business_type,
-            state,
-            city
+            zip_code,
 
         });
 

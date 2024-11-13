@@ -2,21 +2,23 @@ import { useEffect, useState } from "react";
 import { register } from "../../src/utils/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../src/RCA/auth";
-import coData from "../../src/media/US.json"
-import "../../components/auth/styles/Register.css"
+import coData from "../../src/media/US_zips.json";
+import "../../components/auth/styles/Register.css";
+import apiInstance from "../../src/utils/axios";
+
 
 function Register() {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [business, setBusiness] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [departments, setDepartments] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [state, setState] = useState("");
+  const [zipCode, setZipCode] = useState("");
   const [city, setCity] = useState("");
-
+  const [zipError, setZipError] = useState("");
+  const [options, setOptions] = useState({businessTypes: [],});
 
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const navigate = useNavigate();
@@ -25,48 +27,57 @@ function Register() {
     if (isLoggedIn()) {
       navigate("/");
     }
-    // Cargar departamentos únicos desde el archivo JSON
-    const uniqueDepartments = [...new Set(coData.map(item => item.State))];
-    setDepartments(uniqueDepartments);
   }, [isLoggedIn, navigate]);
 
-  const resetForm = () => {
-    setFullname("");
-    setEmail("");
-    setPhone("");
-    setPassword("");
-    setPassword2("");
-    setState("");
-    setCity("");
-  };
 
-  const handleDepartmentChange = (event) => {
-    const dept = event.target.value;
-    setState(dept);
-    const filteredCities = coData.filter(item => item.State === dept);
-    setCities(filteredCities);
-    setCity(""); // Resetear ciudad seleccionada al cambiar de departamento
-  };
 
-  const handleCityChange = (event) => {
-    setCity(event.target.value);
+  useEffect(() => {
+    const fetchbusiness = async () => {
+      try {
+        const response = await apiInstance.get("options/");
+        setOptions({
+          businessTypes: response.data.business_types || [],
+
+
+        });
+      } catch (error) {
+        console.error("Error fetching business types:", error);
+      }
+    };
+
+    fetchbusiness();
+  }, []);
+
+  const handleZipCodeChange = (e) => {
+    const zip = e.target.value;
+    setZipCode(zip);
+
+    // Buscar el código postal en el archivo JSON
+    const cityData = coData.find((item) => item.Zips.split(", ").includes(zip));
+    if (cityData) {
+      setCity(cityData.City);
+      setZipError(""); // Limpiar error si se encuentra la ciudad
+    } else {
+      setCity(""); // Limpiar ciudad si no se encuentra
+      setZipError("Zip not found, please try again"); // Mostrar error
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Set isLoading to true when the form is submitted
     setIsLoading(true);
-    console.log({ fullname, email, phone, password, password2, state, city });
+
     const { error } = await register(
       fullname,
       email,
       phone,
       password,
       password2,
-      state, // Incluye departamento seleccionado
-      city // Incluye ciudad seleccionada
+      city, // Incluir ciudad seleccionada
+      business,
+      zipCode,
     );
+
     if (error) {
       alert(JSON.stringify(error));
     } else {
@@ -74,8 +85,19 @@ function Register() {
       resetForm();
     }
 
-    // Reset isLoading to false when the operation is complete
     setIsLoading(false);
+  };
+
+  const resetForm = () => {
+    setFullname("");
+    setEmail("");
+    setPhone("");
+    setPassword("");
+    setPassword2("");
+    setZipCode("");
+    setCity("");
+    setZipError("");
+    setBusiness("");
   };
 
   return (
@@ -84,15 +106,13 @@ function Register() {
         <section>
           <div className="card">
             <div className="card-body">
-              <h3>Start Form </h3>
+              <h3>Start Form</h3>
 
               <form onSubmit={handleSubmit}>
                 <div className="form-grid">
                   {/* Nombre Completo */}
                   <div className="form-group">
-                    <label className="form-label" htmlFor="fullname">
-                      Full Name
-                    </label>
+                    <label className="form-label" htmlFor="fullname">Full Name</label>
                     <input
                       type="text"
                       id="fullname"
@@ -103,11 +123,57 @@ function Register() {
                     />
                   </div>
 
+                  {/* Código Postal */}
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="zipcode">Zip Code</label>
+                    <input
+                      type="text"
+                      id="zip_code"
+                      value={zipCode}
+                      onChange={handleZipCodeChange}
+                      placeholder="Enter your zip code"
+                      required
+                      className="form-control"
+                    />
+                    <p className="text-danger">{zipError}</p>
+                  </div>
+
+                  {/* Ciudad */}
+                  {city && (
+                    <div className="form-group">
+                      <label className="form-label" htmlFor="city">City</label>
+                      <input
+                        type="text"
+                        id="city"
+                        value={city}
+                        readOnly
+                        className="form-control"
+                      />
+                    </div>
+                  )}
+
+                  {/* Businnes Type */}
+
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="business">Business Type</label>
+                    <select
+                  id="business_type"
+                  value={business}
+                  onChange={(e) => setBusiness(e.target.value)}
+                >
+                  <option value="">Select business type</option>
+                  {options.businessTypes.map((type) => (
+                    <option key={type.id} value={type.id}>
+                      {type.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            
+
                   {/* Email */}
                   <div className="form-group">
-                    <label className="form-label" htmlFor="email">
-                      Email
-                    </label>
+                    <label className="form-label" htmlFor="email">Email</label>
                     <input
                       type="email"
                       id="email"
@@ -118,11 +184,9 @@ function Register() {
                     />
                   </div>
 
-                  {/* Número de Teléfono */}
+                  {/* Teléfono */}
                   <div className="form-group">
-                    <label className="form-label" htmlFor="phone">
-                      Phone number
-                    </label>
+                    <label className="form-label" htmlFor="phone">Phone number</label>
                     <input
                       type="text"
                       id="phone"
@@ -133,53 +197,9 @@ function Register() {
                     />
                   </div>
 
-                  {/* Departamento */}
-                  <div className="form-group">
-                    <label className="form-label" htmlFor="department">
-                      State
-                    </label>
-                    <select
-                      id="department"
-                      onChange={handleDepartmentChange}
-                      value={state}
-                      className="form-control"
-                      required
-                    >
-                      <option value="">select your state</option>
-                      {departments.map((dept, index) => (
-                        <option key={index} value={dept}>
-                          {dept}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Ciudad */}
-                  <div className="form-group">
-                    <label className="form-label" htmlFor="city">
-                      City
-                    </label>
-                    <select
-                      id="city"
-                      onChange={handleCityChange}
-                      value={city}
-                      className="form-control"
-                      required
-                    >
-                      <option value="">Select your city</option>
-                      {cities.map((city, index) => (
-                        <option key={index} value={city.City}>
-                          {city.City}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
                   {/* Contraseña */}
                   <div className="form-group">
-                    <label className="form-label" htmlFor="password">
-                      Password
-                    </label>
+                    <label className="form-label" htmlFor="password">Password</label>
                     <input
                       type="password"
                       id="password"
@@ -191,9 +211,7 @@ function Register() {
 
                   {/* Confirmar Contraseña */}
                   <div className="form-group">
-                    <label className="form-label" htmlFor="confirm-password">
-                      Confirm your password
-                    </label>
+                    <label className="form-label" htmlFor="confirm-password">Confirm your password</label>
                     <input
                       type="password"
                       id="confirm-password"
@@ -209,27 +227,13 @@ function Register() {
                   {password2 !== password ? "Las contraseñas no coinciden" : ""}
                 </p>
 
-                <button
-                  className="btn"
-                  type="submit"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      <span>In progress...</span>
-                      <i className="fas fa-spinner fa-spin" />
-                    </>
-                  ) : (
-                    <>
-                      <span>Register</span>
-                      <i className="fas fa-user-plus" />
-                    </>
-                  )}
+                <button className="btn" type="submit" disabled={isLoading}>
+                  {isLoading ? "In progress..." : "Register"}
                 </button>
+
                 <div className="text-center">
                   <p className="mt-4">
-                    ¿Have you already account ?{" "}
-                    <Link to="/login">Login</Link>
+                    ¿Have you already an account? <Link to="/login">Login</Link>
                   </p>
                 </div>
               </form>
