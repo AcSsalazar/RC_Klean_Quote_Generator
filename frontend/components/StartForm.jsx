@@ -75,13 +75,14 @@ const StartForm = () => {
   };
 
   const handleSubmit = () => {
-    apiInstance.post('/form/', responses)
+    apiInstance.post("form/", responses)
       .then(response => {
         alert('Cuestionario enviado exitosamente');
         const questionnaireId = response.data.id;
       })
       .catch(error => {
         console.error('Error al enviar el cuestionario:', error);
+        console.log("Datos que se envían al servidor:", responses);
         alert('Ocurrió un error al enviar el cuestionario.');
       });
   };

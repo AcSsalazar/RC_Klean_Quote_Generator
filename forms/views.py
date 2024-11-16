@@ -16,11 +16,15 @@ from .serializers import (
 # Vista para enviar los datos del cuestionario
 class QuestionnaireSubmitView(APIView):
     def post(self, request):
-        # Recibir y validar datos
+        # Establecer el usuario como None si no está autenticado
+        user = request.user if request.user.is_authenticated else None
+
         serializer = ClientQtSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            serializer.save(user=user)  # Asignar el usuario (o None)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        print("Errores del serializador:", serializer.errors)  # Log para depuración
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Vista para obtener opciones del cuestionario

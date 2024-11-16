@@ -43,15 +43,21 @@ class HiringLikelihoodSerializer(serializers.ModelSerializer):
 
 
 class ClientQtSerializer(serializers.ModelSerializer):
-    service_type = ServiceTypeSerializer()
-    facility_type = FacilityTypeSerializer()
-    area_size = AreaSizeSerializer()
-    cleaning_frequency = CleaningFreqSerializer()
-    toilets_number = ToiletsQtySerializer()
-    start_date = StartDateSerializer()
-    hiring_likelihood = HiringLikelihoodSerializer()
+    service_type = serializers.PrimaryKeyRelatedField(queryset=ServiceType.objects.all())
+    facility_type = serializers.PrimaryKeyRelatedField(queryset=FacilityType.objects.all())
+    area_size = serializers.PrimaryKeyRelatedField(queryset=AreaSize.objects.all())
+    cleaning_frequency = serializers.PrimaryKeyRelatedField(queryset=CleaningFreq.objects.all())
+    toilets_number = serializers.PrimaryKeyRelatedField(queryset=ToiletsQty.objects.all())
+    start_date = serializers.PrimaryKeyRelatedField(queryset=StartDateOption.objects.all())
+    hiring_likelihood = serializers.PrimaryKeyRelatedField(queryset=HiringLikelihood.objects.all())
 
     class Meta:
         model = ClientQuestionnaire
         fields = '__all__'
         read_only_fields = ['user', 'created_at']
+
+
+    def get_user_display(self, obj):
+        if obj.user:
+            return obj.user.email  # Muestra el email del usuario registrado
+        return f"Anonymous_{obj.id:02}"  # Muestra "Anonymous_0X" para usuarios anónimos

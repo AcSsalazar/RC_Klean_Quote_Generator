@@ -45,7 +45,7 @@ class HiringLikelihood(models.Model):
 
 
 class ClientQuestionnaire(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='questionnaires', null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='questionnaires', null=True, blank=True)
     service_type = models.ForeignKey(ServiceType, on_delete=models.SET_NULL, null=True, blank=True)
     facility_type = models.ForeignKey(FacilityType, on_delete=models.SET_NULL, null=True, blank=True)
     area_size = models.ForeignKey(AreaSize, on_delete=models.SET_NULL, null=True, blank=True)
@@ -55,7 +55,11 @@ class ClientQuestionnaire(models.Model):
     hiring_likelihood = models.ForeignKey(HiringLikelihood, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+
+
+
+
     def __str__(self):
-        return f"Questionnaire by {self.user.email} on {self.created_at.strftime('%Y-%m-%d')}"
+        return f"Questionnaire by {self.user.email if self.user else 'Anonymous'} on {self.created_at.strftime('%Y-%m-%d')}"
 
 
