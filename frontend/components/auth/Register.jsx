@@ -4,13 +4,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../src/RCA/auth";
 import coData from "../../src/media/US_zips.json";
 import "../../components/auth/styles/Register.css";
-import apiInstance from "../../src/utils/axios";
+import  apiInstance from "../../src/utils/axios";
 
 
 function Register() {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
   const [business, setBusiness] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
@@ -74,6 +75,7 @@ function Register() {
       password,
       password2,
       city, // Incluir ciudad seleccionada
+      address,
       business,
       zipCode,
     );
@@ -96,6 +98,7 @@ function Register() {
     setPassword2("");
     setZipCode("");
     setCity("");
+    setAddress("");
     setZipError("");
     setBusiness("");
   };
@@ -117,7 +120,7 @@ function Register() {
                       type="text"
                       id="fullname"
                       onChange={(e) => setFullname(e.target.value)}
-                      placeholder="Ingrese su nombre completo"
+                      placeholder="Enter your full name"
                       required
                       className="form-control"
                     />
@@ -146,11 +149,28 @@ function Register() {
                         type="text"
                         id="city"
                         value={city}
-                        readOnly
+                        required
                         className="form-control"
                       />
                     </div>
                   )}
+
+                  
+                  {/* Address*/}
+                  
+                    <div className="form-group">
+                      <label className="form-label" htmlFor="address">Address</label>
+                      <input
+                        type="text"
+                        id="address"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        placeholder="Enter your address"
+                        required
+                        className="form-control"
+                      />
+                    </div>
+                  
 
                   {/* Businnes Type */}
 
@@ -191,7 +211,7 @@ function Register() {
                       type="text"
                       id="phone"
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="Ingrese su número de celular"
+                      placeholder="Enter your phone number"
                       required
                       className="form-control"
                     />
@@ -204,7 +224,7 @@ function Register() {
                       type="password"
                       id="password"
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Ingrese una contraseña"
+                      placeholder="Insert a new password"
                       className="form-control"
                     />
                   </div>
@@ -216,7 +236,7 @@ function Register() {
                       type="password"
                       id="confirm-password"
                       onChange={(e) => setPassword2(e.target.value)}
-                      placeholder="Escriba nuevamente su contraseña"
+                      placeholder="Confirm your password"
                       required
                       className="form-control"
                     />

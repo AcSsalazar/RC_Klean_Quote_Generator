@@ -1,9 +1,16 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from "../../src/RCA/auth";
 import '../../styles/header.css';
 import logo from "../../public/img/foot-logo_1.png";
+
+
+
 export default function RCHeader() {
+
+
+
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
     state.user
@@ -25,7 +32,7 @@ export default function RCHeader() {
         <div className="user-actions">
           {isLoggedIn ? (
             <>
-              <span className="user-greeting">Hello, {user().username}</span>
+              <span className="user-greeting">Welcome,  {user().username}</span>
               <Link to="/dashboard" className="nav-button">Dashboard</Link>
               <Link to="/logout" className="nav-button">Logout</Link>
             </>

@@ -42,7 +42,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         # Specify the model that this serializer is associated with
         model = User
         # Define the fields from the model that should be included in the serializer
-        fields = ('full_name', 'email', 'phone', 'password', 'password2',  'city', 'business_type', 'zip_code')
+        fields = ('full_name', 'email', 'phone', 'password', 'password2', 'city', 'address', 'business_type', 'zip_code')
 
     def validate(self, attrs):
         # Define a validation method to check if the passwords match
@@ -61,6 +61,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             phone=validated_data['phone'],
             city=validated_data['city'],
+            address=validated_data['address'],
             business_type=validated_data['business_type'],
             zip_code = validated_data['zip_code'],
 

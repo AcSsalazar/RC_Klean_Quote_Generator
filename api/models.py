@@ -7,6 +7,18 @@ class BusinessType(models.Model):
     def __str__(self):
         return self.name
 
+
+
+class AreaType(models.Model):
+    name = models.CharField(max_length=100)
+    price_0_to_500ft = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    price_500_to_1000ft = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    price_over_to_1000ft = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+
+    def __str__(self):
+        return self.name
+    
+
 # Modelo para EquipmentType
 class EquipmentType(models.Model):
     name = models.CharField(max_length=100)
@@ -54,26 +66,21 @@ class ExtraOptions(models.Model):
         return f"{self.equipment_type.name} - {self.get_option_type_display()}: {self.option_value}"
 
 
+
+
  # Modelo para Invoice
 class Invoice(models.Model):
     business_type = models.ForeignKey(BusinessType, on_delete=models.SET_NULL, null=True)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)   
+    area_type =  models.ForeignKey(AreaType, on_delete=models.SET_NULL,  null=True)
+    equipment_type = models.ForeignKey(EquipmentType, on_delete=models.SET_NULL, null=True)
 
+
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
 
 
 
     
 # Modelo para AreaType
-
-class AreaType(models.Model):
-    name = models.CharField(max_length=100)
-    price_0_to_500ft = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-    price_500_to_1000ft = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-    price_over_to_1000ft = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-
-    def __str__(self):
-        return self.name
-    
 
 class FloorType(models.Model):
     name = models.CharField(max_length=100, null=True)

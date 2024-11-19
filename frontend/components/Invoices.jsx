@@ -1,16 +1,19 @@
 // eslint-disable-next-line no-unused-vars
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-function LandingPage() {
+function Invoices() {
+
+
+
   return (
     <div>
-      <h1>Bienvenido a Nuestro Servicio</h1>
-      <Link to="/register">Obtener una Cotización</Link>
+      <h1>Invoice visualizator: </h1>
+      <Link to="/">Obtener una Cotización</Link>
       <br />
       <Link to="/login">Iniciar Sesión</Link>
     </div>
   );
 }
 
-export default LandingPage;
+export default Invoices;

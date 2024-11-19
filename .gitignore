@@ -41,7 +41,8 @@ dist/
 .installed.cfg
 *.egg
 MANIFEST
-
+ngrok.exe
+/ngrok.exe
 # IDEs and editor settings
 .vscode/
 .idea/

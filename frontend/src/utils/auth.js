@@ -40,7 +40,7 @@ export const login = async (email, password) => {
             // Displaying a success toast notification
             Toast.fire({
                 icon: 'success',
-                title: ` Bienvenido, ` 
+                title: ` Nice! Welcome :) , ` 
             });
         }
 
@@ -50,13 +50,13 @@ export const login = async (email, password) => {
         // Handling errors and returning data and error information
         return {
             data: null,
-            error: error.response.data?.detail || 'Algo ha salido mal',
+            error: error.response.data?.detail || 'Somethings was wrong',
         };
     }
 };
 
 // Function to handle user registration
-export const register = async (full_name, email, phone, password, password2, city, business_type,  zip_code) => {
+export const register = async (full_name, email, phone, password, password2, city, address, business_type,  zip_code) => {
     try {
         // Making a POST request to register a new user
         const { data } = await axios.post('user/register/', {
@@ -67,6 +67,7 @@ export const register = async (full_name, email, phone, password, password2, cit
             password,
             password2,
             city,
+            address,
             business_type,
             zip_code,
 
@@ -78,7 +79,7 @@ export const register = async (full_name, email, phone, password, password2, cit
         // Displaying a success toast notification
         Toast.fire({
             icon: 'success',
-            title: 'Registrado exitosamente',
+            title: 'Successfully registered',
             timer: 1200
         });
 
@@ -89,7 +90,7 @@ export const register = async (full_name, email, phone, password, password2, cit
         // Handling errors and returning data and error information
         return {
             data: null,
-            error: error.response.data || 'Ups! Algo ha salido mal',
+            error: error.response.data || 'Ups! Something was wrong',
         };
     }
 };
@@ -104,7 +105,7 @@ export const logout = () => {
     // Displaying a success toast notification
     Toast.fire({
         icon: 'success',
-        title: 'Usted ha cerrado sesión'
+        title: 'Logout complete'
     });
 };
 
@@ -155,7 +156,7 @@ export const setAuthUser = (access_token, refresh_token) => {
 export const getRefreshToken = async () => {
     // Retrieving refresh token from cookies and making a POST request to refresh the access token
     const refresh_token = Cookies.get('refresh_token');
-    const response = await axios.post('user/token/refresh/', {
+    const response = await axios.post('user/token/refresh', {
         refresh: refresh_token,
     });
 

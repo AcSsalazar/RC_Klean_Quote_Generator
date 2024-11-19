@@ -9,6 +9,7 @@ import { faFireBurner, faBroom, faKitchenSet, faFilter, faTableCells } from '@fo
 
 export default function InvoiceEstimator() {
   const [businessType, setBusinessType] = useState("");
+  const [estprice, setEstprice] = useState(null);
   const [areas, setAreas] = useState([{ name: "", square_feet: 0 }]);
   const [equipment, setEquipment] = useState([{ name: "", quantity: 0 }]);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -16,6 +17,7 @@ export default function InvoiceEstimator() {
   const [invoiceDetails, setInvoiceDetails] = useState(null);
   const [invoiceId, setInvoiceId] = useState(null);
   const [options, setOptions] = useState({
+  
     businessTypes: [],
     equipmentTypes: [],
     areaNames: [],
@@ -324,14 +326,14 @@ const handleChangeFloor = (index, field, value) => {
                   </div>
 
                   <button onClick={fetchInvoiceDetails} className="details-btn">
-                    View Invoice Details
+                    View your Invoice Details
                   </button>
 
                   {invoiceDetails && (
                     <div className="invoice-details">
                       <h3>Invoice Details</h3>
                       <p>Business Type: {invoiceDetails.business_type.name}</p>
-                      <p>Total Price: ${invoiceDetails.total_price}</p>
+                      <p>Estimated Price: ${invoiceDetails.total_price}</p>
                       <h4>Areas:</h4>
                       {invoiceDetails.areas.map((area, index) => (
                         <p key={index}>

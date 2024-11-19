@@ -14,7 +14,7 @@ class User(AbstractUser):
     otp = models.CharField(max_length=1000, null=True, blank=True)
     reset_token  = models.CharField(max_length=1000, null=True, blank=True)
     city = models.CharField(max_length=500, null=True, blank=True)
-    state = models.CharField(max_length=500, null=True, blank=True)
+    address = models.CharField(max_length=200, null=True, blank=True)
     zip_code = models.PositiveIntegerField(null=True, blank=True)
 
 
@@ -46,8 +46,7 @@ class Profile(models.Model):
     full_name = models.CharField(max_length=1000, null=True, blank=True)
     country = models.CharField(max_length=1000, null=True, blank=True)
     city = models.CharField(max_length=500, null=True, blank=True)
-    state = models.CharField(max_length=500, null=True, blank=True)
-    address = models.CharField(max_length=1000, null=True, blank=True)
+    address = models.CharField(max_length=200, null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     pid = ShortUUIDField(unique=True, length=10, max_length=20, alphabet="abcdefghijklmnopqrstuvxyz")
     zip_code = models.PositiveIntegerField(null=True, blank=True)
