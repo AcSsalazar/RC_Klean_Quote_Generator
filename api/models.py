@@ -25,45 +25,75 @@ class EquipmentType(models.Model):
 
     base_price_unity = models.DecimalField(max_digits=10, decimal_places=2, default=0, null=True)  # Base price for equipment type
     additional_pricing_info = models.CharField(max_length= 150, null=True, blank=True)  # To store complex pricing rules (if needed)
-
+    
     def __str__(self):
         return self.name
     
 
-class ExtraOptions(models.Model):
+
+from django.db import models
+from django.core.exceptions import ValidationError
+
+class QuantityOptions(models.Model):
+
     BURNER_CHOICES = [
-        (2, '2 burners'),
         (4, '4 burners'),
         (6, '6 burners'),
         (8, '8 burners'),
+        (10,'10 burners'),
     ]
-    GRILL_SIZE_CHOICES = [
-        (24, '24 inch'),
-        (30, '30 inch'),
-        (48, '48 inch'),
-        (0, 'Other'),
+    GRILL_CHOICES = [
+        (24, '24 in'),
+        (30, '30 in'),
+        (48, '48 in'),
+        (60, '60 in'),
     ]
+
+    HOOD_CHOICES = [
+
+        (6, '6 ft'),
+        (8, '8 ft'),
+        (10, '10 ft'),
+        (12, '12 ft'),
+        (15, '15 ft'), 
+    ]
+
+    ALL_CHOICES = BURNER_CHOICES + GRILL_CHOICES + HOOD_CHOICES
 
     OPTION_TYPES = [
         ('burner', 'Burners'),
         ('grill_size', 'Grill Sizes'),
+        ('hood', 'Hood Sizes')
     ]
 
-    equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='extra_options')
+    equipment_type = models.ForeignKey(
+        'EquipmentType', on_delete=models.CASCADE, related_name='extra_options'
+    )
+
     option_type = models.CharField(max_length=20, choices=OPTION_TYPES)
-    option_value = models.IntegerField(null=True, blank=True)  # Store numeric values like 2, 4, 6, etc.
+    option_value = models.IntegerField(choices=ALL_CHOICES)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
 
     def clean(self):
-        from django.core.exceptions import ValidationError
-        # Validate option_value based on option_type
-        if self.option_type == 'burner' and self.option_value not in dict(self.BURNER_CHOICES):
-            raise ValidationError({'option_value': 'Invalid value for Burners.'})
-        if self.option_type == 'grill_size' and self.option_value not in dict(self.GRILL_SIZE_CHOICES):
-            raise ValidationError({'option_value': 'Invalid value for Grill Sizes.'})
+        """Valida que el valor de option_value corresponda a option_type."""
+        valid_choices = dict(
+            self.BURNER_CHOICES if self.option_type == 'burner' 
+            else self.GRILL_CHOICES if self.option_type == 'grill_size' 
+            else self.HOOD_CHOICES
+
+        )
+        if self.option_value not in valid_choices:
+            raise ValidationError(
+                {
+                    'option_value': f"'{self.get_option_value_display()}' no es válido para {self.get_option_type_display()}."
+                }
+            )
 
     def __str__(self):
-        return f"{self.equipment_type.name} - {self.get_option_type_display()}: {self.option_value}"
+        return f"{self.equipment_type.name} - {self.get_option_type_display()}: {self.get_option_value_display()}"
+
+
 
 
 

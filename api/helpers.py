@@ -1,4 +1,5 @@
 def calculate_price(invoice):
+
     total_price = 0
 
     # Area-based pricing

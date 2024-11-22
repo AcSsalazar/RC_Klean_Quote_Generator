@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import BusinessType, AreaType, EquipmentType, Invoice, Area, Equipment, AdditionalService, FloorType, Floor, ExtraOptions
+from .forms import QuantityOptionsForm
+from .models import BusinessType, AreaType, EquipmentType, Invoice, Area, Equipment, AdditionalService, FloorType, Floor, QuantityOptions
 
 
 
@@ -21,5 +22,13 @@ admin.site.register(Equipment)
 admin.site.register(AdditionalService)
 admin.site.register(FloorType)
 admin.site.register(Floor)
-admin.site.register(ExtraOptions)
 
+
+
+
+@admin.register(QuantityOptions)
+class QuantityOptionsAdmin(admin.ModelAdmin):
+    form = QuantityOptionsForm
+    list_display = ('equipment_type', 'option_type', 'price', 'option_value')
+    list_filter = ('option_type', 'equipment_type')
+    search_fields = ('equipment_type__name',)
