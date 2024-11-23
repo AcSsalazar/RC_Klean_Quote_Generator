@@ -8,9 +8,13 @@ class BusinessTypeSerializer(serializers.ModelSerializer):
 
 
 class QuantityOptionSerializer(serializers.ModelSerializer):
+    option_type_display = serializers.ReadOnlyField(source='get_option_type_display')
+    option_value_display = serializers.ReadOnlyField(source='get_option_value_display')
+
     class Meta:
         model = QuantityOption
         fields = '__all__'
+
      
 
 class AreaTypeSerializer(serializers.ModelSerializer):

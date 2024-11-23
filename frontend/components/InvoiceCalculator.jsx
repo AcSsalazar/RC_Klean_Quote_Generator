@@ -304,69 +304,13 @@ const handleEquantityChange = (index, field, value) => {
               <button onClick={handleAddFloor} className="add-btn">
                 Add Floor
               </button>
+              </div>
             
-            </div>
-   
 
-
-          
-          {/* Kitchen equipment*/}
-          
-          <div className="form-section">
-
-              <h2>Kitchen Equipment</h2>
-              <FontAwesomeIcon icon={faKitchenSet} className="icons-form"/>
-              {equipment.map((item, index) => (
-                <div key={index} className="equipment-item">
-                  <div className="input-group-t">
-                    <label htmlFor={`equipment-name-${index}`}>Equipment</label>
-                    <select
-                      id={`equipment-name-${index}`}
-                      value={item.name}
-                      onChange={(e) =>
-                        handleEquipmentChange(index, "name", e.target.value)
-                      }
-                    >
-                      <option value="">Select equipment</option>
-                      {options.equipmentTypes.map((type) => (
-                        <option key={type.id} value={type.id}>
-                          {type.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="input-group-n">
-                    <label htmlFor={`equipment-quantity-${index}`}>
-                      Quantity
-                    </label>
-                    <input
-                      id={`equipment-quantity-${index}`}
-                      type="number"
-                      value={item.quantity}
-                      onChange={(e) =>
-                        handleEquipmentChange(index, "quantity", e.target.value)
-                      }
-                      placeholder="Enter quantity"
-                    />
-                  </div>
-                  <button
-                    onClick={() => handleRemoveEquipment(index)}
-                    className="remove-btn"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-              <button onClick={handleAddEquipment} className="add-btn">
-                Add Equipment
-              </button>
-            </div>
-            </div>
-            
           {/* Equipment: qty and sizes */}
           
-          <div className="form-section">
-  <h2>Equipment: Quantity and Size</h2>
+   <div className="form-section">
+  <h2>Equipment: Quantity and Sizes</h2>
   {equantity.map((item, index) => (
     <div key={index} className="equantity-item">
       {/* Seleccionar Equipo */}
@@ -384,7 +328,8 @@ const handleEquantityChange = (index, field, value) => {
             </option>
           ))}
         </select>
-      </div>
+      </div>            
+   
 
       {/* Mostrar Opciones Solo si Hay un Equipo Seleccionado */}
       {item.validOptions && item.validOptions.length > 0 && (
@@ -395,10 +340,10 @@ const handleEquantityChange = (index, field, value) => {
             value={item.option_type}
             onChange={(e) => handleEquantityChange(index, "option_type", e.target.value)}
           >
-            <option value="">Select size/quantity</option>
+            <option value="">Select: size / quantity</option>
             {item.validOptions.map((option) => (
               <option key={option.id} value={option.option_type}>
-                {option.option_type} - {option.option_value}
+                {option.option_type_display} - {option.option_value_display}
               </option>
             ))}
           </select>
@@ -422,12 +367,14 @@ const handleEquantityChange = (index, field, value) => {
         Remove
       </button>
     </div>
+    
   ))}
 
   {/* Botón para Agregar un Nuevo Equipo */}
   <button onClick={handleEquantityAdd} className="add-btn">
     Add Equipment Option
   </button>
+</div>
 </div>
 
 
