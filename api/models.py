@@ -34,7 +34,7 @@ class EquipmentType(models.Model):
 from django.db import models
 from django.core.exceptions import ValidationError
 
-class QuantityOptions(models.Model):
+class QuantityOption(models.Model):
 
     BURNER_CHOICES = [
         (4, '4 burners'),
@@ -66,9 +66,7 @@ class QuantityOptions(models.Model):
         ('hood', 'Hood Sizes')
     ]
 
-    equipment_type = models.ForeignKey(
-        'EquipmentType', on_delete=models.CASCADE, related_name='extra_options'
-    )
+    equipment_type = models.ForeignKey(EquipmentType, on_delete=models.CASCADE, related_name='extra_options')
 
     option_type = models.CharField(max_length=20, choices=OPTION_TYPES)
     option_value = models.IntegerField(choices=ALL_CHOICES)
@@ -124,21 +122,14 @@ class FloorType(models.Model):
 
 # Modelo para Area
 
-# Modelo para los precios base
-class Floor(models.Model):
-    invoice = models.ForeignKey(Invoice, related_name='floor_type', on_delete=models.CASCADE, null=True)
-    name = models.ForeignKey(FloorType, on_delete=models.SET_NULL,  null=True )
-    price = models.DecimalField(max_digits=5, decimal_places=2)
 
-    def __str__(self):
-       return self.name
     
 
 class Area(models.Model):
     invoice = models.ForeignKey(Invoice, related_name='areas', on_delete=models.CASCADE)
     name = models.ForeignKey(AreaType, on_delete=models.SET_NULL, null=True)
     square_feet = models.IntegerField()
-    floor_type = models.ForeignKey(FloorType, related_name='floor_type', on_delete=models.CASCADE, null=True)
+    floor_type = models.ForeignKey(FloorType, related_name='floor_type', on_delete=models.SET_NULL, null=True)
 
 # Modelo para Equipment
 class Equipment(models.Model):

@@ -9,11 +9,13 @@ import { faFireBurner, faBroom, faKitchenSet, faFilter, faTableCells } from '@fo
 
 export default function InvoiceEstimator() {
   const [businessType, setBusinessType] = useState("");
-  const [estprice, setEstprice] = useState(null);
+
+  const [equantity, setEquantity] = useState([{ name: "", option_type: "", option_value: "", quantity: 0, validOptions: [] },]);
+  
   const [areas, setAreas] = useState([{ name: "", square_feet: 0 }]);
   const [equipment, setEquipment] = useState([{ name: "", quantity: 0 }]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [floors, setFloors] = useState([{ name: "", square_feet: 500 }]);
+  const [floors, setFloors] = useState([{ name: ""}]);
   const [invoiceDetails, setInvoiceDetails] = useState(null);
   const [invoiceId, setInvoiceId] = useState(null);
   const [options, setOptions] = useState({
@@ -22,6 +24,7 @@ export default function InvoiceEstimator() {
     equipmentTypes: [],
     areaNames: [],
     floorNames: [],
+    bus_qty: [], 
   });
 
   useEffect(() => {
@@ -33,6 +36,7 @@ export default function InvoiceEstimator() {
           equipmentTypes: response.data.equipment_types || [],
           areaNames: response.data.area_names || [],
           floorNames: response.data.floor_types || [],
+          bus_qty: response.data.bus_qty || [],
 
         });
       } catch (error) {
@@ -63,7 +67,7 @@ export default function InvoiceEstimator() {
 //Floor types handle funtions: 
 
 const handleAddFloor = () => {
-  setFloors([...floors, { name: "", square_feet: 500 }]);
+  setFloors([...floors, { name: ""}]);
 };
 
 const handleRemoveFloor = (index) => {
@@ -75,9 +79,48 @@ const handleRemoveFloor = (index) => {
 const handleChangeFloor = (index, field, value) => {
   const newFloor = [...floors];
   newFloor[index][field] = field === "square_feets" ? Number(value) : value;
-  setAreas(newFloor);
+  setFloors(newFloor);
 };
 
+
+// Equantity handle funtions:
+
+
+
+const handleEquantityAdd = () => {
+  setEquantity([
+    ...equantity,
+    { name: "", option_type: "", option_value: "", quantity: 0, validOptions: [] },
+  ]);
+};
+
+const handleEquantityRemove = (index) => {
+  const newEquantity = [...equantity];
+  newEquantity.splice(index, 1);
+  setEquantity(newEquantity);
+};
+
+const handleEquantityChange = (index, field, value) => {
+  const newEquantity = [...equantity];
+
+  if (field === "name") {
+    // Actualiza el equipo seleccionado
+    newEquantity[index][field] = value;
+
+    // Filtrar las opciones de `bus_qty` basadas en el equipo seleccionado
+    const validOptions = options.bus_qty.filter(
+      (option) => option.equipment_type === Number(value)
+    );
+
+    // Actualizar las opciones válidas
+    newEquantity[index].validOptions = validOptions;
+  } else {
+    // Actualizar otros campos como `option_type`, `option_value`, o `quantity`
+    newEquantity[index][field] = value;
+  }
+
+  setEquantity(newEquantity);
+};
 
 
 
@@ -122,6 +165,12 @@ const handleChangeFloor = (index, field, value) => {
           name: equip.name,
           quantity: equip.quantity,
         })),
+
+        equantity: equantity.map((qty) => ({
+          name: qty.equipment_type,
+          type : qty.option_type,
+        })),
+
       });
       setTotalPrice(response.data.total_price);
       setInvoiceId(response.data.id);
@@ -136,6 +185,8 @@ const handleChangeFloor = (index, field, value) => {
         <h1 className="title">Invoice Estimator - RC Klean</h1>
         <div className="form-container">
           <div className="form-row">
+
+
             <div className="form-section">
               <h2>Business Details</h2>
               <FontAwesomeIcon icon={faFilter} className="icons-form" />
@@ -224,14 +275,14 @@ const handleChangeFloor = (index, field, value) => {
                     >
                       <option value="">Select your floor type</option>
                       {options.floorNames.map((name) => (
-                        <option key={name.id} value={name.id}>
+                        <option key={name.id} value={name.id}> 
                           {name.name}
                         </option>
                       ))}
                     </select>
                   </div>
                   <div className="input-group-n">
-                    <label htmlFor={`floor-size-${index}`}>Square ft</label>
+                   {/*  <label htmlFor={`floor-size-${index}`}>Square ft</label>
                     <input
                       id={`floor-size-${index}`}
                       type="number"
@@ -240,7 +291,7 @@ const handleChangeFloor = (index, field, value) => {
                         handleChangeFloor(index, "square_feets", e.target.value)
                       }
                       placeholder="Select size range"
-                    />
+                    /> */}
                   </div>
                   <button
                     onClick={() => handleRemoveFloor(index)}
@@ -312,7 +363,75 @@ const handleChangeFloor = (index, field, value) => {
             </div>
             </div>
             
-            
+          {/* Equipment: qty and sizes */}
+          
+          <div className="form-section">
+  <h2>Equipment: Quantity and Size</h2>
+  {equantity.map((item, index) => (
+    <div key={index} className="equantity-item">
+      {/* Seleccionar Equipo */}
+      <div className="input-group-t">
+        <label htmlFor={`equantity-name-${index}`}>Equipment</label>
+        <select
+          id={`equantity-name-${index}`}
+          value={item.name}
+          onChange={(e) => handleEquantityChange(index, "name", e.target.value)}
+        >
+          <option value="">Select equipment</option>
+          {options.equipmentTypes.map((type) => (
+            <option key={type.id} value={type.id}>
+              {type.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Mostrar Opciones Solo si Hay un Equipo Seleccionado */}
+      {item.validOptions && item.validOptions.length > 0 && (
+        <div className="input-group-n">
+          <label htmlFor={`equipment-option-${index}`}>Options</label>
+          <select
+            id={`equipment-option-${index}`}
+            value={item.option_type}
+            onChange={(e) => handleEquantityChange(index, "option_type", e.target.value)}
+          >
+            <option value="">Select size/quantity</option>
+            {item.validOptions.map((option) => (
+              <option key={option.id} value={option.option_type}>
+                {option.option_type} - {option.option_value}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {/* Cantidad */}
+      <div className="input-group-n">
+        <label htmlFor={`equipment-quantity-${index}`}>Quantity</label>
+        <input
+          id={`equipment-quantity-${index}`}
+          type="number"
+          value={item.quantity}
+          onChange={(e) => handleEquantityChange(index, "quantity", e.target.value)}
+          placeholder="Enter quantity"
+        />
+      </div>
+
+      {/* Botón de Eliminar */}
+      <button onClick={() => handleEquantityRemove(index)} className="remove-btn">
+        Remove
+      </button>
+    </div>
+  ))}
+
+  {/* Botón para Agregar un Nuevo Equipo */}
+  <button onClick={handleEquantityAdd} className="add-btn">
+    Add Equipment Option
+  </button>
+</div>
+
+
+
             <div className="form-section">
               <button onClick={calculateTotalPrice} className="calculate-btn">
                 Calculate Estimate
@@ -321,8 +440,9 @@ const handleChangeFloor = (index, field, value) => {
               {totalPrice > 0 && (
                 <>
                   <div className="total-price">
-                    <h2>Estimated Total</h2>
-                    <p>${totalPrice.toFixed(2)}</p>
+                    <h2>The estimated price is betwen: ${((totalPrice * 0.80).toFixed(2)) }
+                          and ${((totalPrice * 1.20).toFixed(2)) } </h2>
+
                   </div>
 
                   <button onClick={fetchInvoiceDetails} className="details-btn">
@@ -333,7 +453,11 @@ const handleChangeFloor = (index, field, value) => {
                     <div className="invoice-details">
                       <h3>Invoice Details</h3>
                       <p>Business Type: {invoiceDetails.business_type.name}</p>
-                      <p>Estimated Price: ${invoiceDetails.total_price}</p>
+
+                      <p>Estimated price: ${invoiceDetails.total_price}</p>
+                        
+
+                      
                       <h4>Areas:</h4>
                       {invoiceDetails.areas.map((area, index) => (
                         <p key={index}>

@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Invoice, Area, Equipment, AdditionalService, BusinessType, AreaType, EquipmentType, FloorType
+from .models import Invoice, Area, Equipment, AdditionalService, BusinessType, AreaType, EquipmentType, FloorType, QuantityOption
 from .helpers import calculate_price
-from .serializers import BusinessTypeSerializer, AreaTypeSerializer, FloorTypeSerializer, EquipmentTypeSerializer, InvoiceSerializer
+from .serializers import BusinessTypeSerializer, AreaTypeSerializer, FloorTypeSerializer, EquipmentTypeSerializer, InvoiceSerializer, QuantityOptionSerializer
 
 class InvoiceCalculateView(APIView):
     def post(self, request):
@@ -75,6 +75,7 @@ class OptionsView(APIView):
         equipment_types = EquipmentType.objects.all()
         area_names = AreaType.objects.all()
         floor_types = FloorType.objects.all()
+        bus_qty = QuantityOption.objects.all()
 
         # Serializar los datos para enviarlos como respuesta en JSON
         data = {
@@ -82,6 +83,7 @@ class OptionsView(APIView):
             'equipment_types': EquipmentTypeSerializer(equipment_types, many=True).data,
             'area_names': AreaTypeSerializer(area_names, many=True).data,
             'floor_types': FloorTypeSerializer(floor_types, many=True).data,
+            'bus_qty': QuantityOptionSerializer(bus_qty, many=True).data,
 
         }
         return Response(data)
