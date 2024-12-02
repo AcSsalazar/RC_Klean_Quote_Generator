@@ -1,18 +1,20 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
+import { useAuthStore } from "../src/RCA/auth"; // For userdata
 import apiInstance from "../src/utils/axios";  // Importación actualizada
 import "../styles/InvoiceCalculator.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFireBurner, faBroom, faKitchenSet, faFilter, faTableCells } from '@fortawesome/free-solid-svg-icons';
-
+import { useParams } from "react-router-dom";
 
 
 export default function InvoiceEstimator() {
-  const [businessType, setBusinessType] = useState("");
-
-  const [equantity, setEquantity] = useState([{ name: "", option_type: "", option_value: "", quantity: 0, validOptions: [] },]);
   
-  const [areas, setAreas] = useState([{ name: "", square_feet: 0 }]);
+  const param = useParams("");
+  //const [userInfo, setUserInfo] = useState([{name:"", business_type:"", city: ""}]);
+  const [businessType, setBusinessType] = useState("");
+  const [equantity, setEquantity] = useState([{ name: "", option_type: "", option_value: "", quantity: 0, validOptions: [] },]);
+  const [areas, setAreas] = useState([{ name: "", square_feet: "", floor_type: "" }]);
   const [equipment, setEquipment] = useState([{ name: "", quantity: 0 }]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [floors, setFloors] = useState([{ name: ""}]);
@@ -25,7 +27,49 @@ export default function InvoiceEstimator() {
     areaNames: [],
     floorNames: [],
     bus_qty: [], 
+
   });
+
+
+  const [errors, setErrors] = useState({
+    businessType: "",
+    areas: [],
+    equipment: [],
+  });
+
+
+
+// User log state
+    const [isLoggedIn, user] = useAuthStore((state) => [
+      state.isLoggedIn,
+      state.user
+    ]);
+    
+
+/*   Cuadrar esta monda en diciembre xd  useEffect(() => {
+      const UserData = async () => {
+        try {
+          const response = await apiInstance.get(`profile/${param.slug}/`); 
+          setOptions({
+            name: response.data.name,
+            business_type: response.data.business_type,
+            city: response.data.city,
+
+  
+          });
+        } catch (error) {
+          console.error("Error fetching userdata: ", error);
+        }
+      };
+
+      UserData();
+      console.log("user data is:", UserData)
+    }, []);
+ */
+
+
+
+
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -47,8 +91,20 @@ export default function InvoiceEstimator() {
     fetchOptions();
   }, []);
 //Areas setiitngs options:
+
+const SquareFeetOptions = [
+
+  { value: 499, label: "0-500" },
+  { value: 999, label: "500-1000" },
+  { value: 1500, label: "More than 1000" },
+
+]
+
+
+
+;
   const handleAddArea = () => {
-    setAreas([...areas, { name: "", square_feet: 0 }]);
+    setAreas([...areas, { name: "", square_feet: "", floor_type: "" }])
   };
 
   const handleRemoveArea = (index) => {
@@ -58,8 +114,8 @@ export default function InvoiceEstimator() {
   };
 
   const handleAreaChange = (index, field, value) => {
-    const newAreas = [...areas];
-    newAreas[index][field] = field === "square_feet" ? Number(value) : value;
+    const newAreas = [...areas ];
+    newAreas[index][field] = value; // Actualiza el campo correspondiente (name, square_feet o floor_type)
     setAreas(newAreas);
   };
 
@@ -78,7 +134,7 @@ const handleRemoveFloor = (index) => {
 
 const handleChangeFloor = (index, field, value) => {
   const newFloor = [...floors];
-  newFloor[index][field] = field === "square_feets" ? Number(value) : value;
+  newFloor[index][field] = value;
   setFloors(newFloor);
 };
 
@@ -153,32 +209,71 @@ const handleEquantityChange = (index, field, value) => {
     }
   };
 
+
+  const handleOptionChange = (index, selectedOptionValue) => {
+    const newEquantity = [...equantity];
+    const currentItem = { ...newEquantity[index] };
+  
+    // Actualiza option_value
+    currentItem.option_value = selectedOptionValue;
+  
+    // Encuentra la opción seleccionada para obtener option_type
+    const selectedOption = currentItem.validOptions.find(
+      (option) => option.option_value.toString() === selectedOptionValue
+    );
+  
+    if (selectedOption) {
+      // Actualiza option_type
+      currentItem.option_type = selectedOption.option_type;
+    } else {
+      currentItem.option_type = '';
+    }
+  
+    newEquantity[index] = currentItem;
+    setEquantity(newEquantity);
+  };
+  
+  
+
+
+
+
   const calculateTotalPrice = async () => {
+
+
+
+
     try {
-      const response = await apiInstance.post("invoice/", {
-        business_type: businessType,
+      const payload = {
+        business_type: Number(businessType), // Convertir a número
         areas: areas.map((area) => ({
-          name: area.name,
-          square_feet: area.square_feet,
+          name: Number(area.name), // Convertir a número
+          square_feet: Number(area.square_feet), // Convertir a número
+          floor_type: Number(area.floor_type), // Convertir a número
         })),
-        equipment: equipment.map((equip) => ({
-          name: equip.name,
-          quantity: equip.quantity,
+        equipment: equantity.map((equip) => ({
+          name: Number(equip.name), // Convertir a número
+          quantity: Number(equip.quantity), // Convertir a número
+          option_type: equip.option_type,
+          option_value: Number( equip.option_value), // Mantener como string si el backend lo espera así
         })),
-
-        equantity: equantity.map((qty) => ({
-          name: qty.equipment_type,
-          type : qty.option_type,
-        })),
-
-      });
+      };
+  
+      console.log("Payload enviado al backend:", payload);
+  
+      const response = await apiInstance.post("invoice/", payload);
       setTotalPrice(response.data.total_price);
       setInvoiceId(response.data.id);
     } catch (error) {
       console.error("Error calculating total price:", error);
     }
   };
+  
 
+
+
+  
+  
   return (
     <div className="invoice-estimator">
       <div className="estimator-container">
@@ -204,110 +299,12 @@ const handleEquantityChange = (index, field, value) => {
                     </option>
                   ))}
                 </select>
+                {errors.businessType && <span className="error">{errors.businessType}</span>}
               </div>
             </div>
 
-            <div className="form-section">
-              <h2>Areas</h2>
-              <FontAwesomeIcon icon={faBroom} className="icons-form" />
-              {areas.map((area, index) => (
-                <div key={index} className="area-item">
-                  <div className="input-group">
-                    <label htmlFor={`area-name-${index}`}>Area Name</label>
-                    <select
-                      id={`area-name-${index}`}
-                      value={area.name}
-                      onChange={(e) =>
-                        handleAreaChange(index, "name", e.target.value)
-                      }
-                    >
-                      <option value="">Select area</option>
-                      {options.areaNames.map((name) => (
-                        <option key={name.id} value={name.id}>
-                          {name.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="input-group-n">
-                    <label htmlFor={`area-size-${index}`}>Square Feet</label>
-                    <input
-                      id={`area-size-${index}`}
-                      type="number"
-                      value={area.square_feet}
-                      onChange={(e) =>
-                        handleAreaChange(index, "square_feet", e.target.value)
-                      }
-                      placeholder="Enter size"
-                    />
-                  </div>
-                  <button
-                    onClick={() => handleRemoveArea(index)}
-                    className="remove-btn"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-              <button onClick={handleAddArea} className="add-btn">
-                Add Area
-              </button>
-            </div>
-          </div>
 
-          {/* Floor Type */}
-
-          <div className="form-row">
-            <div className="form-section">
-
-              <h2>Floor Material</h2>
-              <FontAwesomeIcon icon={faTableCells} className="icons-form" />
-              {floors.map((floor, index) => (
-                <div key={index} className="area-item">
-                  <div className="input-group">
-                    <label htmlFor={`floor-type-${index}`}>Floors Type</label>
-                    <select
-                      id={`area-name-${index}`}
-                      value={floor.name}
-                      onChange={(e) =>
-                        handleChangeFloor(index, "name", e.target.value)
-                      }
-                    >
-                      <option value="">Select your floor type</option>
-                      {options.floorNames.map((name) => (
-                        <option key={name.id} value={name.id}> 
-                          {name.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="input-group-n">
-                   {/*  <label htmlFor={`floor-size-${index}`}>Square ft</label>
-                    <input
-                      id={`floor-size-${index}`}
-                      type="number"
-                      value={floor.price}
-                      onChange={(e) =>
-                        handleChangeFloor(index, "square_feets", e.target.value)
-                      }
-                      placeholder="Select size range"
-                    /> */}
-                  </div>
-                  <button
-                    onClick={() => handleRemoveFloor(index)}
-                    className="remove-btn"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-              <button onClick={handleAddFloor} className="add-btn">
-                Add Floor
-              </button>
-              </div>
-            
-
-          {/* Equipment: qty and sizes */}
+{/* Equipment: qty and sizes */}
           
    <div className="form-section">
   <h2>Equipment: Quantity and Sizes</h2>
@@ -337,12 +334,12 @@ const handleEquantityChange = (index, field, value) => {
           <label htmlFor={`equipment-option-${index}`}>Options</label>
           <select
             id={`equipment-option-${index}`}
-            value={item.option_type}
-            onChange={(e) => handleEquantityChange(index, "option_type", e.target.value)}
+            value={item.option_value || ''}
+            onChange={(e) => handleOptionChange(index, e.target.value)}
           >
             <option value="">Select: size / quantity</option>
             {item.validOptions.map((option) => (
-              <option key={option.id} value={option.option_type}>
+              <option key={option.id} value={option.option_value}>
                 {option.option_type_display} - {option.option_value_display}
               </option>
             ))}
@@ -366,15 +363,90 @@ const handleEquantityChange = (index, field, value) => {
       <button onClick={() => handleEquantityRemove(index)} className="remove-btn">
         Remove
       </button>
+      <button onClick={handleEquantityAdd} className="add-btn">
+    Add Equipment Option
+  </button>
     </div>
     
   ))}
 
-  {/* Botón para Agregar un Nuevo Equipo */}
-  <button onClick={handleEquantityAdd} className="add-btn">
-    Add Equipment Option
-  </button>
+
 </div>
+</div>
+
+
+{/* Selector de área iportante */}
+
+<div className="form-section">
+
+  <h2>Areas and Floor Types</h2>
+  <FontAwesomeIcon icon={faBroom} className="icons-form" />
+  {areas.map((area, index) => (
+    <div key={index} className="area-item">
+      {/* Selector de área */}
+      <div className="input-group">
+        <label htmlFor={`area-name-${index}`}>Area Name</label>
+        <select
+          id={`area-name-${index}`}
+          value={area.name}
+          onChange={(e) => handleAreaChange(index, "name", e.target.value)}
+        >
+          <option value="">Select area</option>
+          {options.areaNames.map((areaOption) => (
+            <option key={areaOption.id} value={areaOption.id}>
+              {areaOption.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Selector de tamaño */}
+      <div className="input-group">
+        <label htmlFor={`area-size-${index}`}>Square Feet Range</label>
+        <select
+          id={`area-size-${index}`}
+          value={area.square_feet}
+          onChange={(e) => handleAreaChange(index, "square_feet", e.target.value)}
+        >
+          <option value="">Select size</option>
+          {SquareFeetOptions.map((sizeOption) => (
+            <option key={sizeOption.value} value={sizeOption.value}>
+              {sizeOption.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Selector de tipo de piso */}
+      <div className="input-group">
+        <label htmlFor={`floor-type-${index}`}>Floor Type</label>
+        <select
+          id={`floor-type-${index}`}
+          value={area.floor_type}
+          onChange={(e) => handleAreaChange(index, "floor_type", e.target.value)}
+        >
+          <option value="">Select floor type</option>
+          {options.floorNames.map((floor) => (
+            <option key={floor.id} value={floor.id}>
+              {floor.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Botón para eliminar área */}
+      <button
+        onClick={() => handleRemoveArea(index)}
+        className="remove-btn"
+      >
+        Remove Area
+      </button>
+    </div>
+  ))}
+  {/* Botón para añadir área */}
+  <button onClick={handleAddArea} className="add-btn">
+    Add Area
+  </button>
 </div>
 
 

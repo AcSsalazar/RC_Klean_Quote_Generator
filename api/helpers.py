@@ -1,3 +1,4 @@
+from .models import QuantityOption
 def calculate_price(invoice):
     total_price = 0
 
@@ -12,24 +13,26 @@ def calculate_price(invoice):
             else:
                 total_price += area_type.price_over_to_1000ft or 0
 
-    # Equipment-based pricing with QuantityOptions
-    for equipment in invoice.equipment.all():
-        equipment_type = equipment.name
+# Equipment-based pricing with QuantityOptions
+        for equipment in invoice.equipment.all():
+         
+         equipment_type = equipment.name
 
-        # Caso para equipos con opciones configuradas en QuantityOptions
-        if equipment_type and equipment_type.extra_options.exists():
-            # Obtener opciones específicas relacionadas con el tipo de equipo
-            options = equipment_type.extra_options.all()
-            selected_option = options.filter(option_value=equipment.quantity).first()
+        if equipment_type and equipment.option_type and equipment.option_value:
+        # Obtener la opción específica basada en option_type y option_value
+            selected_option = QuantityOption.objects.filter(
+            equipment_type=equipment_type,
+            option_type=equipment.option_type,
+            option_value=equipment.option_value).first()
 
-            if selected_option:
-                total_price += selected_option.price * equipment.quantity
-            else:
-                # Si no hay opciones configuradas para la cantidad específica, usar un precio base
-                total_price += equipment.quantity * (equipment_type.base_price_unity or 0)
+        if selected_option:
+            total_price += selected_option.price * equipment.quantity
         else:
-            # Para equipos sin opciones específicas, usar precio base
+            # Si no se encuentra la opción, usar un precio base o manejar el error
             total_price += equipment.quantity * (equipment_type.base_price_unity or 0)
+    else:
+        # Para equipos sin opciones específicas, usar precio base
+        total_price += equipment.quantity * (equipment_type.base_price_unity or 0)
 
     # Floor type pricing
     for area in invoice.areas.all():
@@ -42,104 +45,3 @@ def calculate_price(invoice):
 
     return total_price
 
-
-
-
-
-
-'''def calculate_price(invoice):
-
-    total_price = 0
-
-    # Area-based pricing
-    for area in invoice.areas.all():
-        if area.name.name == "Kitchen":
-            if area.square_feet <= 500:
-                total_price += area.square_feet * 1.50
-            elif area.square_feet <= 1000:
-                total_price += area.square_feet * 1.25
-            else:
-                total_price += area.square_feet * 1.00
-        elif area.name.name == "Dining Room" or area.name.name == "Lobby":
-            if area.square_feet <= 500:
-                total_price += area.square_feet * 1.00
-            elif area.square_feet <= 1000:
-                total_price += area.square_feet * 0.85
-            else:
-                total_price += area.square_feet * 0.75
-        elif area.name.name == "Bathroom":
-            total_price += 75 * area.square_feet  # Precio fijo por baño
-        # Se pueden añadir más reglas para otras áreas
-
-    # Equipment-based pricing
-    for equipment in invoice.equipment.all():
-        # Stoves and Ranges
-        if equipment.name.name == "Stove" or equipment.name.name == "Range":
-            if equipment.quantity == 2:
-                total_price += 50 * equipment.quantity
-            elif equipment.quantity == 4:
-                total_price += 75 * equipment.quantity
-            elif equipment.quantity == 6:
-                total_price += 100 * equipment.quantity
-            elif equipment.quantity == 8:
-                total_price += 125 * equipment.quantity
-        # Ovens
-        elif equipment.name.name == "Oven":
-            total_price += 80 * equipment.quantity
-        elif equipment.name.name == "Convection Oven":
-            total_price += 100 * equipment.quantity
-        elif equipment.name.name == "Combi Steamer":
-            total_price += 120 * equipment.quantity
-        # Grills and Griddles
-        elif equipment.name.name == "Griddle":
-            if equipment.size == 24:
-                total_price += 70 * equipment.quantity
-            elif equipment.size == 30:
-                total_price += 85 * equipment.quantity
-            elif equipment.size == 48:
-                total_price += 100 * equipment.quantity
-            else:
-                total_price += 100 * equipment.quantity  # Precio a evaluar
-        # Fryers
-        elif equipment.name.name == "Fryer":
-            total_price += 60 * equipment.quantity
-        # Hood Vents
-        elif equipment.name.name == "Hood Vent":
-            if equipment.size == 6:
-                total_price += 150 * equipment.quantity
-            elif equipment.size == 8:
-                total_price += 200 * equipment.quantity
-            elif equipment.size == 10:
-                total_price += 250 * equipment.quantity
-            elif equipment.size == 12:
-                total_price += 300 * equipment.quantity
-            elif equipment.size >= 15:
-                total_price += 350 * equipment.quantity
-        # Refrigerators and Walk-Ins
-        elif equipment.name.name == "Refrigerator" or equipment.name.name == "Walk-In":
-            total_price += 50 * equipment.quantity  # Exterior y juntas
-            total_price += 100 * equipment.quantity  # Limpieza interior (si está vacío)
-        # Prep Tables and Countertops
-        elif equipment.name.name == "Prep Table" or equipment.name.name == "Countertop":
-            total_price += 25 * equipment.quantity
-        # Sinks
-        elif equipment.name.name == "Sink":
-            total_price += 30 * equipment.quantity
-        # Ice Machines
-        elif equipment.name.name == "Ice Machine":
-            total_price += 80 * equipment.quantity
-        # Other Equipment
-        else:
-            total_price += 50 * equipment.quantity  # Precio fijo por equipo estándar
-        # Añadir más reglas para equipos si es necesario...
-
-    # Additional services pricing
-    for service in invoice.additional_services.all():
-        if service.name == "Carpet Cleaning":
-            total_price += service.square_feet * 0.25
-        elif service.name == "Floor Buffing":
-            total_price += service.square_feet * 0.50
-        elif service.name == "High Dusting":
-            total_price += 15 * service.quantity  # Por cada luz, ventilador, etc.
-
-    return total_price'''

@@ -159,6 +159,7 @@ button {
 .add-btn {
   background-color: var(--secondary-color);
   color: white;
+  margin: 10px 0px 0px 15px;
 }
 
 .remove-btn {

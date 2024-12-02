@@ -8,12 +8,14 @@ class BusinessTypeSerializer(serializers.ModelSerializer):
 
 
 class QuantityOptionSerializer(serializers.ModelSerializer):
-    option_type_display = serializers.ReadOnlyField(source='get_option_type_display')
-    option_value_display = serializers.ReadOnlyField(source='get_option_value_display')
+    equipment_type = serializers.PrimaryKeyRelatedField(read_only=True)
+    option_type_display = serializers.CharField(source='get_option_type_display', read_only=True)
+    option_value_display = serializers.CharField(source='get_option_value_display', read_only=True)
 
     class Meta:
         model = QuantityOption
-        fields = '__all__'
+        fields = ['id', 'equipment_type', 'option_type', 'option_type_display', 'option_value', 'option_value_display', 'price']
+        #read_only_fields = ['option_type_display', 'option_value_display']
 
      
 
@@ -29,9 +31,12 @@ class EquipmentTypeSerializer(serializers.ModelSerializer):
         model = EquipmentType
         fields = ['id', 'name']
 
+
+
 # Serializador para las áreas (Area)
 class AreaSerializer(serializers.ModelSerializer):
-    name = AreaTypeSerializer()  # id, name del tipo de area
+    name = serializers.PrimaryKeyRelatedField(queryset=AreaType.objects.all())
+    floor_type = serializers.PrimaryKeyRelatedField(queryset=FloorType.objects.all(), allow_null=True)
 
     class Meta:
         model = Area
@@ -43,13 +48,16 @@ class FloorTypeSerializer(serializers.ModelSerializer):
         model = FloorType
         fields = ['id', 'name', 'price']
 
-# Serializador para el equipo (Equipment)
 class EquipmentSerializer(serializers.ModelSerializer):
-    name = EquipmentTypeSerializer()  # ID del tipo de equipo
+    name = serializers.PrimaryKeyRelatedField(queryset=EquipmentType.objects.all())
+    option_type = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    option_value = serializers.IntegerField(required=False, allow_null=True)
 
     class Meta:
         model = Equipment
-        fields = ['name', 'quantity']
+        fields = ['name', 'quantity', 'option_type', 'option_value']
+
+
 
 # Serializador para los servicios adicionales
 class AdditionalServiceSerializer(serializers.ModelSerializer):
@@ -57,37 +65,28 @@ class AdditionalServiceSerializer(serializers.ModelSerializer):
         model = AdditionalService
         fields = ['name', 'price']  # Nombre del servicio y su precio
 
+        
+
 # Serializador para la factura (Invoice)
 class InvoiceSerializer(serializers.ModelSerializer):
     areas = AreaSerializer(many=True)
     equipment = EquipmentSerializer(many=True)
-    additional_services = AdditionalServiceSerializer(many=True, required=False)
-    business_type = BusinessTypeSerializer()  # ID del tipo de negocio
-    #floor_type = FloorTypeSerializer()
+    business_type = serializers.PrimaryKeyRelatedField(queryset=BusinessType.objects.all())
 
     class Meta:
         model = Invoice
-        fields = ['id', 'business_type', 'areas', 'equipment', 'additional_services', 'total_price']
+        fields = ['id', 'business_type', 'areas', 'equipment', 'total_price']
 
-    # Este método crea una factura junto con las áreas, equipos y servicios adicionales.
     def create(self, validated_data):
-        areas_data = validated_data.pop('areas')
-        equipment_data = validated_data.pop('equipment')
-        additional_services_data = validated_data.pop('additional_services', [])
-        
-        # Crear la factura (invoice)
+        areas_data = validated_data.pop('areas', [])
+        equipment_data = validated_data.pop('equipment', [])
+
         invoice = Invoice.objects.create(**validated_data)
 
-        # Añadir las áreas
         for area_data in areas_data:
             Area.objects.create(invoice=invoice, **area_data)
 
-        # Añadir los equipos
         for equip_data in equipment_data:
             Equipment.objects.create(invoice=invoice, **equip_data)
-
-        # Añadir los servicios adicionales
-        for service_data in additional_services_data:
-            AdditionalService.objects.create(invoice=invoice, **service_data)
 
         return invoice

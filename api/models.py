@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 # Modelo para BusinessType
 class BusinessType(models.Model):
     name = models.CharField(max_length=100)
@@ -106,11 +107,10 @@ class QuantityOption(models.Model):
  # Modelo para Invoice
 class Invoice(models.Model):
     business_type = models.ForeignKey(BusinessType, on_delete=models.SET_NULL, null=True)
-    area_type =  models.ForeignKey(AreaType, on_delete=models.SET_NULL,  null=True)
-    equipment_type = models.ForeignKey(EquipmentType, on_delete=models.SET_NULL, null=True)
-
-
+    #area_type =  models.ManyToManyField(AreaType,  null=True)
+    #equipment_type = models.ManyToManyField(EquipmentType,  null=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    
 
 
 
@@ -142,7 +142,20 @@ class Area(models.Model):
 class Equipment(models.Model):
     invoice = models.ForeignKey(Invoice, related_name='equipment', on_delete=models.CASCADE)
     name = models.ForeignKey(EquipmentType, on_delete=models.SET_NULL, null=True)
-    quantity = models.IntegerField(default=1)
+    quantity = models.PositiveIntegerField()
+    option_type = models.CharField(max_length=20, blank=True, null=True)
+
+    option_value = models.IntegerField(
+    blank=True,
+    null=True,
+    validators=[MinValueValidator(0), MaxValueValidator(99)]
+)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.option_type}"
+
+
+
 
 # Modelo para Additional Services
 class AdditionalService(models.Model):

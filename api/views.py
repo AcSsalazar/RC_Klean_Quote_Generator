@@ -7,65 +7,75 @@ from .serializers import BusinessTypeSerializer, AreaTypeSerializer, FloorTypeSe
 
 class InvoiceCalculateView(APIView):
     def post(self, request):
-        # Recibir datos de la solicitud (request)
         business_type = request.data.get("business_type")
         areas_data = request.data.get("areas", [])
         equipment_data = request.data.get("equipment", [])
-        additional_services_data = request.data.get("additional_services", [])
 
-        # Verificar que los datos requeridos estén presentes
+
+        # Validaciones iniciales
         if not business_type or not areas_data or not equipment_data:
             return Response({"error": "Faltan datos necesarios."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Crear la instancia de la factura (invoice)
+        # Validar si el tipo de negocio existe
         try:
-            invoice = Invoice.objects.create(business_type_id=business_type, total_price=0)
+            business_type_instance = BusinessType.objects.get(pk=business_type)
         except BusinessType.DoesNotExist:
             return Response({"error": "El tipo de negocio no existe."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Añadir áreas a la factura
+        # Crear la factura
+        invoice = Invoice.objects.create(business_type=business_type_instance, total_price=0)
+
+        # Procesar áreas
         for area in areas_data:
             try:
                 Area.objects.create(
                     invoice=invoice,
-                    name_id=area['name'],  # Se espera que 'name' sea el ID del tipo de área
-                    square_feet=area['square_feet']
+                    name_id=area['name'],
+                    square_feet=area['square_feet'],
+                    floor_type_id=area.get('floor_type')
                 )
             except Exception as e:
+                invoice.delete()
                 return Response({"error": f"Error al añadir el área: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Añadir equipos a la factura
+        # Procesar equipos
         for equip in equipment_data:
             try:
                 Equipment.objects.create(
                     invoice=invoice,
-                    name_id=equip['name'],  # Se espera que 'name' sea el ID del tipo de equipo
-                    quantity=equip['quantity']
+                    name_id=equip['name'],
+                    quantity=equip['quantity'],
+                    option_type=equip.get('option_type'),  # Agregar esta línea
+                    option_value=equip.get('option_value'),  # Agregar esta línea
                 )
             except Exception as e:
+                invoice.delete()
+                print(f"Error al añadir el equipo: {str(e)}")  # Agregar esta línea para imprimir el error
                 return Response({"error": f"Error al añadir el equipo: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Añadir servicios adicionales a la factura
-        for service in additional_services_data:
+        # Procesar servicios adicionales
+        '''for service in additional_services_data:
             try:
                 AdditionalService.objects.create(
                     invoice=invoice,
-                    name=service['name'],  # Se espera que 'name' sea una cadena (nombre del servicio)
-                    price=service['price']  # Precio fijo por el servicio adicional
+                    name=service['name'],
+                    price=service['price']
                 )
             except Exception as e:
-                return Response({"error": f"Error al añadir el servicio adicional: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+                invoice.delete()
+                return Response({"error": f"Error al añadir el servicio adicional: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)'''
 
-        # Calcular el precio total
+        # Calcular precio total
         try:
             total_price = calculate_price(invoice)
             invoice.total_price = total_price
             invoice.save()
         except Exception as e:
+            invoice.delete()
             return Response({"error": f"Error al calcular el precio total: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Devolver el precio total en la respuesta
         return Response({"total_price": total_price, "id": invoice.id}, status=status.HTTP_200_OK)
+
 
 
 class OptionsView(APIView):

@@ -10,7 +10,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from api import views as invoiceviews
-from userauths import views as userauths_views
+
 
 
 #Para agilizar redaccion de documentacion del backend
@@ -31,6 +31,9 @@ urlpatterns = [
            # Admin and documentations URL's
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
+    path('userauths/', include('userauths.urls')),
+    
+
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 
             # Invoice endpoints
@@ -42,7 +45,7 @@ urlpatterns = [
     path('user/token/', userauths_views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('user/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('user/register/', userauths_views.RegisterView.as_view(), name='auth_register'),
-    path('user/profile/<user_id>/', userauths_views.ProfileView.as_view(), name='user_profile'),
+    path('profile/<user_id>/', userauths_views.ProfileView.as_view(), name='user_profile'),
     path('user/test/', userauths_views.testEndPoint, name='auth_register'),
     path('user/password-reset/<email>/', userauths_views.PasswordEmailVerify.as_view(), name='password_reset'),
     path('user/password-change/', userauths_views.PasswordChangeView.as_view(), name='password_change'),

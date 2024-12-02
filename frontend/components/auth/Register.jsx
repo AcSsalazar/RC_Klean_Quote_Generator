@@ -74,7 +74,7 @@ function Register() {
       phone,
       password,
       password2,
-      city, // Incluir ciudad seleccionada
+      city, 
       address,
       business,
       zipCode,

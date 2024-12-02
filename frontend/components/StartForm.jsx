@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import apiInstance from "../src/utils/axios";
 import '../styles/StartForm.css'; 
+import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const StartForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -77,7 +79,11 @@ const StartForm = () => {
   const handleSubmit = () => {
     apiInstance.post("form/", responses)
       .then(response => {
-        alert('Cuestionario enviado exitosamente');
+        Swal.fire({
+          icon: "success",
+          title: "Form successfully send",
+        });
+        // eslint-disable-next-line no-unused-vars
         const questionnaireId = response.data.id;
       })
       .catch(error => {
@@ -111,9 +117,12 @@ const StartForm = () => {
             Next
           </button>
         ) : (
-          <button onClick={handleSubmit} className="submit-button" disabled={!responses[currentQuestion.key]}>
+          <Link to="/">
+          <button  onClick={handleSubmit} className="submit-button" disabled={!responses[currentQuestion.key]}>
+           
             Submit
           </button>
+          </Link>
         )}
       </div>
     </div>
