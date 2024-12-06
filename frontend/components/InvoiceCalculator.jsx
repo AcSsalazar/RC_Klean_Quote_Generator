@@ -8,6 +8,7 @@ import { faFireBurner, faBroom, faKitchenSet, faFilter, faTableCells } from '@fo
 import { useParams } from "react-router-dom";
 
 
+
 export default function InvoiceEstimator() {
   
   const param = useParams("");
@@ -45,7 +46,31 @@ export default function InvoiceEstimator() {
       state.user
     ]);
     
-
+// Permitir que value y type options no esten presentes: 
+    const validatePayload = (payload) => {
+      const validEquantity = payload.equipment.map((equip) => {
+        if (!equip.name) {
+          console.error("Invalid equipment: name is required", equip);
+          return false; // Exclude incomplete equipment
+        }
+    
+        // Check for extra options only if required
+        if (equip.option_type || equip.option_value) {
+          if (!equip.option_type || !equip.option_value) {
+            console.error(
+              `Invalid extra options for equipment ${equip.name}:`,
+              equip
+            );
+            return false; // Exclude equipment with invalid extra options
+          }
+        }
+    
+        return equip; // Valid equipment
+      }).filter(Boolean); // Exclude invalid entries
+    
+      return { ...payload, equipment: validEquantity };
+    };
+    
 /*   Cuadrar esta monda en diciembre xd  useEffect(() => {
       const UserData = async () => {
         try {
@@ -160,23 +185,28 @@ const handleEquantityChange = (index, field, value) => {
   const newEquantity = [...equantity];
 
   if (field === "name") {
-    // Actualiza el equipo seleccionado
+    // Update the equipment selected
     newEquantity[index][field] = value;
 
-    // Filtrar las opciones de `bus_qty` basadas en el equipo seleccionado
+    // Check if this equipment has extra options
     const validOptions = options.bus_qty.filter(
       (option) => option.equipment_type === Number(value)
     );
 
-    // Actualizar las opciones válidas
     newEquantity[index].validOptions = validOptions;
+
+    // Reset extra option fields if the equipment has no valid options
+    if (validOptions.length === 0) {
+      newEquantity[index].option_type = "";
+      newEquantity[index].option_value = "";
+    }
   } else {
-    // Actualizar otros campos como `option_type`, `option_value`, o `quantity`
     newEquantity[index][field] = value;
   }
 
   setEquantity(newEquantity);
 };
+
 
 
 
@@ -244,7 +274,8 @@ const handleEquantityChange = (index, field, value) => {
 
 
     try {
-      const payload = {
+
+      let payload = {
         business_type: Number(businessType), // Convertir a número
         areas: areas.map((area) => ({
           name: Number(area.name), // Convertir a número
@@ -258,8 +289,11 @@ const handleEquantityChange = (index, field, value) => {
           option_value: Number( equip.option_value), // Mantener como string si el backend lo espera así
         })),
       };
-  
-      console.log("Payload enviado al backend:", payload);
+
+      payload = validatePayload(payload);
+
+      console.log("Validated Payload sent to backend:", payload);
+
   
       const response = await apiInstance.post("invoice/", payload);
       setTotalPrice(response.data.total_price);

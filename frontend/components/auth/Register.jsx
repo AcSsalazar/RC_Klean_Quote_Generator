@@ -8,7 +8,7 @@ import  apiInstance from "../../src/utils/axios";
 
 
 function Register() {
-  const [fullname, setFullname] = useState("");
+  const [fullname, setFullname] = useState({field:"", validate:null});
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -128,6 +128,7 @@ function Register() {
 
                   {/* Código Postal */}
                   <div className="form-group">
+                    
                     <label className="form-label" htmlFor="zipcode">Zip Code</label>
                     <input
                       type="text"

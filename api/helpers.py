@@ -1,4 +1,6 @@
 from .models import QuantityOption
+
+
 def calculate_price(invoice):
     total_price = 0
 
@@ -14,25 +16,35 @@ def calculate_price(invoice):
                 total_price += area_type.price_over_to_1000ft or 0
 
 # Equipment-based pricing with QuantityOptions
-        for equipment in invoice.equipment.all():
-         
-         equipment_type = equipment.name
 
+
+    # Equipment pricing logic
+    for equipment in invoice.equipment.all():
+        equipment_type = equipment.name
+
+        # Handle equipment with extra options
         if equipment_type and equipment.option_type and equipment.option_value:
-        # Obtener la opción específica basada en option_type y option_value
             selected_option = QuantityOption.objects.filter(
-            equipment_type=equipment_type,
-            option_type=equipment.option_type,
-            option_value=equipment.option_value).first()
+                equipment_type=equipment_type,
+                option_type=equipment.option_type,
+                option_value=equipment.option_value
+            ).first()
 
-        if selected_option:
-            total_price += selected_option.price * equipment.quantity
+            if selected_option:
+                total_price += selected_option.price * equipment.quantity
+            else:
+                print(
+                    f"Warning: No matching option for equipment {equipment_type.name} "
+                    f"with option_type={equipment.option_type} and option_value={equipment.option_value}"
+                )
+                # Use base price if no matching option is found
+                total_price += equipment.quantity * (equipment_type.base_price_unity or 0)
         else:
-            # Si no se encuentra la opción, usar un precio base o manejar el error
+            # Handle equipment without extra options
             total_price += equipment.quantity * (equipment_type.base_price_unity or 0)
-    else:
-        # Para equipos sin opciones específicas, usar precio base
-        total_price += equipment.quantity * (equipment_type.base_price_unity or 0)
+
+
+
 
     # Floor type pricing
     for area in invoice.areas.all():
