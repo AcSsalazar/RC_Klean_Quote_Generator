@@ -4,25 +4,35 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../src/RCA/auth";
 import coData from "../../src/media/US_zips.json";
 import "../../components/auth/styles/Register.css";
-import  apiInstance from "../../src/utils/axios";
-
+import apiInstance from "../../src/utils/axios";
+import InputField from "../auth/InputManager";
 
 function Register() {
-  const [fullname, setFullname] = useState({field:"", validate:null});
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [business, setBusiness] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [zipCode, setZipCode] = useState("");
+  const [fullname, setFullname] = useState({ field: "", validate: null });
+  const [email, setEmail] = useState({ field: "", validate: null });
+  const [phone, setPhone] = useState({ field: "", validate: null });
+  const [address, setAddress] = useState({ field: "", validate: null });
+  const [business, setBusiness] = useState({ field: "", validate: null });
+  const [password, setPassword] = useState({ field: "", validate: null });
+  const [password2, setPassword2] = useState({ field: "", validate: null });
+  const [zipCode, setZipCode] = useState({ field: "", validate: null });
   const [city, setCity] = useState("");
   const [zipError, setZipError] = useState("");
-  const [options, setOptions] = useState({businessTypes: [],});
-
+  const [options, setOptions] = useState({ businessTypes: [] });
+  const [terms, setTerms] = useState(false);
+  const [validForm, setValidForm] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const navigate = useNavigate();
+
+  const regexPatterns = {
+    name: /^[a-zA-ZÀ-ÿ\s]{1,40}$/,
+    email: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+    phone: /^\d{7,14}$/,
+    password: /^.{4,12}$/,
+    zipcode: /^\d{4,7}$/,
+    
+  };
 
   useEffect(() => {
     if (isLoggedIn()) {
@@ -30,77 +40,102 @@ function Register() {
     }
   }, [isLoggedIn, navigate]);
 
-
-
   useEffect(() => {
-    const fetchbusiness = async () => {
+    const fetchBusinessTypes = async () => {
       try {
         const response = await apiInstance.get("options/");
         setOptions({
           businessTypes: response.data.business_types || [],
-
-
         });
       } catch (error) {
         console.error("Error fetching business types:", error);
       }
     };
 
-    fetchbusiness();
+    fetchBusinessTypes();
   }, []);
+
+
+  const validateZipCode = (zip, coData) => {
+    const cityData = coData.find((item) => item.Zips.split(", ").includes(zip));
+    return cityData ? { isValid: true, city: cityData.City } : { isValid: false, city: "" };
+  }; 
 
   const handleZipCodeChange = (e) => {
     const zip = e.target.value;
-    setZipCode(zip);
-
-    // Buscar el código postal en el archivo JSON
+    setZipCode({ field: zip, validate: null });
     const cityData = coData.find((item) => item.Zips.split(", ").includes(zip));
     if (cityData) {
       setCity(cityData.City);
-      setZipError(""); // Limpiar error si se encuentra la ciudad
+      setZipError("");
+      setZipCode({ field: zip, validate: "true" });
     } else {
-      setCity(""); // Limpiar ciudad si no se encuentra
-      setZipError("Zip not found, please try again"); // Mostrar error
+      setCity("");
+      setZipError("Zip not found, please try again.");
+      setZipCode({ field: zip, validate: "false" });
     }
+
+    console.log("Zip Code:", zip);
+    console.log("City Data:", cityData);
+
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
 
-    const { error } = await register(
-      fullname,
-      email,
-      phone,
-      password,
-      password2,
-      city, 
-      address,
-      business,
-      zipCode,
-    );
+    if (
+      fullname.validate === "true" &&
+      email.validate === "true" &&
+      phone.validate === "true" &&
+      address.validate === "true" &&
+      business.validate === "true" &&
+      password.validate === "true" &&
+      password2.validate === "true" &&
+      zipCode.validate === "true" &&
+      city &&
+      terms
+    ) {
+      setIsLoading(true);
+      const { error } = await register(
+        fullname.field,
+        email.field,
+        phone.field,
+        password.field,
+        password2.field,
+        city,
+        address.field,
+        business.field,
+        zipCode.field
+      );
 
-    if (error) {
-      alert(JSON.stringify(error));
+      if (error) {
+        alert(JSON.stringify(error));
+      } else {
+        navigate("/");
+        resetForm();
+      }
+      setIsLoading(false);
     } else {
-      navigate("/");
-      resetForm();
+      setValidForm(false);
     }
-
-    setIsLoading(false);
   };
 
   const resetForm = () => {
-    setFullname("");
-    setEmail("");
-    setPhone("");
-    setPassword("");
-    setPassword2("");
-    setZipCode("");
+    setFullname({ field: "", validate: null });
+    setEmail({ field: "", validate: null });
+    setPhone({ field: "", validate: null });
+    setAddress({ field: "", validate: null });
+    setBusiness({ field: "", validate: null });
+    setPassword({ field: "", validate: null });
+    setPassword2({ field: "", validate: null });
+    setZipCode({ field: "", validate: null });
     setCity("");
-    setAddress("");
     setZipError("");
-    setBusiness("");
+    setTerms(false);
+  };
+
+  const handleTermsChange = (e) => {
+    setTerms(e.target.checked);
   };
 
   return (
@@ -109,152 +144,125 @@ function Register() {
         <section>
           <div className="card">
             <div className="card-body">
-              <h3>Start Form</h3>
-
+              <h3>Register Form</h3>
               <form onSubmit={handleSubmit}>
                 <div className="form-grid">
-                  {/* Nombre Completo */}
+                  <InputField
+                    state={fullname}
+                    setState={setFullname}
+                    label="Full Name"
+                    name="fullname"
+                    placeholder="Enter your full name"
+                    regex={regexPatterns.name}
+                    errorMessage="Name must only contain letters and spaces."
+                  />
+                  <InputField
+                    state={email}
+                    setState={setEmail}
+                    label="Email"
+                    name="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    regex={regexPatterns.email}
+                    errorMessage="Invalid email format."
+                  />
+                  <InputField
+                    state={phone}
+                    setState={setPhone}
+                    label="Phone"
+                    name="phone"
+                    placeholder="Enter your phone number"
+                    regex={regexPatterns.phone}
+                    errorMessage="Phone must be between 7 and 14 digits."
+                  />
+                  <InputField
+                    state={address}
+                    setState={setAddress}
+                    label="Address"
+                    name="address"
+                    placeholder="Enter your address"
+                    errorMessage="Address is required."
+                  />
                   <div className="form-group">
-                    <label className="form-label" htmlFor="fullname">Full Name</label>
-                    <input
-                      type="text"
-                      id="fullname"
-                      onChange={(e) => setFullname(e.target.value)}
-                      placeholder="Enter your full name"
-                      required
-                      className="form-control"
-                    />
+                    <label htmlFor="business">Business Type</label>
+                    <select
+                      id="business"
+                      value={business.field}
+                      onChange={(e) => setBusiness({ field: e.target.value, validate: "true" })}
+                      className={`form-control ${
+                        business.validate === "false" ? "is-invalid" : ""
+                      }`}
+                    >
+                      <option value="">Select business type</option>
+                      {options.businessTypes.map((type) => (
+                        <option key={type.id} value={type.id}>
+                          {type.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
-
-                  {/* Código Postal */}
-                  <div className="form-group">
-                    
-                    <label className="form-label" htmlFor="zipcode">Zip Code</label>
-                    <input
-                      type="text"
-                      id="zip_code"
-                      value={zipCode}
-                      onChange={handleZipCodeChange}
-                      placeholder="Enter your zip code"
-                      required
-                      className="form-control"
-                    />
-                    <p className="text-danger">{zipError}</p>
-                  </div>
-
-                  {/* Ciudad */}
+                  <InputField
+                    state={zipCode}
+                    setState={setZipCode}
+                    label="Zip Code"
+                    name="zip_code"
+                    placeholder="Enter your zip code"
+                    customValidation={handleZipCodeChange}
+                    errorMessage="Invalid zip code."
+                  />
+                  <p className="text-danger">{zipError}</p>
                   {city && (
                     <div className="form-group">
-                      <label className="form-label" htmlFor="city">City</label>
-                      <input
-                        type="text"
-                        id="city"
-                        value={city}
-                        required
-                        className="form-control"
-                      />
+                      <label htmlFor="city">City</label>
+                      <input type="text" id="city" value={city} readOnly className="form-control" />
                     </div>
                   )}
-
-                  
-                  {/* Address*/}
-                  
-                    <div className="form-group">
-                      <label className="form-label" htmlFor="address">Address</label>
+                  <InputField
+                    state={password}
+                    setState={setPassword}
+                    label="Password"
+                    name="password"
+                    type="password"
+                    regex={regexPatterns.password}
+                    errorMessage="Password must be between 4 and 12 characters."
+                  />
+                  <InputField
+                    state={password2}
+                    setState={setPassword2}
+                    label="Confirm Password"
+                    name="password2"
+                    type="password"
+                    customValidation={() =>
+                      setPassword2({
+                        ...password2,
+                        validate: password.field === password2.field ? "true" : "false",
+                      })
+                    }
+                    errorMessage="Passwords must match."
+                  />
+                  <div className="form-group">
+                    <label>
                       <input
-                        type="text"
-                        id="address"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        placeholder="Enter your address"
-                        required
-                        className="form-control"
-                      />
-                    </div>
-                  
-
-                  {/* Businnes Type */}
-
-                  <div className="form-group">
-                    <label className="form-label" htmlFor="business">Business Type</label>
-                    <select
-                  id="business_type"
-                  value={business}
-                  onChange={(e) => setBusiness(e.target.value)}
-                >
-                  <option value="">Select business type</option>
-                  {options.businessTypes.map((type) => (
-                    <option key={type.id} value={type.id}>
-                      {type.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            
-
-                  {/* Email */}
-                  <div className="form-group">
-                    <label className="form-label" htmlFor="email">Email</label>
-                    <input
-                      type="email"
-                      id="email"
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Ingrese correo electrónico"
-                      required
-                      className="form-control"
-                    />
-                  </div>
-
-                  {/* Teléfono */}
-                  <div className="form-group">
-                    <label className="form-label" htmlFor="phone">Phone number</label>
-                    <input
-                      type="text"
-                      id="phone"
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="Enter your phone number"
-                      required
-                      className="form-control"
-                    />
-                  </div>
-
-                  {/* Contraseña */}
-                  <div className="form-group">
-                    <label className="form-label" htmlFor="password">Password</label>
-                    <input
-                      type="password"
-                      id="password"
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Insert a new password"
-                      className="form-control"
-                    />
-                  </div>
-
-                  {/* Confirmar Contraseña */}
-                  <div className="form-group">
-                    <label className="form-label" htmlFor="confirm-password">Confirm your password</label>
-                    <input
-                      type="password"
-                      id="confirm-password"
-                      onChange={(e) => setPassword2(e.target.value)}
-                      placeholder="Confirm your password"
-                      required
-                      className="form-control"
-                    />
+                        type="checkbox"
+                        name="terms"
+                        checked={terms}
+                        onChange={handleTermsChange}
+                      />{" "}
+                      Accept Terms and Conditions
+                    </label>
                   </div>
                 </div>
-
-                <p className="fw-bold text-danger text-center">
-                  {password2 !== password ? "Las contraseñas no coinciden" : ""}
-                </p>
-
+                {validForm === false && (
+                  <div className="alert alert-warning" role="alert">
+                    Please complete all fields correctly before continuing.
+                  </div>
+                )}
                 <button className="btn" type="submit" disabled={isLoading}>
-                  {isLoading ? "In progress..." : "Register"}
+                  {isLoading ? "Submitting..." : "Register"}
                 </button>
-
                 <div className="text-center">
                   <p className="mt-4">
-                    ¿Have you already an account? <Link to="/login">Login</Link>
+                    Already have an account? <Link to="/login">Login</Link>
                   </p>
                 </div>
               </form>
