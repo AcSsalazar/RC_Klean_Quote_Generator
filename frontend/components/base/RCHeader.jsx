@@ -4,9 +4,20 @@ import { Link } from 'react-router-dom';
 import { useAuthStore } from "../../src/RCA/auth";
 import '../../styles/header.css';
 import logo from "../../public/img/foot-logo_1.png";
+import { useState } from 'react';
+
+const DropDown = ()  => {
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const ToggleDropDown = () => {
+
+    setIsOpen(!isOpen);
+
+  }
 
 
-
+}
 export default function RCHeader() {
 
 
@@ -15,6 +26,8 @@ export default function RCHeader() {
     state.isLoggedIn,
     state.user
   ]);
+
+  
 
   return (
     <header className="app-header">

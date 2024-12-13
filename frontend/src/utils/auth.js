@@ -72,7 +72,8 @@ export const register = async (full_name, email, phone, password, password2, cit
             zip_code,
 
         });
-
+        
+        console.log("Response from backend:", data);
         // Logging in the newly registered user and displaying success toast
         await login(email, password);
 

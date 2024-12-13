@@ -132,3 +132,39 @@ a {
 a:hover {
   color: #272c74;
 }
+
+
+/* Validation stiles: */
+
+.input-icon {
+  margin-left: 10px;
+}
+
+.icon-true {
+  color: green;
+}
+
+.icon-false {
+  color: red;
+}
+
+.text-danger {
+  color: #dc3545;
+}
+
+.is-valid {
+  border-color: #28a745;
+}
+
+.is-invalid {
+  border-color: #dc3545;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 10px;
+  margin-top: 15px;
+  border: 1px solid #ffeeba;
+  border-radius: 5px;
+}

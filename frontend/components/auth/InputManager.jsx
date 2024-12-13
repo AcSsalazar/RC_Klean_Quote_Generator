@@ -1,8 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { faCheckCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+
+
 
 const InputManager = ({
   state,
@@ -20,7 +23,7 @@ const InputManager = ({
     setState({ ...state, field: e.target.value });
   };
 
-  const handleValidation = () => {
+  const handleValidation = (e) => {
     if (regex) {
       if (regex.test(state.field)) {
         setState({ ...state, validate: "true" });
@@ -29,7 +32,7 @@ const InputManager = ({
       }
     }
     if (customValidation) {
-      customValidation();
+      customValidation(e);
     }
   };
 
@@ -44,6 +47,7 @@ const InputManager = ({
           id={name}
           placeholder={placeholder}
           value={state.field}
+          onKeyUp={handleValidation}
           onChange={handleChange}
           onBlur={handleValidation}
           className={`form-control ${

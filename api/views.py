@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Invoice, Area, Equipment, AdditionalService, BusinessType, AreaType, EquipmentType, FloorType, QuantityOption
+from .models import Invoice, Area, Equipment, BusinessType, AreaType, EquipmentType, FloorType, QuantityOption
 from .helpers import calculate_price
 from .serializers import BusinessTypeSerializer, AreaTypeSerializer, FloorTypeSerializer, EquipmentTypeSerializer, InvoiceSerializer, QuantityOptionSerializer
 
@@ -53,17 +53,6 @@ class InvoiceCalculateView(APIView):
                 print(f"Error al añadir el equipo: {str(e)}")  # Agregar esta línea para imprimir el error
                 return Response({"error": f"Error al añadir el equipo: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Procesar servicios adicionales
-        '''for service in additional_services_data:
-            try:
-                AdditionalService.objects.create(
-                    invoice=invoice,
-                    name=service['name'],
-                    price=service['price']
-                )
-            except Exception as e:
-                invoice.delete()
-                return Response({"error": f"Error al añadir el servicio adicional: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)'''
 
         # Calcular precio total
         try:

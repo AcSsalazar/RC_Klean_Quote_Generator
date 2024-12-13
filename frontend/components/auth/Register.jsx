@@ -31,6 +31,7 @@ function Register() {
     phone: /^\d{7,14}$/,
     password: /^.{4,12}$/,
     zipcode: /^\d{4,7}$/,
+    address: /^[a-zA-Z0-9À-ÿ\s.,-]{5,30}$/,
     
   };
 
@@ -56,10 +57,6 @@ function Register() {
   }, []);
 
 
-  const validateZipCode = (zip, coData) => {
-    const cityData = coData.find((item) => item.Zips.split(", ").includes(zip));
-    return cityData ? { isValid: true, city: cityData.City } : { isValid: false, city: "" };
-  }; 
 
   const handleZipCodeChange = (e) => {
     const zip = e.target.value;
@@ -82,6 +79,19 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form submitted!");
+    console.log("Form state before submission:", {
+      fullname,
+      email,
+      phone,
+      address,
+      business,
+      password,
+      password2,
+      zipCode,
+      city,
+      terms,
+    });
 
     if (
       fullname.validate === "true" &&
@@ -102,11 +112,12 @@ function Register() {
         phone.field,
         password.field,
         password2.field,
-        city,
         address.field,
+        city,
         business.field,
         zipCode.field
       );
+
 
       if (error) {
         alert(JSON.stringify(error));
@@ -181,7 +192,9 @@ function Register() {
                     label="Address"
                     name="address"
                     placeholder="Enter your address"
-                    errorMessage="Address is required."
+                    regex={regexPatterns.address}
+                    errorMessage="Address must be at least 5 characters"
+  
                   />
                   <div className="form-group">
                     <label htmlFor="business">Business Type</label>

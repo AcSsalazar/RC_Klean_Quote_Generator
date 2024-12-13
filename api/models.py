@@ -153,17 +153,3 @@ class Equipment(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.option_type}"
-
-
-
-
-# Modelo para Additional Services
-class AdditionalService(models.Model):
-    invoice = models.ForeignKey(Invoice, related_name='additional_services', on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-
-    def __str__(self):
-        return self.name
-    
-

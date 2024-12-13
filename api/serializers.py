@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Invoice, Area, Equipment, BusinessType, AreaType, EquipmentType, AdditionalService, FloorType, QuantityOption
+from .models import Invoice, Area, Equipment, BusinessType, AreaType, EquipmentType, FloorType, QuantityOption
 
 class BusinessTypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -57,13 +57,6 @@ class EquipmentSerializer(serializers.ModelSerializer):
         model = Equipment
         fields = ['name', 'quantity', 'option_type', 'option_value']
 
-
-
-# Serializador para los servicios adicionales
-class AdditionalServiceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AdditionalService
-        fields = ['name', 'price']  # Nombre del servicio y su precio
 
         
 
