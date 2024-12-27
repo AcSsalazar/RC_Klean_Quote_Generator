@@ -5,7 +5,7 @@ venv/
 # Node modules
 backend/node_modules/
 frontend/node_modules/
-
+node_modules/
 # Django migrations
 */migrations/*.py
 !*/migrations/__init__.py

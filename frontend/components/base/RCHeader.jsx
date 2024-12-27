@@ -6,7 +6,12 @@ import '../../styles/header.css';
 import logo from "../../public/img/foot-logo_1.png";
 import { useState } from 'react';
 
-const DropDown = ()  => {
+
+
+
+function RCHeader() {
+
+
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -17,15 +22,20 @@ const DropDown = ()  => {
   }
 
 
-}
-export default function RCHeader() {
+
+const GetUserName = (fullName) => {
+  if (!fullName) return "";
+  return fullName.split(" ")[0]; // Divide por espacio y toma la primera palabra
+
+};
 
 
-
-  const [isLoggedIn, user] = useAuthStore((state) => [
-    state.isLoggedIn,
-    state.user
+const [isLoggedIn, user] = useAuthStore((state) => [
+  state.isLoggedIn,
+  state.user
   ]);
+  console.log("User data:", user());
+  console.log("isLoggedIn:", isLoggedIn());
 
   
 
@@ -43,24 +53,43 @@ export default function RCHeader() {
         </nav>
 
         <div className="user-actions">
-          {isLoggedIn ? (
+
+          {isLoggedIn() ? (
             <>
-              <span className="user-greeting">Welcome,  {user().username}</span>
-              <Link to="/dashboard" className="nav-button">Dashboard</Link>
-              <Link to="/logout" className="nav-button">Logout</Link>
+              <span className="user-greeting">Hi Dear,  {GetUserName(user().full_name)}</span>
+              <Link to="/dashboard" className="headerbtn">Dashboard</Link>
+              <Link to="/logout" className="headerbtn">Logout</Link>
             </>
-          ) : (
+          ) 
+          : (
             <>
-              <Link to="/register" className="nav-button">Register</Link>
-              <Link to="/login" className="nav-button">Login</Link>
+              <span className="user-greeting">Hi Dear, User</span>
+              <Link to="/register" className="headerbtn">Register</Link>
+              <Link to="/login" className="headerbtn">Login</Link>
             </>
+
           )}
-          <Link to="/cart" className="cart-button">
-            <i className="fas fa-shopping-cart"></i>
-            <span className="cart-items">0</span>
-          </Link>
+
+
+
+<div className="dropdown">
+       <>
+
+       <button className='dropdown-button ' onClick={ToggleDropDown}>Options</button>
+       
+       </>
+      {isOpen && (
+        <ul className="dropdown-menu">
+          <li><a href="/home">Inicio</a></li>
+          <li><a href="/about">Acerca de</a></li>
+          <li><a href="/contact">Contacto</a></li>
+        </ul>
+      )}
+    </div>
         </div>
       </div>
     </header>
   );
 }
+
+export default RCHeader

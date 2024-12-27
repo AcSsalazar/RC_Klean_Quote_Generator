@@ -45,5 +45,13 @@ def calculate_price(invoice):
 
 
 
+
+    # Floor type pricing
+    for area in invoice.areas.all():
+        if area.floor_type:
+            total_price += area.floor_type.price or 0
+
+
     return total_price
+
 

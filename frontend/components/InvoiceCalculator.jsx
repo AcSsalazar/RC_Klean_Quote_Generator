@@ -4,97 +4,45 @@ import { useAuthStore } from "../src/RCA/auth"; // For userdata
 import apiInstance from "../src/utils/axios";  // Importación actualizada
 import "../styles/InvoiceCalculator.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFireBurner, faBroom, faKitchenSet, faFilter, faTableCells } from '@fortawesome/free-solid-svg-icons';
+import { faFireBurner, faBroom, faKitchenSet, faFilter, faTableCells, faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from "react-router-dom";
 
 
 
+
 export default function InvoiceEstimator() {
-  
   const param = useParams("");
-  //const [userInfo, setUserInfo] = useState([{name:"", business_type:"", city: ""}]);
-  const [businessType, setBusinessType] = useState("");
-  const [equantity, setEquantity] = useState([{ name: "", option_type: "", option_value: "", quantity: 0, validOptions: [] },]);
-  const [areas, setAreas] = useState([{ name: "", square_feet: "", floor_type: "" }]);
-  const [equipment, setEquipment] = useState([{ name: "", quantity: 0 }]);
+
+  const [businessType, setBusinessType] = useState({ field: "", validate: null });
+  const [areas, setAreas] = useState([
+    { name: { field: "", validate: null }, square_feet: { field: "", validate: null }, floor_type: { field: "", validate: null } },
+  ]);
+  const [equantity, setEquantity] = useState([
+    { name: { field: "", validate: null }, option_type: { field: "", validate: null }, option_value: { field: "", validate: null }, quantity: { field: 0, validate: null }, validOptions: [] },
+  ]);
+  
   const [totalPrice, setTotalPrice] = useState(0);
-  const [floors, setFloors] = useState([{ name: ""}]);
   const [invoiceDetails, setInvoiceDetails] = useState(null);
   const [invoiceId, setInvoiceId] = useState(null);
-  const [options, setOptions] = useState({
-  
+  const [options, setOptions] = useState({ 
     businessTypes: [],
     equipmentTypes: [],
     areaNames: [],
     floorNames: [],
-    bus_qty: [], 
-
+    bus_qty: [],
   });
-
 
   const [errors, setErrors] = useState({
-    businessType: "",
-    areas: [],
-    equipment: [],
+    general: ""
   });
 
-
-
-// User log state
-    const [isLoggedIn, user] = useAuthStore((state) => [
-      state.isLoggedIn,
-      state.user
-    ]);
-    
-// Permitir que value y type options no esten presentes: 
-    const validatePayload = (payload) => {
-      const validEquantity = payload.equipment.map((equip) => {
-        if (!equip.name) {
-          console.error("Invalid equipment: name is required", equip);
-          return false; // Exclude incomplete equipment
-        }
-    
-        // Check for extra options only if required
-        if (equip.option_type || equip.option_value) {
-          if (!equip.option_type || !equip.option_value) {
-            console.error(
-              `Invalid extra options for equipment ${equip.name}:`,
-              equip
-            );
-            return false; // Exclude equipment with invalid extra options
-          }
-        }
-    
-        return equip; // Valid equipment
-      }).filter(Boolean); // Exclude invalid entries
-    
-      return { ...payload, equipment: validEquantity };
-    };
-    
-/*   Cuadrar esta monda en diciembre xd  useEffect(() => {
-      const UserData = async () => {
-        try {
-          const response = await apiInstance.get(`profile/${param.slug}/`); 
-          setOptions({
-            name: response.data.name,
-            business_type: response.data.business_type,
-            city: response.data.city,
-
-  
-          });
-        } catch (error) {
-          console.error("Error fetching userdata: ", error);
-        }
-      };
-
-      UserData();
-      console.log("user data is:", UserData)
-    }, []);
- */
-
-
-
-
+  const maxAreas = 4;
+  const maxEquipment = 15;
+  const SquareFeetOptions = [
+    { value: 499, label: "0-500" },
+    { value: 999, label: "500-1000" },
+    { value: 1500, label: "More than 1000" },
+  ];
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -106,30 +54,38 @@ export default function InvoiceEstimator() {
           areaNames: response.data.area_names || [],
           floorNames: response.data.floor_types || [],
           bus_qty: response.data.bus_qty || [],
-
         });
       } catch (error) {
         console.error("Error fetching options:", error);
       }
     };
-
     fetchOptions();
   }, []);
-//Areas setiitngs options:
 
-const SquareFeetOptions = [
+  // Función genérica de validación: revisa si es requerido y si el valor es válido
+  const validateField = (value, required = true) => {
+    if (required && (!value || value.toString().trim() === "")) {
+      return "false";
+    } else {
+      return "true";
+    }
+  };
 
-  { value: 499, label: "0-500" },
-  { value: 999, label: "500-1000" },
-  { value: 1500, label: "More than 1000" },
+  const handleBusinessTypeChange = (e) => {
+    setBusinessType({ ...businessType, field: e.target.value });
+  };
 
-]
+  const handleBusinessTypeValidate = () => {
+    setBusinessType({ ...businessType, validate: validateField(businessType.field, true) });
+  };
 
-
-
-;
+  // Manejo de areas:
   const handleAddArea = () => {
-    setAreas([...areas, { name: "", square_feet: "", floor_type: "" }])
+    if (areas.length < maxAreas) {
+      setAreas([...areas, { name: { field: "", validate: null }, square_feet: { field: "", validate: null }, floor_type: { field: "", validate: null } }]);
+    } else {
+      setErrors({ ...errors, general: `You can only add up to ${maxAreas} areas.` });
+    } 
   };
 
   const handleRemoveArea = (index) => {
@@ -139,95 +95,78 @@ const SquareFeetOptions = [
   };
 
   const handleAreaChange = (index, field, value) => {
-    const newAreas = [...areas ];
-    newAreas[index][field] = value; // Actualiza el campo correspondiente (name, square_feet o floor_type)
+    const newAreas = [...areas];
+    newAreas[index][field].field = value;
     setAreas(newAreas);
   };
 
+  const handleAreaValidate = (index, field) => {
+    const newAreas = [...areas];
+    newAreas[index][field].validate = validateField(newAreas[index][field].field, true);
+    setAreas(newAreas);
+  };
 
-//Floor types handle funtions: 
-
-const handleAddFloor = () => {
-  setFloors([...floors, { name: ""}]);
-};
-
-const handleRemoveFloor = (index) => {
-  const newFloor = [...floors];
-  newFloor.splice(index, 1);
-  setFloors(newFloor);
-};
-
-const handleChangeFloor = (index, field, value) => {
-  const newFloor = [...floors];
-  newFloor[index][field] = value;
-  setFloors(newFloor);
-};
-
-
-// Equantity handle funtions:
-
-
-
-const handleEquantityAdd = () => {
-  setEquantity([
-    ...equantity,
-    { name: "", option_type: "", option_value: "", quantity: 0, validOptions: [] },
-  ]);
-};
-
-const handleEquantityRemove = (index) => {
-  const newEquantity = [...equantity];
-  newEquantity.splice(index, 1);
-  setEquantity(newEquantity);
-};
-
-const handleEquantityChange = (index, field, value) => {
-  const newEquantity = [...equantity];
-
-  if (field === "name") {
-    // Update the equipment selected
-    newEquantity[index][field] = value;
-
-    // Check if this equipment has extra options
-    const validOptions = options.bus_qty.filter(
-      (option) => option.equipment_type === Number(value)
-    );
-
-    newEquantity[index].validOptions = validOptions;
-
-    // Reset extra option fields if the equipment has no valid options
-    if (validOptions.length === 0) {
-      newEquantity[index].option_type = "";
-      newEquantity[index].option_value = "";
+  // Manejo del equipment:
+  const handleEquantityAdd = () => {
+    if (equantity.length < maxEquipment) {
+      setEquantity([...equantity, { name: { field: "", validate: null }, option_type: { field: "", validate: null }, option_value: { field: "", validate: null }, quantity: { field: 0, validate: null }, validOptions: [] }]);
+    } else {
+      setErrors({ ...errors, general: `You can only add up to  ${maxEquipment} equipment items.`});
     }
-  } else {
-    newEquantity[index][field] = value;
-  }
-
-  setEquantity(newEquantity);
-};
-
-
-
-
-
-
-
-// Handle equipements funtions:
-  const handleAddEquipment = () => {
-    setEquipment([...equipment, { name: "", quantity: 0 }]);
   };
 
-  const handleRemoveEquipment = (index) => {
-    const newEquipment = [...equipment];
-    newEquipment.splice(index, 1);
-    setEquipment(newEquipment);
+  const handleEquantityRemove = (index) => {
+    const newEquantity = [...equantity];
+    newEquantity.splice(index, 1);
+    setEquantity(newEquantity);
   };
 
-  const handleEquipmentChange = (index, field, value) => {
-    const newEquipment = [...equipment];
-    newEquipment[index][field] = field === "quantity" ? Number(value) : value;
-    setEquipment(newEquipment);
+  const handleEquantityChange = (index, field, value) => {
+    const newEquantity = [...equantity];
+  
+    if (field === "quantity") {
+      newEquantity[index][field].field = Math.max(1, Number(value));
+    } else {
+      newEquantity[index][field].field = value;
+    }
+  
+    // Si el campo que cambió es "name", significa que se seleccionó un tipo de equipo
+    if (field === "name") {
+      // Filtra las opciones válidas para este tipo de equipo
+      const validOptions = options.bus_qty.filter(
+        (option) => option.equipment_type === Number(value)
+      );
+  
+      // Asigna validOptions al equipo actual
+      newEquantity[index].validOptions = validOptions;
+  
+      // Reinicia option_type y option_value ya que es un nuevo equipo seleccionado
+      newEquantity[index].option_type = { field: "", validate: null };
+      newEquantity[index].option_value = { field: "", validate: null };
+    }
+  
+    setEquantity(newEquantity);
+  };
+
+  const handleEquantityValidate = (index, field, required = true) => {
+    const newEquantity = [...equantity];
+    newEquantity[index][field].validate = validateField(newEquantity[index][field].field, required);
+    setEquantity(newEquantity);
+  };
+
+  const handleOptionChange = (index, selectedOptionValue) => {
+    const newEquantity = [...equantity];
+    const currentItem = newEquantity[index];
+    currentItem.option_value.field = selectedOptionValue;
+    const selectedOption = currentItem.validOptions.find(
+      (option) => option.option_value.toString() === selectedOptionValue
+    );
+    if (selectedOption) {
+      currentItem.option_type.field = selectedOption.option_type;
+    } else {
+      currentItem.option_type.field = '';
+    }
+    setEquantity(newEquantity);
   };
 
   const fetchInvoiceDetails = async () => {
@@ -239,62 +178,102 @@ const handleEquantityChange = (index, field, value) => {
     }
   };
 
-
-  const handleOptionChange = (index, selectedOptionValue) => {
-    const newEquantity = [...equantity];
-    const currentItem = { ...newEquantity[index] };
-  
-    // Actualiza option_value
-    currentItem.option_value = selectedOptionValue;
-  
-    // Encuentra la opción seleccionada para obtener option_type
-    const selectedOption = currentItem.validOptions.find(
-      (option) => option.option_value.toString() === selectedOptionValue
-    );
-  
-    if (selectedOption) {
-      // Actualiza option_type
-      currentItem.option_type = selectedOption.option_type;
-    } else {
-      currentItem.option_type = '';
+  const validateAllFields = () => {
+    // Validar businessType
+    let allValid = true;
+    if (validateField(businessType.field, true) === "false") {
+      allValid = false;
+      setBusinessType({ ...businessType, validate: "false" });
     }
-  
-    newEquantity[index] = currentItem;
+
+    // Validar areas
+    const newAreas = [...areas];
+    for (let i = 0; i < newAreas.length; i++) {
+      for (const field of ["name", "square_feet", "floor_type"]) {
+        if (validateField(newAreas[i][field].field, true) === "false") {
+          newAreas[i][field].validate = "false";
+          allValid = false;
+        } else {
+          if (newAreas[i][field].validate !== "true") {
+            newAreas[i][field].validate = "true";
+          }
+        }
+      }
+    }
+    setAreas(newAreas);
+
+    // Validar equipment
+    const newEquantity = [...equantity];
+    for (let i = 0; i < newEquantity.length; i++) {
+      // Por simplicidad, se asume que todos son requeridos (depende de tu lógica real)
+      for (const field of ["name", "quantity"]) {
+        if (validateField(newEquantity[i][field].field, true) === "false") {
+          newEquantity[i][field].validate = "false";
+          allValid = false;
+        } else {
+          if (newEquantity[i][field].validate !== "true") {
+            newEquantity[i][field].validate = "true";
+          }
+        }
+      }
+      // Si el equipo requiere options:
+      if (newEquantity[i].validOptions.length > 0) {
+        if (validateField(newEquantity[i].option_value.field, true) === "false") {
+          newEquantity[i].option_value.validate = "false";
+          allValid = false;
+        } else {
+          newEquantity[i].option_value.validate = "true";
+        }
+      }
+    }
     setEquantity(newEquantity);
+
+    if (!allValid) {
+      setErrors({ ...errors, general: "Please complete all fields" });
+    } else {
+      setErrors({ ...errors, general: "" });
+    }
+
+    return allValid;
   };
-  
-  
 
-
-
+  const validatePayload = (payload) => {
+    const validEquantity = payload.equipment
+      .map((equip) => {
+        if (!equip.name) return false;
+        // Check extra options if required
+        if (equip.option_type || equip.option_value) {
+          if (!equip.option_type || !equip.option_value) return false;
+        }
+        return equip;
+      })
+      .filter(Boolean);
+    return { ...payload, equipment: validEquantity };
+  };
 
   const calculateTotalPrice = async () => {
-
-
-
+    if (!validateAllFields()) {
+      return; // Si no todos los campos son válidos, no continuar
+    }
 
     try {
-
       let payload = {
-        business_type: Number(businessType), // Convertir a número
+        business_type: Number(businessType.field),
         areas: areas.map((area) => ({
-          name: Number(area.name), // Convertir a número
-          square_feet: Number(area.square_feet), // Convertir a número
-          floor_type: Number(area.floor_type), // Convertir a número
+          name: Number(area.name.field),
+          square_feet: Number(area.square_feet.field),
+          floor_type: Number(area.floor_type.field),
         })),
         equipment: equantity.map((equip) => ({
-          name: Number(equip.name), // Convertir a número
-          quantity: Number(equip.quantity), // Convertir a número
-          option_type: equip.option_type,
-          option_value: Number( equip.option_value), // Mantener como string si el backend lo espera así
+          name: Number(equip.name.field),
+          quantity: Number(equip.quantity.field),
+          option_type: equip.option_type.field,
+          option_value: equip.option_value.field ? Number(equip.option_value.field) : null,
         })),
       };
 
       payload = validatePayload(payload);
 
-      console.log("Validated Payload sent to backend:", payload);
-
-  
       const response = await apiInstance.post("invoice/", payload);
       setTotalPrice(response.data.total_price);
       setInvoiceId(response.data.id);
@@ -302,234 +281,372 @@ const handleEquantityChange = (index, field, value) => {
       console.error("Error calculating total price:", error);
     }
   };
+
+  // Función para renderizar ícono de validación
+  const renderValidationIcon = (validateStatus) => {
+    if (!validateStatus) return null;
+    return (
+      <FontAwesomeIcon
+        icon={validateStatus === "true" ? faCheckCircle : faTimesCircle}
+        className={`icon-${validateStatus}`}
+      />
+    );
+  };
+
+
+  // User info (City,Name,Business type,Email) for printable invoice : 
+
+
   
+  const [isLoggedIn, user] = useAuthStore((state) => [
+    state.isLoggedIn,
+    state.user
+    ]);
+    console.log("User data:", user());
+    console.log("isLoggedIn:", isLoggedIn());
 
 
 
-  
-  
+    const GetUserName = (fullName) => {
+
+      if (!fullName) return "";
+      return fullName.split("")[1];
+
+
+
+    };
+
+
+
+
   return (
     <div className="invoice-estimator">
       <div className="estimator-container">
         <h1 className="title">Invoice Estimator - RC Klean</h1>
         <div className="form-container">
           <div className="form-row">
-
-
+            {/* Business Type */}
             <div className="form-section">
               <h2>Business Details</h2>
               <FontAwesomeIcon icon={faFilter} className="icons-form" />
               <div className="input-group">
-                <label htmlFor="business-type">Business Type</label>
-                <select
-                  id="business-type"
-                  value={businessType}
-                  onChange={(e) => setBusinessType(e.target.value)}
-                >
-                  <option value="">Select business type</option>
-                  {options.businessTypes.map((type) => (
-                    <option key={type.id} value={type.id}>
-                      {type.name}
-                    </option>
-                  ))}
-                </select>
-                {errors.businessType && <span className="error">{errors.businessType}</span>}
+                <label htmlFor="business-type">
+                  Business Type <span className="text-danger">*</span>
+                </label>
+                <div className="input-wrapper">
+                  <select
+                    id="business-type"
+                    value={businessType.field}
+                    onChange={handleBusinessTypeChange}
+                    onBlur={handleBusinessTypeValidate}
+                    onKeyUp={handleBusinessTypeValidate}
+                    className={`form-control ${
+                      businessType.validate === "false" ? "is-invalid" : businessType.validate === "true" ? "is-valid" : ""
+                    }`}
+                  >
+                    <option value="">Select business type</option>
+                    {options.businessTypes.map((type) => (
+                      <option key={type.id} value={type.id}>
+                        {type.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="input-icon">
+                    {renderValidationIcon(businessType.validate)}
+                  </div>
+                </div>
+                {businessType.validate === "false" && (
+                  <span className="text-danger">Please select a business type.</span>
+                )}
               </div>
             </div>
 
-
-{/* Equipment: qty and sizes */}
-          
-   <div className="form-section">
-  <h2>Equipment: Quantity and Sizes</h2>
-  {equantity.map((item, index) => (
-    <div key={index} className="equantity-item">
-      {/* Seleccionar Equipo */}
-      <div className="input-group-t">
-        <label htmlFor={`equantity-name-${index}`}>Equipment</label>
-        <select
-          id={`equantity-name-${index}`}
-          value={item.name}
-          onChange={(e) => handleEquantityChange(index, "name", e.target.value)}
-        >
-          <option value="">Select equipment</option>
-          {options.equipmentTypes.map((type) => (
-            <option key={type.id} value={type.id}>
-              {type.name}
-            </option>
-          ))}
-        </select>
-      </div>            
-   
-
-      {/* Mostrar Opciones Solo si Hay un Equipo Seleccionado */}
-      {item.validOptions && item.validOptions.length > 0 && (
-        <div className="input-group-n">
-          <label htmlFor={`equipment-option-${index}`}>Options</label>
-          <select
-            id={`equipment-option-${index}`}
-            value={item.option_value || ''}
-            onChange={(e) => handleOptionChange(index, e.target.value)}
-          >
-            <option value="">Select: size / quantity</option>
-            {item.validOptions.map((option) => (
-              <option key={option.id} value={option.option_value}>
-                {option.option_type_display} - {option.option_value_display}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      {/* Cantidad */}
-      <div className="input-group-n">
-        <label htmlFor={`equipment-quantity-${index}`}>Quantity</label>
-        <input
-          id={`equipment-quantity-${index}`}
-          type="number"
-          value={item.quantity}
-          onChange={(e) => handleEquantityChange(index, "quantity", e.target.value)}
-          placeholder="Enter quantity"
-        />
-      </div>
-
-      {/* Botón de Eliminar */}
-      <button onClick={() => handleEquantityRemove(index)} className="remove-btn">
-        Remove
-      </button>
-      <button onClick={handleEquantityAdd} className="add-btn">
-    Add Equipment Option
-  </button>
-    </div>
-    
-  ))}
-
-
-</div>
-</div>
-
-
-{/* Selector de área iportante */}
-
-<div className="form-section">
-
-  <h2>Areas and Floor Types</h2>
-  <FontAwesomeIcon icon={faBroom} className="icons-form" />
-  {areas.map((area, index) => (
-    <div key={index} className="area-item">
-      {/* Selector de área */}
-      <div className="input-group">
-        <label htmlFor={`area-name-${index}`}>Area Name</label>
-        <select
-          id={`area-name-${index}`}
-          value={area.name}
-          onChange={(e) => handleAreaChange(index, "name", e.target.value)}
-        >
-          <option value="">Select area</option>
-          {options.areaNames.map((areaOption) => (
-            <option key={areaOption.id} value={areaOption.id}>
-              {areaOption.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Selector de tamaño */}
-      <div className="input-group">
-        <label htmlFor={`area-size-${index}`}>Square Feet Range</label>
-        <select
-          id={`area-size-${index}`}
-          value={area.square_feet}
-          onChange={(e) => handleAreaChange(index, "square_feet", e.target.value)}
-        >
-          <option value="">Select size</option>
-          {SquareFeetOptions.map((sizeOption) => (
-            <option key={sizeOption.value} value={sizeOption.value}>
-              {sizeOption.label}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Selector de tipo de piso */}
-      <div className="input-group">
-        <label htmlFor={`floor-type-${index}`}>Floor Type</label>
-        <select
-          id={`floor-type-${index}`}
-          value={area.floor_type}
-          onChange={(e) => handleAreaChange(index, "floor_type", e.target.value)}
-        >
-          <option value="">Select floor type</option>
-          {options.floorNames.map((floor) => (
-            <option key={floor.id} value={floor.id}>
-              {floor.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Botón para eliminar área */}
-      <button
-        onClick={() => handleRemoveArea(index)}
-        className="remove-btn"
-      >
-        Remove Area
-      </button>
-    </div>
-  ))}
-  {/* Botón para añadir área */}
-  <button onClick={handleAddArea} className="add-btn">
-    Add Area
-  </button>
-</div>
-
-
-
+            {/* Equipment */}
             <div className="form-section">
-              <button onClick={calculateTotalPrice} className="calculate-btn">
-                Calculate Estimate
-              </button>
-
-              {totalPrice > 0 && (
-                <>
-                  <div className="total-price">
-                    <h2>The estimated price is betwen: ${((totalPrice * 0.80).toFixed(2)) }
-                          and ${((totalPrice * 1.20).toFixed(2)) } </h2>
-
+              <h2>Equipment: Quantity and Sizes</h2>
+              {equantity.map((item, index) => (
+                <div key={index} className="equantity-item">
+                  <div className="input-group-t">
+                    <label htmlFor={`equantity-name-${index}`}>
+                      Equipment <span className="text-danger">*</span>
+                    </label>
+                    <div className="input-wrapper">
+                      <select
+                        id={`equantity-name-${index}`}
+                        value={item.name.field}
+                        onChange={(e) => handleEquantityChange(index, "name", e.target.value)}
+                        onBlur={() => handleEquantityValidate(index, "name")}
+                        onKeyUp={() => handleEquantityValidate(index, "name")}
+                        className={`form-control ${
+                          item.name.validate === "false" ? "is-invalid" : item.name.validate === "true" ? "is-valid" : ""
+                        }`}
+                      >
+                        <option value="">Select equipment</option>
+                        {options.equipmentTypes.map((type) => (
+                          <option key={type.id} value={type.id}>
+                            {type.name}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="input-icon">
+                        {renderValidationIcon(item.name.validate)}
+                      </div>
+                    </div>
+                    {item.name.validate === "false" && (
+                      <span className="text-danger">Please select an equipment type.</span>
+                    )}
                   </div>
 
-                  <button onClick={fetchInvoiceDetails} className="details-btn">
-                    View your Invoice Details
-                  </button>
-
-                  {invoiceDetails && (
-                    <div className="invoice-details">
-                      <h3>Invoice Details</h3>
-                      <p>Business Type: {invoiceDetails.business_type.name}</p>
-
-                      <p>Estimated price: ${invoiceDetails.total_price}</p>
-                        
-
-                      
-                      <h4>Areas:</h4>
-                      {invoiceDetails.areas.map((area, index) => (
-                        <p key={index}>
-                          {area.name.name} - {area.square_feet} sq ft
-                        </p>
-                      ))}
-                      <h4>Equipment:</h4>
-                      {invoiceDetails.equipment.map((equip, index) => (
-                        <p key={index}>
-                          {equip.name.name} - Quantity: {equip.quantity}
-                        </p>
-                      ))}
+                  {item.validOptions && item.validOptions.length > 0 && (
+                    <div className="input-group-n">
+                      <label htmlFor={`equipment-option-${index}`}>
+                        Options <span className="text-danger">*</span>
+                      </label>
+                      <div className="input-wrapper">
+                        <select
+                          id={`equipment-option-${index}`}
+                          value={item.option_value.field || ''}
+                          onChange={(e) => {
+                            handleOptionChange(index, e.target.value);
+                          }}
+                          onBlur={() => handleEquantityValidate(index, "option_value")}
+                          onKeyUp={() => handleEquantityValidate(index, "option_value")}
+                          className={`form-control ${
+                            item.option_value.validate === "false" ? "is-invalid" : item.option_value.validate === "true" ? "is-valid" : ""
+                          }`}
+                        >
+                          <option value="">Select: size / quantity</option>
+                          {item.validOptions.map((option) => (
+                            <option key={option.id} value={option.option_value}>
+                              {option.option_type_display} - {option.option_value_display}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="input-icon">
+                          {renderValidationIcon(item.option_value.validate)}
+                        </div>
+                      </div>
+                      {item.option_value.validate === "false" && (
+                        <span className="text-danger">This field is required.</span>
+                      )}
                     </div>
                   )}
-                </>
-              )}
+
+                  <div className="input-group-n">
+                    <label htmlFor={`equipment-quantity-${index}`}>
+                      Quantity <span className="text-danger">*</span>
+                    </label>
+                    <div className="input-wrapper">
+                      <input
+                        id={`equipment-quantity-${index}`}
+                        type="number"
+                        value={item.quantity.field}
+                        onChange={(e) => handleEquantityChange(index, "quantity", e.target.value)}
+                        onBlur={() => handleEquantityValidate(index, "quantity")}
+                        onKeyUp={() => handleEquantityValidate(index, "quantity")}
+                        className={`form-control ${
+                          item.quantity.validate === "false" ? "is-invalid" : item.quantity.validate === "true" ? "is-valid" : ""
+                        }`}
+                        placeholder="Enter quantity"
+                      />
+                      <div className="input-icon">
+                        {renderValidationIcon(item.quantity.validate)}
+                      </div>
+                    </div>
+                    {item.quantity.validate === "false" && (
+                      <span className="text-danger">Please enter a valid quantity (min 1).</span>
+                    )}
+                  </div>
+
+                  <button onClick={() => handleEquantityRemove(index)} className="remove-btn">
+                    Remove
+                  </button>
+                  <button onClick={handleEquantityAdd} className="add-btn">
+                    Add Equipment Option
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
 
+          {/* Areas */}
+          <div className="form-section">
+            <h2>Areas and Floor Types</h2>
+            <FontAwesomeIcon icon={faBroom} className="icons-form" />
+            {areas.map((area, index) => (
+              <div key={index} className="area-item">
+                <div className="input-group">
+                  <label htmlFor={`area-name-${index}`}>
+                    Area Name <span className="text-danger">*</span>
+                  </label>
+                  <div className="input-wrapper">
+                    <select
+                      id={`area-name-${index}`}
+                      value={area.name.field}
+                      onChange={(e) => handleAreaChange(index, "name", e.target.value)}
+                      onBlur={() => handleAreaValidate(index, "name")}
+                      onKeyUp={() => handleAreaValidate(index, "name")}
+                      className={`form-control ${
+                        area.name.validate === "false" ? "is-invalid" : area.name.validate === "true" ? "is-valid" : ""
+                      }`}
+                    >
+                      <option value="">Select area</option>
+                      {options.areaNames.map((areaOption) => (
+                        <option key={areaOption.id} value={areaOption.id}>
+                          {areaOption.name}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="input-icon">
+                      {renderValidationIcon(area.name.validate)}
+                    </div>
+                  </div>
+                  {area.name.validate === "false" && (
+                    <span className="text-danger">Please select an area.</span>
+                  )}
+                </div>
+
+                <div className="input-group">
+                  <label htmlFor={`area-size-${index}`}>
+                    Square Feet Range <span className="text-danger">*</span>
+                  </label>
+                  <div className="input-wrapper">
+                    <select
+                      id={`area-size-${index}`}
+                      value={area.square_feet.field}
+                      onChange={(e) => handleAreaChange(index, "square_feet", e.target.value)}
+                      onBlur={() => handleAreaValidate(index, "square_feet")}
+                      onKeyUp={() => handleAreaValidate(index, "square_feet")}
+                      className={`form-control ${
+                        area.square_feet.validate === "false" ? "is-invalid" : area.square_feet.validate === "true" ? "is-valid" : ""
+                      }`}
+                    >
+                      <option value="">Select size</option>
+                      {SquareFeetOptions.map((sizeOption) => (
+                        <option key={sizeOption.value} value={sizeOption.value}>
+                          {sizeOption.label}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="input-icon">
+                      {renderValidationIcon(area.square_feet.validate)}
+                    </div>
+                  </div>
+                  {area.square_feet.validate === "false" && (
+                    <span className="text-danger">Please select a size range.</span>
+                  )}
+                </div>
+
+                <div className="input-group">
+                  <label htmlFor={`floor-type-${index}`}>
+                    Floor Type <span className="text-danger">*</span>
+                  </label>
+                  <div className="input-wrapper">
+                    <select
+                      id={`floor-type-${index}`}
+                      value={area.floor_type.field}
+                      onChange={(e) => handleAreaChange(index, "floor_type", e.target.value)}
+                      onBlur={() => handleAreaValidate(index, "floor_type")}
+                      onKeyUp={() => handleAreaValidate(index, "floor_type")}
+                      className={`form-control ${
+                        area.floor_type.validate === "false" ? "is-invalid" : area.floor_type.validate === "true" ? "is-valid" : ""
+                      }`}
+                    >
+                      <option value="">Select floor type</option>
+                      {options.floorNames.map((floor) => (
+                        <option key={floor.id} value={floor.id}>
+                          {floor.name}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="input-icon">
+                      {renderValidationIcon(area.floor_type.validate)}
+                    </div>
+                  </div>
+                  {area.floor_type.validate === "false" && (
+                    <span className="text-danger">Please select a floor type.</span>
+                  )}
+                </div>
+
+                <button
+                  onClick={() => handleRemoveArea(index)}
+                  className="remove-btn"
+                >
+                  Remove Area
+                </button>
+              </div>
+            ))}
+            <button onClick={handleAddArea} className="add-btn">Add Area</button>
+          </div>
+
+          {errors.general && <p className="error">{errors.general}</p>}
+
+          <div className="form-section">
+            <button onClick={calculateTotalPrice} className="calculate-btn">
+              Calculate Estimate
+            </button>
+
+            {totalPrice > 0 && (
+              <>
+                <div className="total-price">
+                  <h2>The estimated price is between: ${((totalPrice * 0.80).toFixed(2))}
+                    and ${((totalPrice * 1.20).toFixed(2))} </h2>
+                </div>
+
+                <button onClick={fetchInvoiceDetails} className="details-btn">
+                  View your Invoice Details
+                </button>
+
+
+
+                {invoiceDetails && (
+
+                <div>
+
+                  {isLoggedIn() ? (
+                    <>
+                    <li className="user-greeting">Name: {GetUserName(user().full_name)}</li>
+                    <li className="user-greeting">Email: {GetUserName(user().email)}</li>
+                    <li className="user-greeting">City: {GetUserName(user().city)}</li>
+                    <li className="user-greeting">Business Type: {GetUserName(user().business_type)}</li> 
+
+                    </>
+                  ) : 
+                  
+                  ( 
+                    <>
+                    <li className="user-greeting">Hi Anonymous user, download your ivoice details here: </li>
+                    
+                    </>
+
+                  )}
+
+
+
+                  <div className="invoice-details">
+                    <h3>Invoice Details</h3>
+                    <p>Business Type: {invoiceDetails.business_type.name}</p>
+                    <p>Estimated price: ${invoiceDetails.total_price}</p>
+                    <h4>Areas:</h4>
+                    {invoiceDetails.areas.map((area, index) => (
+                      <p key={index}>
+                        {area.name.name} - {area.square_feet} sq ft
+                      </p>
+                    ))}
+                    <h4>Equipment:</h4>
+                    {invoiceDetails.equipment.map((equip, index) => (
+                      <p key={index}>
+                        {equip.name.name} - Quantity: {equip.quantity}
+                      </p>
+                    ))}
+                  </div>
+                  </div>
+                )}
+              </>
+            )}
+            
+          </div>
+        </div>
       </div>
     </div>
   );

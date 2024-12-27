@@ -5,7 +5,7 @@ import { useAuthStore } from "../../src/RCA/auth";
 import coData from "../../src/media/US_zips.json";
 import "../../components/auth/styles/Register.css";
 import apiInstance from "../../src/utils/axios";
-import InputField from "../auth/InputManager";
+import InputField from "./InputRegisterManager";
 
 function Register() {
   const [fullname, setFullname] = useState({ field: "", validate: null });

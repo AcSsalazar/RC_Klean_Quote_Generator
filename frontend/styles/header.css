@@ -1,9 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+
+
 .app-header {
 
+
     background: rgb(75,81,116);
-    background: radial-gradient(circle, rgba(75,81,116,0.896796218487395) 29%, rgba(9,86,121,1) 80%);
+    background: radial-gradient(circle, rgba(75,81,116,0.89) 29%, rgba(9,86,121,1) 80%);
     color: #ecf0f1;
     padding: 1rem 0;
+    position: relative;
   }
   
   .header-content {
@@ -49,16 +54,7 @@
     border-radius: 4px;
   }
   
-  .search-button {
-    padding: 0.5rem 1rem;
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
+
   .search-button:hover {
     background-color: #2980b9;
   }
@@ -73,43 +69,29 @@
     font-weight: 500;
   }
   
-  .nav-button {
-    padding: 0.5rem 1rem;
-    background-color: #3498db;
-    color: #fff;
-    text-decoration: none;
+  .nav,.headerbtn  { 
+    
+    padding: 10px !important;
+    font-size: 16px !important;
+    background-color: #1657bf;
+    color: rgb(236, 207, 13);
+    border: none;
+    cursor: pointer;
     border-radius: 4px;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease !important;
   }
   
-  .nav-button:hover {
-    background-color: #2980b9;
+  .nav,.headerbtn:hover {
+    background-color: rgb(18, 171, 222); 
+    padding: 0.6rem 1rem !important;
+    color: rgb(236, 207, 13);
+ 
+
   }
   
-  .cart-button {
-    position: relative;
-    padding: 0.5rem;
-    background-color: #e74c3c;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-  }
+
   
-  .cart-button:hover {
-    background-color: #c0392b;
-  }
-  
-  .cart-items {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background-color: #f39c12;
-    color: #fff;
-    font-size: 0.75rem;
-    padding: 2px 6px;
-    border-radius: 50%;
-  }
+
   
   @media (max-width: 768px) {
     .header-content {
@@ -122,3 +104,65 @@
       justify-content: center;
     }
   }
+
+
+  /* Estilos para el dropdown */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-button {
+  font-family: "Roboto Condensed", sans-serif;
+  padding: 14px;
+  font-size: 16px;
+  background-color: #1657bf;
+  color: rgb(236, 207, 13);
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease !important;
+}
+
+.dropdown-button:hover {
+  background-color: rgb(18, 171, 222);
+  padding: 0.8rem 1.2rem !important;
+  border: none;
+  cursor: pointer;
+  
+}
+
+/* Menú desplegable */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;           /* Coloca el menú justo debajo del botón */
+  left: 0;             /* Alinea el menú con el botón */
+  background-color: rgba(30, 60, 96, 0.9);
+  border: 1px solid #2ba353;
+  border-radius: 4px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 150px;    /* Asegura un ancho mínimo */
+  z-index: 1000;       /* Asegura que se muestre por encima de otros elementos */
+}
+
+/* Estilos para los elementos del menú */
+.dropdown-menu li {
+  padding: 10px;
+}
+
+.dropdown-menu li a {
+  text-decoration: none;
+  color: #ffffff;
+  display: block;
+  width: 100%;
+  padding-left: 2px;
+  
+}
+
+.dropdown-menu li a:hover {
+  background-color: #252b81;
+  border-radius: 5px;
+}

@@ -14,6 +14,7 @@ const useAuthStore = create((set, get) => ({
     user: () => ({
         user_id: get().allUserData?.user_id || null,
         username: get().allUserData?.username || null,
+        full_name: get().allUserData?.full_name || null, 
         
 
     }),

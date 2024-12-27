@@ -2,35 +2,29 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import { faCheckCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 
 
-const InputManager = ({
+const InputInvoiceManager = ({
   state,
   setState,
-  type = "text",
-  label,
-  placeholder,
-  name,
   errorMessage,
-  regex,
-  customValidation,
   required = true,
+  
 }) => {
   const handleChange = (e) => {
     setState({ ...state, field: e.target.value });
   };
 
   const handleValidation = (e) => {
-    if (regex) {
-      if (regex.test(state.field)) {
+    
+      if (required==true) {
         setState({ ...state, validate: "true" });
       } else {
         setState({ ...state, validate: "false" });
       }
-    }
+  }
     if (customValidation) {
       customValidation(e);
     }
@@ -43,9 +37,9 @@ const InputManager = ({
       </label>
       <div className="input-group">
         <input
-          type={type}
-          id={name}
-          placeholder={placeholder}
+
+
+          //placeholder={placeholder}
           value={state.field}
           onKeyUp={handleValidation}
           onChange={handleChange}
@@ -69,30 +63,24 @@ const InputManager = ({
 };
 
 // PropTypes para validación
-InputManager.propTypes = {
+InputInvoiceManager.propTypes = {
+
   state: PropTypes.shape({
-    field: PropTypes.string.isRequired,
+
     validate: PropTypes.oneOf(["true", "false", null]).isRequired,
   }).isRequired,
   setState: PropTypes.func.isRequired,
-  type: PropTypes.string,
-  label: PropTypes.string.isRequired,
-  placeholder: PropTypes.string,
-  name: PropTypes.string.isRequired,
   errorMessage: PropTypes.string,
-  regex: PropTypes.instanceOf(RegExp),
   customValidation: PropTypes.func,
   required: PropTypes.bool,
 };
 
 // Valores por defecto
-InputManager.defaultProps = {
-  type: "text",
-  placeholder: "",
+InputInvoiceManager.defaultProps = {
+
   errorMessage: "Invalid input.",
-  regex: null,
   customValidation: null,
   required: true,
 };
 
-export default InputManager;
+export default InputInvoiceManager;
