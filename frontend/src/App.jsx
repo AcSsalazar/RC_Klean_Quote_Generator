@@ -14,6 +14,8 @@ import CreatePassword from "../components/auth/CreatePassword";
 import MainWrapper from '../src/layouts/MainWrapper'; 
 import RCHeader from "../components/base/RCHeader";
 import StartForm from "../components/StartForm";
+import QuoteViewer from "../components/QuoteViewer";
+import Coverage from "../components/Coverage";
 
 const App = () => {
 
@@ -39,7 +41,11 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />}> </Route>
         <Route path="/start-form" element={<StartForm/>}> </Route>
         
-        {/* Si hay otras rutas, agrégalas aquí */}
+        {/* Header Pages */}
+        <Route path="/savedqtes" element={<QuoteViewer />}> </Route>
+        <Route path="/coverage" element={<Coverage />}> </Route>
+
+
         </Routes>
         </MainWrapper>
       <RCFooter/>

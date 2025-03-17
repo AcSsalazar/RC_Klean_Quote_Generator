@@ -2,9 +2,18 @@ from django.contrib import admin
 
 from .models import BusinessType, AreaType, EquipmentType, Invoice, Area, Equipment, FloorType, QuantityOption
 
-
+from userauths.models import User
 
 # Los inlines permiten agregar, editar y eliminar instancias de modelos relacionados dentro de un formulario de administración: 
+
+# Registra los nuevos modelos en el admin
+admin.site.register(BusinessType)
+admin.site.register(AreaType)
+admin.site.register(EquipmentType)
+admin.site.register(Area)
+admin.site.register(Equipment)
+admin.site.register(FloorType)
+
 
 class AreaInline(admin.TabularInline):
     model = Area
@@ -16,7 +25,7 @@ class EquipmentInline(admin.TabularInline):
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
-    list_display = ['id', 'business_type', 'total_price', 'get_areas', 'get_equipment']
+    list_display = ['id', 'user', 'business_type', 'total_price', 'get_areas', 'get_equipment']
     inlines = [AreaInline, EquipmentInline]
 
     def get_areas(self, obj):
@@ -36,13 +45,6 @@ class InvoiceAdmin(admin.ModelAdmin):
     get_equipment.short_description = 'Equipos'
 
 
-# Registra los nuevos modelos en el admin
-admin.site.register(BusinessType)
-admin.site.register(AreaType)
-admin.site.register(EquipmentType)
-admin.site.register(Area)
-admin.site.register(Equipment)
-admin.site.register(FloorType)
 
 
 

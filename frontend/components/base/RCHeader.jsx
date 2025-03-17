@@ -43,13 +43,13 @@ const [isLoggedIn, user] = useAuthStore((state) => [
     <header className="app-header">
       <div className="header-content">
       <img src={logo} alt="Company Logo" style={{ height: '50px', marginRight: '10px' }} />
-        <Link to="/" className="logo">RC Klean Invoice Estimator</Link>
+        <Link to="/" className="logo">RCKlean Quote Generator</Link>
         
         <nav className="main-nav">
           <Link to="/">Home</Link>
-          <Link to="/invoices">Invoices</Link>
-          <Link to="/clients">Clients</Link>
-          <Link to="/reports">Reports</Link>
+          <Link to="/savedqtes">Saved Quotes</Link>
+          <Link to="/clients">Our Clients</Link>
+          <Link to="/coverage">Coverage</Link>
         </nav>
 
         <div className="user-actions">
@@ -57,7 +57,7 @@ const [isLoggedIn, user] = useAuthStore((state) => [
           {isLoggedIn() ? (
             <>
               <span className="user-greeting">Hi Dear,  {GetUserName(user().full_name)}</span>
-              <Link to="/dashboard" className="headerbtn">Dashboard</Link>
+              {/* <Link to="/dashboard" className="headerbtn"></Link> */}
               <Link to="/logout" className="headerbtn">Logout</Link>
             </>
           ) 
@@ -80,9 +80,9 @@ const [isLoggedIn, user] = useAuthStore((state) => [
        </>
       {isOpen && (
         <ul className="dropdown-menu">
-          <li><a href="/home">Inicio</a></li>
-          <li><a href="/about">Acerca de</a></li>
-          <li><a href="/contact">Contacto</a></li>
+          <li><a href="/home">Home</a></li>
+          <li><a href="/about">About us</a></li>
+          <li><a href="/contact">Contact</a></li>
         </ul>
       )}
     </div>

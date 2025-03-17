@@ -3,13 +3,15 @@
 :root {
   --primary-color: #42a01a;
   --secondary-color: #393571;
-  --background: linear-gradient(198deg, rgba(45,50,59,1) 44%, rgba(69,56,97,1) 85%);
+  --background: linear-gradient(198deg, rgb(57, 70, 94) 44%, rgb(92, 75, 129) 85%);
   --text-color: #c9e4ec;
+ 
   --input-bg: rgba(36, 36, 36, 0.8);
   --border-color: #dfe6e9;
   --success-color: #00b894;
   --error-color: #d63031;
   --section: #30303bcc;
+  
 }
 
 * {
@@ -29,7 +31,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 70vh;
   padding: 2rem;
   width: 100%;
 }
@@ -72,7 +74,7 @@ body {
 }
 
 .icons-form {
-  color: #c3cac8;
+  color: #179773;
   font-size: 30px;
   margin-bottom: 1rem;
 }
@@ -210,4 +212,35 @@ button:hover {
   .equipment-item {
     grid-template-columns: 1fr;
   }
+}
+
+
+
+.card-selector {
+  width: 100%;
+  max-width: 800px;
+  /* backdrop-filter: blur(10px); */
+  border: 2px solid #2c1348e3;
+  padding: 8px;
+  border-radius: 10px;
+  box-shadow: 8px 6px 7px 1px rgba(0, 0, 0, 0.1), -1px 1px 10px 1px #213258;
+  background-color: #f8fcff;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loading-overlay img {
+  width: 100px;
 }

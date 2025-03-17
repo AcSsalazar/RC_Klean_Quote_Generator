@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
+
 # Modelo para BusinessType
 class BusinessType(models.Model):
     name = models.CharField(max_length=100)
@@ -31,10 +32,7 @@ class EquipmentType(models.Model):
         return self.name
     
 
-from django.core.exceptions import ValidationError
 
-from django.db import models
-from django.core.exceptions import ValidationError
 
 class QuantityOption(models.Model):
     BURNER_CHOICES = [
@@ -99,22 +97,20 @@ class QuantityOption(models.Model):
 
 
 
-
-
-
-
-
  # Modelo para Invoice
 class Invoice(models.Model):
     business_type = models.ForeignKey(BusinessType, on_delete=models.SET_NULL, null=True)
     #area_type =  models.ManyToManyField(AreaType,  null=True)
     #equipment_type = models.ManyToManyField(EquipmentType,  null=True)
+    user = models.ForeignKey('userauths.User', on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)  
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+    def __str__(self):
+        return f"Invoice {self.id} - {self.user.username if self.user else 'Anonymous'} on {self.created_at.strftime('%Y-%m-%d')}"
     
-
-
-
-    
+ 
 # Modelo para AreaType
 
 class FloorType(models.Model):
@@ -125,12 +121,7 @@ class FloorType(models.Model):
     def __str__(self):
         return self.name
       
-
-
 # Modelo para Area
-
-
-    
 
 class Area(models.Model):
     invoice = models.ForeignKey(Invoice, related_name='areas', on_delete=models.CASCADE)
