@@ -1,0 +1,68 @@
+/* src/styles/SearchQuote.css */
+.search-quote-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f7fa;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .search-quote-container h1 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+  
+  .search-quote-container p {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    margin-bottom: 20px;
+  }
+  
+  .search-form {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .search-input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+    width: 200px;
+    text-transform: uppercase;
+  }
+  
+  .search-button {
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .search-button:hover {
+    background-color: #2980b9;
+  }
+  
+  .error-message {
+    color: #e74c3c;
+    margin-top: 10px;
+  }
+  
+  .back-link {
+    margin-top: 20px;
+    color: #3498db;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+  
+  .back-link:hover {
+    text-decoration: underline;
+  }

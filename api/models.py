@@ -1,7 +1,8 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
-
+import random
+import string
 # Modelo para BusinessType
 class BusinessType(models.Model):
     name = models.CharField(max_length=100)
@@ -100,15 +101,37 @@ class QuantityOption(models.Model):
  # Modelo para Invoice
 class Invoice(models.Model):
     business_type = models.ForeignKey(BusinessType, on_delete=models.SET_NULL, null=True)
-    #area_type =  models.ManyToManyField(AreaType,  null=True)
-    #equipment_type = models.ManyToManyField(EquipmentType,  null=True)
     user = models.ForeignKey('userauths.User', on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)  
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    quote_id = models.CharField(max_length=5, unique=True, null=True, blank=True)  
+    full_name = models.CharField(max_length=80, null=True, blank=True)  # New now we pass the full name from user-info form
+    email = models.EmailField(max_length=80, null=True, blank=True)     # New
+    city = models.CharField(max_length=20, null=True, blank=True)  
+    zip_code = models.CharField(max_length=10, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.quote_id:
+            self.quote_id = self.generate_quote_id()
+        super().save(*args, **kwargs)
+
+    def generate_quote_id(self):
+        """Genererates a unique ID with 3 letters and 2 numbers"""
+
+        while True:
+            letters = ''.join(random.choices(string.ascii_uppercase, k=3))
+            numbers = ''.join(random.choices(string.digits, k=2))
+            quote_id = f"{letters}{numbers}"
+            if not Invoice.objects.filter(quote_id=quote_id).exists():
+                return quote_id
+
+
+
+
 
 
     def __str__(self):
-        return f"Invoice {self.id} - {self.user.username if self.user else 'Anonymous'} on {self.created_at.strftime('%Y-%m-%d')}"
+        return f"Invoice {self.quote_id or self.id} - {self.user.username if self.user else 'Anonymous'} on {self.created_at.strftime('%Y-%m-%d')}"
     
  
 # Modelo para AreaType

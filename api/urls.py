@@ -1,24 +1,31 @@
 from django.urls import path
-from .views import InvoiceCalculateView, OptionsView, SavedQuotesView, InvoiceDetailView, InvoicePDFView
 from userauths import views as userauths_views
 from rest_framework_simplejwt.views import TokenRefreshView
-from forms import views as forms_views
+from .views import (InvoiceCalculateView, OptionsView, 
+                    SavedQuotesView, InvoiceDetailView)
 
 
 urlpatterns = [
     # Invoice calculator API end points: para obtener las opciones de negocio, áreas, y equipos
 
-    path('invoice/', InvoiceCalculateView.as_view(), name='invoice'),
+    path('invoice/', InvoiceCalculateView.as_view(), name='invoice-calculate'),
+    path('invoice/<str:identifier>/', InvoiceDetailView.as_view(), name='invoice_detail'),
     path('options/', OptionsView.as_view(), name='options' ),
-    path('invoice/<int:pk>/', InvoiceDetailView.as_view(), name='invoice_detail'),
-    path('invoice/<int:pk>/pdf/', InvoicePDFView.as_view(), name='invoice_pdf'),
+
+    
+
+
+    path('invoice/', InvoiceCalculateView.as_view(), name='invoice-calculate'),  # POST
+    path('invoice/<str:identifier>/update/', InvoiceCalculateView.as_view(), name='invoice-update'),  # PATCH
+    path('invoice/<str:identifier>/', InvoiceDetailView.as_view(), name='invoice-detail'),  # GET
+
+
     path('saved-quotes/', SavedQuotesView.as_view(), name='saved_quotes'),
 
-    # Forms API endpoint:
 
-    path('form/', forms_views.QuestionnaireSubmitView.as_view(), name='questionnaire-submit'),           # POST
-    path('form/options/', forms_views.QuestionnaireOptionsView.as_view(), name='questionnaire-options'), # GET options
-    path('form/<int:pk>/', forms_views.QuestionnaireDetailView.as_view(), name='questionnaire-detail'),  # GET details 
+
+   
+    
     
     # Userauths API Endpoints
 

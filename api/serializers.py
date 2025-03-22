@@ -60,7 +60,7 @@ class EquipmentSerializer(serializers.ModelSerializer):
 
         
 
-# Serializador para la factura (Invoice)
+# Serializer for Invoice
 class InvoiceSerializer(serializers.ModelSerializer):
     areas = AreaSerializer(many=True)
     equipment = EquipmentSerializer(many=True)
@@ -68,18 +68,27 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Invoice
-        fields = ['id', 'business_type', 'areas', 'equipment', 'total_price']
+        fields = ['id', 'quote_id', 'business_type', 'areas', 'equipment', 'total_price', 'full_name', 'city', 'zip_code', 'email', 'created_at']
 
     def create(self, validated_data):
         areas_data = validated_data.pop('areas', [])
         equipment_data = validated_data.pop('equipment', [])
-
+        
+        # Create the invoice with all validated data (including full_name, email, etc.)
         invoice = Invoice.objects.create(**validated_data)
 
+        # Create related areas
         for area_data in areas_data:
             Area.objects.create(invoice=invoice, **area_data)
 
+        # Create related equipment
         for equip_data in equipment_data:
             Equipment.objects.create(invoice=invoice, **equip_data)
 
         return invoice
+
+    def to_representation(self, instance):
+        # For GET requests, return human-readable business_type name
+        representation = super().to_representation(instance)
+        representation['business_type'] = instance.business_type.name if instance.business_type else None
+        return representation

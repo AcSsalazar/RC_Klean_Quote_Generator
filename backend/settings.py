@@ -45,8 +45,6 @@ INSTALLED_APPS = [
     #MY apps
     'userauths',
     'api',
-    'forms',
-    
 
     #Thirt party apps 
  

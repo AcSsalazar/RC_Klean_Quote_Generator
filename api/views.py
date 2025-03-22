@@ -8,84 +8,80 @@ from django.http import HttpResponse
 from django.http import HttpResponse
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
 from userauths.models import User
 from rest_framework.permissions import IsAuthenticated
-class InvoiceCalculateView(APIView):
 
-    permission_classes = [ AllowAny ] # Allow both authenticated and unauthenticated users
-    authentication_classes = [JWTAuthentication] # Use JWT for authenticated users
+
+class InvoiceCalculateView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = [JWTAuthentication]
 
     def post(self, request):
         business_type = request.data.get("business_type")
         areas_data = request.data.get("areas", [])
         equipment_data = request.data.get("equipment", [])
+        full_name = request.data.get("full_name")
+        email = request.data.get("email")
+        city = request.data.get("city")
+        zip_code = request.data.get("zip_code")
 
-        
-
-
-        # Validaciones iniciales
         if not business_type:
-            return Response({"error": "Bussiness type is required."}, status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response({"error": "Business type is required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Validar si el tipo de negocio existe
         try:
             business_type_instance = BusinessType.objects.get(pk=business_type)
         except BusinessType.DoesNotExist:
             return Response({"error": "Business type does not exist"}, status=status.HTTP_400_BAD_REQUEST)
-        # User management
 
         user = request.user if request.user.is_authenticated else None
         if not user:
-            user, _ = User.objects.get_or_create(username="Anonymous")
-            email="emptyfield@example.com",
-            defaults = {"username": "anonymous", "full_name": "Anonymous User"}
-        # Crear la factura
-        invoice = Invoice.objects.create(business_type=business_type_instance, user=user, total_price=0)
+            user, _ = User.objects.get_or_create(username="anonymous", defaults={"username": "anonymous", "email": "emptyfield@example.com", "full_name": "Anonymous User"})
 
-        # Procesar áreas
+        invoice = Invoice.objects.create(
+            business_type=business_type_instance,
+            user=user,
+            total_price=0,
+            full_name=full_name,
+            email=email,
+            city=city,
+            zip_code=zip_code,
+        )
+
         for area in areas_data:
-            
-                Area.objects.create(
-                    invoice=invoice,
-                    name_id=area['name'],
-                    square_feet=area['square_feet'],
-                    floor_type_id=area.get('floor_type')
-                )
-#            except Exception as e:
-#               invoice.delete()
-#                return Response({"error": f"Error al añadir el área: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Procesar equipos
+            Area.objects.create(invoice=invoice, name_id=area['name'], square_feet=area['square_feet'], floor_type_id=area.get('floor_type'))
         for equip in equipment_data:
-#            try:
-                Equipment.objects.create(
-                    invoice=invoice,
-                    name_id=equip['name'],
-                    quantity=equip['quantity'],
-                    option_type=equip.get('option_type'),  # Agregar esta línea
-                    option_value=equip.get('option_value'),  # Agregar esta línea
-                )
-#            except Exception as e:
-#                invoice.delete()
-#                print(f"Error al añadir el equipo: {str(e)}")  # Agregar esta línea para imprimir el error
-#                return Response({"error": f"Error al añadir el equipo: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+            Equipment.objects.create(invoice=invoice, name_id=equip['name'], quantity=equip['quantity'], option_type=equip.get('option_type'), option_value=equip.get('option_value'))
 
-
-        # Calcular precio total
-#        try:
         total_price = calculate_price(invoice)
         invoice.total_price = total_price
         invoice.save()
-#        except Exception as e:
-#            invoice.delete()
-#            return Response({"error": f"Error al calcular el precio total: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response({"total_price": total_price, "id": invoice.id}, status=status.HTTP_200_OK)
+        return Response({"total_price": total_price, "id": invoice.id, "quote_id": invoice.quote_id}, status=status.HTTP_200_OK)
 
+    def patch(self, request, identifier):
+        try:
+            invoice = Invoice.objects.get(quote_id=identifier)
+        except Invoice.DoesNotExist:
+            return Response({"error": "Invoice not found."}, status=status.HTTP_404_NOT_FOUND)
 
+        areas_data = request.data.get("areas", [])
+        equipment_data = request.data.get("equipment", [])
+
+        # Clear existing areas/equipment if needed, or append
+        Area.objects.filter(invoice=invoice).delete()
+        Equipment.objects.filter(invoice=invoice).delete()
+
+        for area in areas_data:
+            Area.objects.create(invoice=invoice, name_id=area['name'], square_feet=area['square_feet'], floor_type_id=area.get('floor_type'))
+        for equip in equipment_data:
+            Equipment.objects.create(invoice=invoice, name_id=equip['name'], quantity=equip['quantity'], option_type=equip.get('option_type'), option_value=equip.get('option_value'))
+
+        total_price = calculate_price(invoice)
+        invoice.total_price = total_price
+        invoice.save()
+
+        return Response({"total_price": total_price, "id": invoice.id, "quote_id": invoice.quote_id}, status=status.HTTP_200_OK)
+    
 
 class OptionsView(APIView):
     def get(self, request):
@@ -107,57 +103,19 @@ class OptionsView(APIView):
         }
         return Response(data)
     
-# Vista para generar el detalle de la factura
 class InvoiceDetailView(APIView):
-    def get(self, request, pk):
+    def get(self, request, identifier):
         try:
-            # Obtener la factura por ID (pk)
-            invoice = Invoice.objects.get(pk=pk)
+            if len(identifier) == 5 and identifier[:3].isalpha() and identifier[3:].isdigit():
+                invoice = Invoice.objects.get(quote_id=identifier)
+            else:
+                invoice = Invoice.objects.get(pk=identifier)
         except Invoice.DoesNotExist:
-            return Response({"error": "Factura no encontrada."}, status=status.HTTP_404_NOT_FOUND)
-        
-        # Serializar los detalles de la factura
-        serializer = InvoiceSerializer(invoice)
+            return Response({"error": "Invoice not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = InvoiceSerializer(invoice)  # Define this serializer
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
 
-class InvoicePDFView(APIView):
-    def get(self, request, pk):
-        try:
-            invoice = Invoice.objects.get(pk=pk)
-        except Invoice.DoesNotExist:
-            return Response({"error": "Invoice not found."}, status=404)
-
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="invoice_{pk}.pdf"'
-
-        p = canvas.Canvas(response, pagesize=letter)
-        p.setFont("Helvetica", 12)
-        y = 750
-
-        p.drawString(100, y, f"Invoice ID: {invoice.id}")
-        y -= 20
-        p.drawString(100, y, f"Business Type: {invoice.business_type.name}")
-        y -= 20
-        p.drawString(100, y, f"Total Price: ${invoice.total_price}")
-        y -= 30
-
-        p.drawString(100, y, "Areas:")
-        y -= 20
-        for area in invoice.areas.all():
-            p.drawString(100, y, f"{area.name.name} - {area.square_feet} sq ft")
-            y -= 20
-
-        y -= 10
-        p.drawString(100, y, "Equipment:")
-        y -= 20
-        for equip in invoice.equipment.all():
-            p.drawString(100, y, f"{equip.name.name} - Quantity: {equip.quantity}")
-            y -= 20
-
-        p.showPage()
-        p.save()
-        return response
     
 class SavedQuotesView(APIView):
     permission_classes = [IsAuthenticated]

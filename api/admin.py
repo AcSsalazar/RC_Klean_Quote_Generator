@@ -1,6 +1,8 @@
 from django.contrib import admin
 
-from .models import BusinessType, AreaType, EquipmentType, Invoice, Area, Equipment, FloorType, QuantityOption
+from .models import (BusinessType, AreaType, EquipmentType, 
+                     Invoice, Area, Equipment, FloorType,
+                    QuantityOption)
 
 from userauths.models import User
 
@@ -15,6 +17,7 @@ admin.site.register(Equipment)
 admin.site.register(FloorType)
 
 
+
 class AreaInline(admin.TabularInline):
     model = Area
     extra = 0
@@ -25,7 +28,7 @@ class EquipmentInline(admin.TabularInline):
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'business_type', 'total_price', 'get_areas', 'get_equipment']
+    list_display = ['id', 'email', 'business_type', 'total_price', 'get_areas', 'get_equipment']
     inlines = [AreaInline, EquipmentInline]
 
     def get_areas(self, obj):
@@ -63,3 +66,6 @@ class QuantityOptionAdmin(admin.ModelAdmin):
 
     def option_value_display(self, obj):
         return obj.get_option_value_display()
+
+
+
