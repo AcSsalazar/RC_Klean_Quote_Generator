@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import coData from "../src/media/US_zips.json";
-import "../styles/StartInfoCard.css";
+import "../styles/StartInfoCard.css"; // Keep this as your file name
 import apiInstance from "../src/utils/axios";
 import InputField from "../components/auth/InputRegisterManager";
 
@@ -65,16 +65,15 @@ function UserInfoForm() {
       city
     ) {
       setIsLoading(true);
-
       try {
         const payload = {
           business_type: Number(business.field),
           full_name: fullname.field,
           email: email.field,
-          city: city,              // Add to Invoice
-          zip_code: zipCode.field, // Add to Invoice
-          areas: [],              // Empty for now
-          equipment: [],          // Empty for now
+          city: city,
+          zip_code: zipCode.field,
+          areas: [],
+          equipment: [],
         };
         console.log("Payload:", payload);
         const response = await apiInstance.post("invoice/", payload);
@@ -108,81 +107,79 @@ function UserInfoForm() {
   };
 
   return (
-      <div className="container">
-        <section>
-          <div className="cart-start">
-            <div className="cart-start-body">
-              <h3>Start Form</h3>
-              <form onSubmit={handleSubmit}>
-                <div className="form-grid">
-                  <InputField
-                    state={fullname}
-                    setState={setFullname}
-                    label="Full Name"
-                    name="fullname"
-                    placeholder="Enter your full name"
-                    regex={regexPatterns.name}
-                    errorMessage="Name must only contain letters and spaces."
-                  />
-                  <InputField
-                    state={email}
-                    setState={setEmail}
-                    label="Email"
-                    name="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    regex={regexPatterns.email}
-                    errorMessage="Invalid email format."
-                  />
-                  <div className="form-group">
-                    <label className="form-label">Business Type</label>
-                    <select
-                      id="business"
-                      value={business.field}
-                      onChange={(e) => setBusiness({ field: e.target.value, validate: e.target.value ? "true" : "false" })}
-                      className={`form-control ${business.validate === "false" ? "is-invalid" : ""}`}
-                    >
-                      <option value="">Select business type</option>
-                      {options.businessTypes.map((type) => (
-                        <option key={type.id} value={type.id}>
-                          {type.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <InputField
-                    state={zipCode}
-                    setState={setZipCode}
-                    label="Zip Code"
-                    name="zip_code"
-                    placeholder="Enter your zip code"
-                    customValidation={handleZipCodeChange}
-                    errorMessage="Invalid zip code."
-                  />
-                  <p className="text-danger">{zipError}</p>
-                  {city && (
-                    <div className="form-group">
-                      <label htmlFor="city">City</label>
-                      <input type="text" id="city" value={city} readOnly className="form-control" />
-                    </div>
-                  )}
-                </div>
-                {validForm === false && (
-                  <div className="alert alert-warning" role="alert">
-                    Please complete all fields correctly before continuing.
-                  </div>
-                )}
-                <div className="text-center">
-                  <button className="btn" type="submit" disabled={isLoading}>
-                    {isLoading ? "Processing..." : "Submit"}
-                  </button>
-                </div>
-              </form>
+    <div className="start-info-container">
+      <div className="start-info-card">
+        <h2 className="start-info-title">Get Started</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-grid">
+            <InputField
+              state={fullname}
+              setState={setFullname}
+              label="Full Name"
+              name="fullname"
+              placeholder="Enter your full name"
+              regex={regexPatterns.name}
+              errorMessage="Name must only contain letters and spaces."
+            />
+            <InputField
+              state={email}
+              setState={setEmail}
+              label="Email"
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+              regex={regexPatterns.email}
+              errorMessage="Invalid email format."
+            />
+            <div className="input-group">
+              <label className="input-label">Business Type</label>
+              <select
+                id="business"
+                value={business.field}
+                onChange={(e) => setBusiness({ field: e.target.value, validate: e.target.value ? "true" : "false" })}
+                className={`input-field ${business.validate === "false" ? "is-invalid" : business.validate === "true" ? "is-valid" : ""}`}
+              >
+                <option value="">Select business type</option>
+                {options.businessTypes.map((type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.name}
+                  </option>
+                ))}
+              </select>
             </div>
+            <InputField
+              state={zipCode}
+              setState={setZipCode}
+              label="Zip Code"
+              name="zip_code"
+              placeholder="Enter your zip code"
+              customValidation={handleZipCodeChange}
+              errorMessage="Invalid zip code."
+            />
+            {city && (
+              <div className="input-group">
+                <label className="input-label">City</label>
+                <input
+                  type="text"
+                  value={city}
+                  readOnly
+                  className="input-field"
+                />
+              </div>
+            )}
+            {zipError && <p className="error-text">{zipError}</p>}
           </div>
-        </section>
+          {validForm === false && (
+            <div className="alert-warning">
+              Please complete all fields correctly before continuing.
+            </div>
+          )}
+          <button className="submit-btn" type="submit" disabled={isLoading}>
+            {isLoading ? "Processing..." : "Submit"}
+          </button>
+        </form>
       </div>
-
+    </div>
   );
 }
 

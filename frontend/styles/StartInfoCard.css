@@ -1,160 +1,161 @@
-/* src/styles/StartForm.css */
+/* src/styles/StartInfoCard.css */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.start-info-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: "Poppins", sans-serif;
+
+}
+
+.start-info-card {
+  background-color: rgba(255, 255, 255, 0.95); /* Subtle glassmorphism */
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.start-info-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #2c3e50; /* Dark blue from homepage */
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.form-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: #333;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: #00aaff; /* Cyan from footer */
+  box-shadow: 0 0 6px rgba(0, 170, 255, 0.3);
+}
+
+.input-field.is-valid {
+  border-color: #2ecc71; /* Green for valid */
+}
+
+.input-field.is-invalid {
+  border-color: #e74c3c; /* Red for invalid */
+}
+
+.error-text {
+  font-size: 0.875rem;
+  color: #e74c3c;
+  margin-top: 0.25rem;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #00aaff; /* Cyan from footer */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.submit-btn:hover {
+  background-color: #0088cc; /* Darker cyan */
+  transform: translateY(-2px);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.submit-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .start-info-card {
+    padding: 1.5rem;
+    max-width: 90%;
   }
-  
-  .user-info-form {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    padding: 20px;
-    font-family: 'Poppins', sans-serif;
+
+  .start-info-title {
+    font-size: 1.5rem;
   }
-  
-  .user-info-form form {
-    /* backdrop-filter: blur(20px); */
-    background: #fffffdf6;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    width: 80%;
-    max-width: 600px; /* Increased width to accommodate two columns */
+
+  .input-field {
+    padding: 0.65rem 0.85rem;
+    font-size: 0.95rem;
   }
-  
-  .user-info-form h2 {
-    text-align: center;
-    font-size: 16px;
-    color: #333;
-    margin-bottom: 10px !important;
-    font-weight: 600;
+
+  .submit-btn {
+    padding: 0.65rem;
+    font-size: 0.95rem;
   }
-  
-  /* Two-column layout */
-  .form-columns {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px; /* Space between columns */
+}
+
+@media (max-width: 480px) {
+  .start-info-card {
+    padding: 1rem;
   }
-  
-  .column-left,
-  .column-right {
-    flex: 1; /* Each column takes equal space */
-    min-width: 0; /* Prevents overflow */
+
+  .start-info-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
   }
-  
-  .input-group {
-    margin-bottom: 20px;
+
+  .form-grid {
+    gap: 1rem;
   }
-  
-  .input-group label {
-    display: block;
-    font-size: 16px;
-    color: #555;
-    margin-bottom: 8px;
-    font-weight: 500;
-  }
-  
-  .input-group label .text-danger {
-    color: #e74c3c;
-  }
-  
-  .input-group input {
-    width: 100%;
-    padding: 12px 15px;
-    font-size: 16px;
-    color: #333;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .input-group input:focus {
-    border-color: #9b59b6;
-    box-shadow: 0 0 8px rgba(155, 89, 182, 0.3);
-  }
-  
-  .input-group input.is-valid {
-    border-color: #2ecc71;
-  }
-  
-  .input-group input.is-invalid {
-    border-color: #e74c3c;
-  }
-  
-  .input-group .text-danger {
-    font-size: 14px;
-    color: #e74c3c;
-    margin-top: 5px;
-    display: block;
-  }
-  
-  .continue-btn {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    color: #fff;
-    
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 600;
-    text-transform: uppercase;
-    transition: background 0.3s ease, transform 0.2s ease;
-  }
-  
-  .continue-btn:hover {
-    
-    transform: translateY(-2px);
-  }
-  
-  .continue-btn:active {
-    transform: translateY(0);
-  }
-  
-  /* Responsive design */
-  @media (max-width: 768px) {
-    .user-info-form form {
-      padding: 30px;
-      max-width: 90%;
-    }
-  
-    .form-columns {
-      flex-direction: column; /* Stack columns on smaller screens */
-      gap: 0; /* Remove gap when stacked */
-    }
-  
-    .user-info-form h2 {
-      font-size: 24px;
-    }
-  
-    .input-group input {
-      font-size: 14px;
-      padding: 10px;
-    }
-  
-    .continue-btn {
-      font-size: 14px;
-      padding: 10px;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .user-info-form form {
-      padding: 20px;
-    }
-  
-    .user-info-form h2 {
-      font-size: 20px;
-      margin-bottom: 20px;
-    }
-  
-    .input-group {
-      margin-bottom: 15px;
-    }
-  }
+}

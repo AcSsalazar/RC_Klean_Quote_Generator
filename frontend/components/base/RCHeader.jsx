@@ -76,14 +76,14 @@ const [isLoggedIn, user] = useAuthStore((state) => [
 <div className="dropdown">
        <>
 
-       <button className='dropdown-button ' onClick={ToggleDropDown}>Options</button>
+       <p className='dropdown-button ' onClick={ToggleDropDown}>Options</p>
        
        </>
       {isOpen && (
         <ul className="dropdown-menu">
-          <li><a href="/home">Home</a></li>
-          <li><a href="/about">About us</a></li>
-          <li><a href="/contact">Contact</a></li>
+          <li><a href="/user-info-form">Quote Calculator</a></li>
+          <li><a href="/quote-searcher">Searcher</a></li>
+          <li><a href="/about-service">About the tool</a></li>
         </ul>
       )}
     </div>

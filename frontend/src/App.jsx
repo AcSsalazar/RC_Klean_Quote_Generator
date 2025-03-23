@@ -11,13 +11,12 @@ import ForgotPassword from "../components/auth/ForgotPassword";
 import CreatePassword from "../components/auth/CreatePassword";
 import MainWrapper from '../src/layouts/MainWrapper'; 
 import RCHeader from "../components/base/RCHeader";
-import StartForm from "../components/StartForm";
 import QuoteViewer from "../components/QuoteViewer";
 import Coverage from "../components/Coverage";
 import QuoteResult from "../components/QuoteResult";
 import UserInfoForm from "../components/UserInfoForm";
 import QuoteCalculator from "../components/QuoteCalculator";
-import HomePage from "../components/Dashboard";
+import HomePage from "../components/HomePage";
 import SearchQuote from "../components/SearchQuote";
 import AboutService from "../components/About";
 
@@ -48,7 +47,6 @@ const App = () => {
         <Route path="/" element={<HomePage />}> </Route>
 
         {/* Start info form before the calculator */}
-        <Route path="/start-form" element={<StartForm />}> </Route>
         <Route path="/user-info-form" element={<UserInfoForm />}> </Route>
 
 

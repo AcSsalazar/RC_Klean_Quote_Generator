@@ -4,13 +4,12 @@
 .app-header {
 
 
-    background: rgba(203, 209, 250, 0.055);
+    background: #36434b;
     /* background: radial-gradient(circle, rgba(75,81,116,0.4) 29%, rgba(9,86,121,0.2) 80%); */
     color: #ecf0f1;
-    padding: 1rem 0;
+    padding: 3px;
     position: relative;
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(37, 36, 97, 0.281);
   }
   
   .header-content {
@@ -79,17 +78,17 @@
     padding: 10px !important;
     font-size: 16px !important;
     /* background-color: #1657bf; */
-    color: rgb(236, 207, 13);
-    border: none;
+    color: #3473da;
+  
     cursor: pointer;
     border-radius: 4px;
     transition: all 0.3s ease !important;
   }
   
   .nav,.headerbtn:hover {
-    background-color: rgba(50, 51, 131, 0.425); 
-    /* padding: 0.6rem 1rem !important; */
-    color: rgb(236, 207, 13);
+ 
+ 
+    color: #73a5f0;
  
 
   }
@@ -120,11 +119,11 @@
 .dropdown-button {
   padding: 14px;
   font-size: 16px;
-  background-color: #1657bf56;
+
   color: rgb(236, 207, 13);
   border: none;
   cursor: pointer;
-  border-radius: 4px;
+
   transition: all 0.3s ease !important;
 }
 

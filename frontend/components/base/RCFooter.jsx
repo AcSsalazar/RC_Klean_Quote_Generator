@@ -1,26 +1,28 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../../styles/footer.css"
+import "../../styles/footer.css";
 
 function RCFooter() {
+  const handleNewsletterSubmit = (e) => {
+    e.preventDefault();
+    alert("Thank you for subscribing! (This is a placeholder—newsletter functionality coming soon.)");
+  };
+
   return (
-    <footer className="professional-footer">
+    <footer className="rc-footer">
       <div className="footer-content">
         <div className="footer-section">
-          <h3>RC Klean Invoice Estimator</h3>
-          <p>Simplifying invoicing for cleaning businesses.</p>
+          <h3>RC Klean</h3>
+          <p>Floors to Ceiling, We’ve Got You Covered. Professional cleaning services for restaurants and commercial spaces.</p>
           <div className="social-links">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <a href="https://facebook.com/rcklean" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
               <i className="fab fa-facebook-f"></i>
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-              <i className="fab fa-twitter"></i>
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-              <i className="fab fa-linkedin-in"></i>
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <a href="https://instagram.com/rcklean" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
               <i className="fab fa-instagram"></i>
+            </a>
+            <a href="https://linkedin.com/company/rcklean" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <i className="fab fa-linkedin-in"></i>
             </a>
           </div>
         </div>
@@ -30,34 +32,35 @@ function RCFooter() {
             <li><Link to="/">Home</Link></li>
             <li><Link to="/about">About Us</Link></li>
             <li><Link to="/services">Services</Link></li>
-            <li><Link to="/pricing">Pricing</Link></li>
+            <li><Link to="/quote-calculator">Get a Quote</Link></li>
             <li><Link to="/contact">Contact</Link></li>
           </ul>
         </div>
         <div className="footer-section">
-          <h3>Resources</h3>
+          <h3>Contact Us</h3>
           <ul>
-            <li><Link to="/blog">Blog</Link></li>
+            <li><a href="mailto:rcklean@rcklean.com">rcklean@rcklean.com</a></li>
+            <li><a href="tel:+12128787611">212-878-7611</a></li>
+            <li>New York, NY</li>
             <li><Link to="/faq">FAQ</Link></li>
-            <li><Link to="/support">Support</Link></li>
             <li><Link to="/terms">Terms of Service</Link></li>
-            <li><Link to="/privacy">Privacy Policy</Link></li>
           </ul>
         </div>
         <div className="footer-section">
           <h3>Newsletter</h3>
-          <p>Stay updated with our latest news and offers.</p>
-          <form className="newsletter-form">
-            <input type="email" placeholder="Enter your email" required />
+          <p>Get updates on cleaning tips and special offers.</p>
+          <form className="newsletter-form" onSubmit={handleNewsletterSubmit}>
+            <input type="email" placeholder="Your email address" required />
             <button type="submit">Subscribe</button>
           </form>
         </div>
       </div>
       <div className="footer-bottom">
-        <p>&copy; 2024 RC Klean Invoice Estimator. All rights reserved.</p>
-        <p>Designed and developed by Wirk Consulting SAS</p>
+        <p>© {new Date().getFullYear()} RC Klean. All rights reserved.</p>
+        <p>Powered by <a href="https://wirkconsulting.com" target="_blank" rel="noopener noreferrer">Wirk Consulting SAS</a></p>
       </div>
     </footer>
   );
 }
+
 export default RCFooter;

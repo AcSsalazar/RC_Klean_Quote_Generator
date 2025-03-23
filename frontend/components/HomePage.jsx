@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "../styles/HomePage.css";
 import logo from "../public/img/foot-logo_1.png"; // Assuming you want to reuse your logo
 
+
 const HomePage = () => {
   return (
     <div className="homepage-container">
@@ -17,6 +18,7 @@ const HomePage = () => {
           <Link to="/user-info-form" className="option-card">
             <h2>Quote Calculator</h2>
             <p>Get an instant estimate for your cleaning service needs.</p>
+                      
             <button className="option-button">Start Now</button>
           </Link>
 
