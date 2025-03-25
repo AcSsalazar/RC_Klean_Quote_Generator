@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuthStore } from "../src/RCA/auth";
 import apiInstance from "../src/utils/axios";
-import "../styles/InvoiceCalculator.css";
+import "../styles/Options.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import useValidation from "./useValidator";
@@ -367,7 +367,7 @@ export default function QuoteCalculator() {
         );
       case 3:
         return (
-          <div className="card">
+          <div className="selector-card">
             <h2>Areas</h2>
             {fields.areas.map((area, index) => (
               <div key={index} className="area-item">

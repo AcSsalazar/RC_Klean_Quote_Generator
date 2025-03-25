@@ -1,5 +1,54 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
 
+.homepage-container {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: "Poppins", sans-serif;
+}
+
+.homepage-header {
+  text-align: center;
+  padding: 10px;
+  background-color: #ffffffe8;
+  box-shadow: inset 1px -7px 5px 1px rgb(187 187 187 / 50%);
+  border-radius: 0 0 30px 30px;
+}
+
+.homepage-logo {
+  height: 80px;
+  margin-bottom: 2px;
+}
+
+.homepage-header h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.homepage-header p {
+  font-size: 1.2rem;
+  color: #40b7c0;
+  margin-top: 1px;
+}
+
+.homepage-main {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.homepage-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  max-width: 1200px;
+}
+
 .option-card {
   position: relative;
   background-color: #ffffff1a;
@@ -21,7 +70,6 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("../public/hover-doc.gif");
   background-size: cover;
   background-position: center;
   opacity: 0;
@@ -29,8 +77,20 @@
   z-index: 0;
 }
 
+.option-card[data-gif="quote"]::before {
+  background-image: url("/hover-doc.gif");
+}
+
+.option-card[data-gif="search"]::before {
+  background-image: url("/magnifier-rotation.gif");
+}
+
+.option-card[data-gif="about"]::before {
+  background-image: url("/spray-disinfection.gif");
+}
+
 .option-card:hover::before {
-  opacity: 0.5; /* Adjust for readability */
+  opacity: 0.5; /* Subtle visibility */
 }
 
 .option-card:hover {
@@ -39,124 +99,52 @@
   border-radius: 45px;
 }
 
-.option-card h2,
-.option-card p,
-.option-button {
+.option-card h2 {
+  font-size: 1.5rem;
+  color: #dce6dd;
+  margin-bottom: 10px;
   position: relative;
   z-index: 1;
 }
 
-/* Rest unchanged */
-.homepage-container {
-    min-height: 90vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    font-family:'Poppins', sans-serif;
-    
-    
-  }
-  
-  .homepage-header {
-    text-align: center;
-    padding: 10px 10px;
-    background-color: #ffffffe8;
-    box-shadow: inset 1px -7px 5px 1px rgb(187 187 187 / 50%);
-    border-radius: 0px 0px 30px 30px;
-    
-  }
-  
-  .homepage-logo {
-    height: 80px;
-    margin-bottom: 2px;
-  }
-  
-  .homepage-header h1 {
-    font-size: 2.5rem;
-    color: #2c3e50;
-    margin: 0;
-  }
-  
-  .homepage-header p {
-    font-size: 1.2rem;
-    color: #40b7c0;
-    margin-top: 1px;
-  }
-  
-  .homepage-main {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
-  }
-  
-  .homepage-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    max-width: 1200px;
-  }
-  
-  .option-card {
-    background-color: #ffffff1a;
-    backdrop-filter: blur(10px);
-    border-radius: 40px;
-    box-shadow: 1px 4px 10px rgba(15, 92, 102, 0.1);
-    padding: 20px;
-    width: 300px;
-    text-align: center;
-    text-decoration: none;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-radius 0.2s ease-out;
-  }
-  
-  .option-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    border-radius: 45px;
-  }
-  
-  .option-card h2 {
-    font-size: 1.5rem;
-    color: #dce6dd;
-    margin-bottom: 10px;
-  }
-  
-  .option-card p {
-    font-size: 1rem;
-    color: #cbeaff;
-    margin-bottom: 20px;
-  }
-  
-  .option-button {
-    background-color: #c1dd5b8e;
-    color: #ffffff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .option-button:hover {
-    background-color: #2980b9;
-  }
-  
-  .homepage-footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #2c3e50;
-    color: #ffffff;
-    font-size: 0.9rem;
-  }
-  
-  .homepage-footer a {
-    color: #3498db;
-    text-decoration: none;
-  }
-  
-  .homepage-footer a:hover {
-    text-decoration: underline;
-  }
+.option-card p {
+  font-size: 1rem;
+  color: #cbeaff;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.option-button {
+  background-color: #c1dd5b8e;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.option-button:hover {
+  background-color: #2980b9;
+}
+
+.homepage-footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #2c3e50;
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+.homepage-footer a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.homepage-footer a:hover {
+  text-decoration: underline;
+}

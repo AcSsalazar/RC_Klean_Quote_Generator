@@ -12,7 +12,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 2px;
   font-family: "Poppins", sans-serif;
 
 }
@@ -31,9 +31,9 @@
 .start-info-title {
   font-size: 1.75rem;
   font-weight: 600;
-  color: #2c3e50; /* Dark blue from homepage */
+  color: #088a3aac; /* Dark blue from homepage */
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1px;
 }
 
 .form-grid {
@@ -67,7 +67,7 @@
 
 .input-field:focus {
   border-color: #00aaff; /* Cyan from footer */
-  box-shadow: 0 0 6px rgba(0, 170, 255, 0.3);
+  box-shadow: 0 0 6px #00aaff72;
 }
 
 .input-field.is-valid {
@@ -95,12 +95,14 @@
 }
 
 .submit-btn {
-  width: 100%;
-  padding: 0.75rem;
-  font-size: 1rem;
+  align-items: left;
+  justify-content: left;
+  width: 40%;
+  padding: 0.5rem;
+  font-size: 1.2rem;
   font-weight: 600;
-  color: #ffffff;
-  background-color: #00aaff; /* Cyan from footer */
+  color: #60c194;
+  background-color: #365488; 
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -109,7 +111,7 @@
 }
 
 .submit-btn:hover {
-  background-color: #0088cc; /* Darker cyan */
+  background-color: #2f205c; /* Darker cyan */
   transform: translateY(-2px);
 }
 

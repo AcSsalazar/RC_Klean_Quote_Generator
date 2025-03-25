@@ -1,24 +1,36 @@
 /* src/styles/SearchQuote.css */
-.search-quote-container {
-    min-height: 100vh;
+.search-quote-container  {
+    min-height: 60vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #f4f7fa;
-    padding: 20px;
-    font-family: Arial, sans-serif;
+    background-color: #f4f7fa1d;
+    backdrop-filter: blur(10px);
+    padding: 2px;
+  }
+  .search-card{
+    background-color: rgba(255, 255, 255, 0.95); 
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    width: 100%;
+    max-width: 600px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
   
+
+
   .search-quote-container h1 {
     font-size: 2rem;
-    color: #2c3e50;
+    color: #2cd06bac;
     margin-bottom: 10px;
   }
   
   .search-quote-container p {
     font-size: 1.1rem;
-    color: #7f8c8d;
+    color: #9ac4c7;
     margin-bottom: 20px;
   }
   
@@ -29,17 +41,17 @@
   
   .search-input {
     padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #dcdcdc;
+    font-size: 13px;
+    border: 1px solid #5fabe9d0;
     border-radius: 5px;
-    width: 200px;
+    width: 190px;
     text-transform: uppercase;
   }
   
   .search-button {
-    background-color: #3498db;
+    background-color: #365488;
     color: #ffffff;
-    border: none;
+    border: 1px solid #c0bf81;
     padding: 10px 20px;
     border-radius: 5px;
     font-size: 1rem;
@@ -52,7 +64,7 @@
   }
   
   .error-message {
-    color: #e74c3c;
+    color: #e74c3c !important;
     margin-top: 10px;
   }
   

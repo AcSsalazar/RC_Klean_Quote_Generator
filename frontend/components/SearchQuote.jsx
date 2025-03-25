@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import apiInstance from "../src/utils/axios";
 import "../styles/QuoteSearch.css";
+import Swal from "sweetalert2";
 
 const SearchQuote = () => {
   const [quoteId, setQuoteId] = useState("");
@@ -19,7 +20,11 @@ const SearchQuote = () => {
     }
 
     try {
-      await apiInstance.get(`/invoice/${quoteId}/`);  // Check if quote exists
+      await apiInstance.get(`/invoice/${quoteId}/`);
+                Swal.fire({
+                  icon: "success",
+                  title: "Quote found",
+                });  // Check if quote exists
       navigate(`/results/${quoteId}`);
     } catch (error) {
       console.error("Error searching quote:", error);
@@ -29,6 +34,7 @@ const SearchQuote = () => {
 
   return (
     <div className="search-quote-container">
+      <div className='search-card'> 
       <h1>Search Your Quote</h1>
       <p>Enter your Quote ID to view your estimate.</p>
       <form onSubmit={handleSearch} className="search-form">
@@ -36,7 +42,7 @@ const SearchQuote = () => {
           type="text"
           value={quoteId}
           onChange={(e) => setQuoteId(e.target.value.toUpperCase())}
-          placeholder="Enter Quote ID (e.g., ABC45)"
+          placeholder="Example: ABC45"
           maxLength={5}
           className="search-input"
         />
@@ -46,6 +52,7 @@ const SearchQuote = () => {
       </form>
       {error && <p className="error-message">{error}</p>}
       <Link to="/" className="back-link">Back to Home</Link>
+      </div>
     </div>
   );
 };

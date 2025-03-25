@@ -110,6 +110,7 @@ function UserInfoForm() {
     <div className="start-info-container">
       <div className="start-info-card">
         <h2 className="start-info-title">Get Started</h2>
+        <p style={{color: '#00aaff96', textAlign: 'center', marginBottom: '4px'}}>We need some information</p>
         <form onSubmit={handleSubmit}>
           <div className="form-grid">
             <InputField
