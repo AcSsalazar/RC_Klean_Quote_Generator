@@ -111,7 +111,7 @@ const QuoteResult = () => {
           ${(total_price * 0.8).toFixed(2)} to ${(total_price * 1.2).toFixed(2)}
         </p>
         <div className="invoice-details">
-          <p>Quote ID: {quoteId}</p>
+          <p>Quote ID: {quoteId} </p>
           <p>Business Type: {business_type}</p>
           <p>Issued to: {full_name}</p>
           <p>Email: {email}</p>
@@ -120,8 +120,12 @@ const QuoteResult = () => {
         </div>
         <div className="invoice-footer">
           <p style={{ fontWeight: "500" }}>Terms and Conditions:</p>
-          <p>
-            Will provide cleaning solutions, equipment, and materials to perform cleaning service. RC Klean will furnish insurance throughout the term of this service. In order to clean properly, water is needed. If no water is available on premises, we cannot service the location. Only equipment on wheels is moved in order to clean properly. Non-movable equipment will be cleaned in place unless moved by the customer.
+          <p style={{fontSize: '12px', textAlign: 'justify'}}>Will provide cleaning solutions, equipment, and materials to perform cleaning service.
+RC Klean shall perform the Services in a professional and workman-like manner in accordance with generally recognized industry standards for similar services and
+will exercise reasonable care and diligence in performing its duties. RC Klean hereby agrees to indemnify, hold harmless, and at customer request, defend and its
+affiliates, successors and assigns, and its and their officers, directors, employees, agents, successors and assigns, from and against any damages, liabilities,
+deficiencies, actions, judgments, interest, awards penalties, fines, losses costs or expenses of whatever kind of nature (including, but not limited to, attorneys’ fees and
+other defense costs) which are caused by the actions of RC Klean or any of its employees, agents, subcontractors or representatives
           </p>
           <p className="invoice-footer-info">rcklean@rcklean.com</p>
           <p className="invoice-footer-info">212-878-7611</p>

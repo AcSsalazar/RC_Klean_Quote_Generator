@@ -198,7 +198,7 @@ export default function QuoteCalculator() {
       setTimeout(() => {
         setIsCalculating(false);
         navigate(`/results/${quoteId}`);
-      }, 5000);
+      }, 4000);
     } catch (error) {
       console.error("Error updating invoice:", error);
       setErrors({ ...errors, general: error.response?.data?.error || "Error calculating price." });
@@ -219,10 +219,7 @@ export default function QuoteCalculator() {
     return 0;
   };
 
-  const renderValidationIcon = (validateStatus) => {
-    if (!validateStatus) return null;
-    return <FontAwesomeIcon icon={validateStatus === "true" ? faCheckCircle : faTimesCircle} className={`icon-${validateStatus}`} />;
-  };
+
 
   const renderStep = () => {
     const isCalculateDisabled = fields.equantity.some(item => 
@@ -242,14 +239,14 @@ export default function QuoteCalculator() {
                       value={item.name.field}
                       onChange={(e) => handleEquantityChange(index, "name", e.target.value)}
                       onBlur={() => handleEquantityValidate(index, "name")}
-                      className={`form-control ${item.name.validate === "false" ? "is-invalid" : item.name.validate === "true" ? "is-valid" : ""}`}
+                      className={`selector-input ${item.name.validate === "false" ? "is-invalid" : item.name.validate === "true" ? "is-valid" : ""}`}
                     >
                       <option value="">Select equipment</option>
                       {options.equipmentTypes.map((type) => (
                         <option key={type.id} value={type.id}>{type.name}</option>
                       ))}
                     </select>
-                    {renderValidationIcon(item.name.validate)}
+                   
                   </div>
                   {item.name.validate === "false" && <span className="text-danger">Please select an equipment type.</span>}
                 </div>
@@ -261,7 +258,7 @@ export default function QuoteCalculator() {
                         value={item.option_value.field}
                         onChange={(e) => handleOptionChange(index, e.target.value)}
                         onBlur={() => handleEquantityValidate(index, "option_value")}
-                        className={`form-control ${item.option_value.validate === "false" ? "is-invalid" : item.option_value.validate === "true" ? "is-valid" : ""}`}
+                        className={`form-control-options ${item.option_value.validate === "false" ? "is-invalid" : item.option_value.validate === "true" ? "is-valid" : ""}`}
                       >
                         <option value="">Select size/quantity</option>
                         {item.validOptions.map((option) => (
@@ -270,7 +267,7 @@ export default function QuoteCalculator() {
                           </option>
                         ))}
                       </select>
-                      {renderValidationIcon(item.option_value.validate)}
+                    
                     </div>
                     {item.option_value.validate === "false" && <span className="text-danger">This field is required.</span>}
                   </div>
@@ -286,7 +283,7 @@ export default function QuoteCalculator() {
                       className={`form-control ${item.quantity.validate === "false" ? "is-invalid" : item.quantity.validate === "true" ? "is-valid" : ""}`}
                       placeholder="Enter quantity"
                     />
-                    {renderValidationIcon(item.quantity.validate)}
+                    
                   </div>
                   {item.quantity.validate === "false" && <span className="text-danger">Please enter a valid quantity (min 1).</span>}
                 </div>
@@ -305,14 +302,14 @@ export default function QuoteCalculator() {
                       value={area.name.field}
                       onChange={(e) => handleAreaChange(index, "name", e.target.value)}
                       onBlur={() => handleAreaValidate(index, "name")}
-                      className={`form-control ${area.name.validate === "false" ? "is-invalid" : area.name.validate === "true" ? "is-valid" : ""}`}
+                      className={`selector-input selector-area ${area.name.validate === "false" ? "is-invalid" : area.name.validate === "true" ? "is-valid" : ""}`}
                     >
                       <option value="">Select area</option>
                       {options.areaNames.map((areaOption) => (
                         <option key={areaOption.id} value={areaOption.id}>{areaOption.name}</option>
                       ))}
                     </select>
-                    {renderValidationIcon(area.name.validate)}
+                   
                   </div>
                   {area.name.validate === "false" && <span className="text-danger">Please select an area.</span>}
                 </div>
@@ -323,14 +320,14 @@ export default function QuoteCalculator() {
                       value={area.square_feet.field}
                       onChange={(e) => handleAreaChange(index, "square_feet", e.target.value)}
                       onBlur={() => handleAreaValidate(index, "square_feet")}
-                      className={`form-control ${area.square_feet.validate === "false" ? "is-invalid" : area.square_feet.validate === "true" ? "is-valid" : ""}`}
+                      className={`selector-input selector-squarefeet ${area.square_feet.validate === "false" ? "is-invalid" : area.square_feet.validate === "true" ? "is-valid" : ""}`}
                     >
                       <option value="">Select size</option>
                       {SquareFeetOptions.map((sizeOption) => (
                         <option key={sizeOption.value} value={sizeOption.value}>{sizeOption.label}</option>
                       ))}
                     </select>
-                    {renderValidationIcon(area.square_feet.validate)}
+                    
                   </div>
                   {area.square_feet.validate === "false" && <span className="text-danger">Please select a size range.</span>}
                 </div>
@@ -341,14 +338,14 @@ export default function QuoteCalculator() {
                       value={area.floor_type.field}
                       onChange={(e) => handleAreaChange(index, "floor_type", e.target.value)}
                       onBlur={() => handleAreaValidate(index, "floor_type")}
-                      className={`form-control ${area.floor_type.validate === "false" ? "is-invalid" : area.floor_type.validate === "true" ? "is-valid" : ""}`}
+                      className={`selector-input selector-floor ${area.floor_type.validate === "false" ? "is-invalid" : area.floor_type.validate === "true" ? "is-valid" : ""}`}
                     >
                       <option value="">Select floor type</option>
                       {options.floorNames.map((floor) => (
                         <option key={floor.id} value={floor.id}>{floor.name}</option>
                       ))}
                     </select>
-                    {renderValidationIcon(area.floor_type.validate)}
+                   
                   </div>
                   {area.floor_type.validate === "false" && <span className="text-danger">Please select a floor type.</span>}
                 </div>
@@ -358,7 +355,7 @@ export default function QuoteCalculator() {
             <button onClick={handleAddArea} className="add-btn">Add Area</button>
             <button 
               onClick={calculateTotalPrice} 
-              className="calculate-btn" 
+              className="calculate-btn areas" 
               disabled={isCalculateDisabled}
             >
               Calculate
@@ -378,14 +375,14 @@ export default function QuoteCalculator() {
                       value={area.name.field}
                       onChange={(e) => handleAreaChange(index, "name", e.target.value)}
                       onBlur={() => handleAreaValidate(index, "name")}
-                      className={`form-control ${area.name.validate === "false" ? "is-invalid" : area.name.validate === "true" ? "is-valid" : ""}`}
+                      className={`selector-input selector-area ${area.name.validate === "false" ? "is-invalid" : area.name.validate === "true" ? "is-valid" : ""}`}
                     >
                       <option value="">Select area</option>
                       {options.areaNames.map((areaOption) => (
                         <option key={areaOption.id} value={areaOption.id}>{areaOption.name}</option>
                       ))}
                     </select>
-                    {renderValidationIcon(area.name.validate)}
+                   
                   </div>
                   {area.name.validate === "false" && <span className="text-danger">Please select an area.</span>}
                 </div>
@@ -396,14 +393,14 @@ export default function QuoteCalculator() {
                       value={area.square_feet.field}
                       onChange={(e) => handleAreaChange(index, "square_feet", e.target.value)}
                       onBlur={() => handleAreaValidate(index, "square_feet")}
-                      className={`form-control ${area.square_feet.validate === "false" ? "is-invalid" : area.square_feet.validate === "true" ? "is-valid" : ""}`}
+                      className={`selector-input squarefeet ${area.square_feet.validate === "false" ? "is-invalid" : area.square_feet.validate === "true" ? "is-valid" : ""}`}
                     >
                       <option value="">Select size</option>
                       {SquareFeetOptions.map((sizeOption) => (
                         <option key={sizeOption.value} value={sizeOption.value}>{sizeOption.label}</option>
                       ))}
                     </select>
-                    {renderValidationIcon(area.square_feet.validate)}
+                    
                   </div>
                   {area.square_feet.validate === "false" && <span className="text-danger">Please select a size range.</span>}
                 </div>
@@ -414,14 +411,14 @@ export default function QuoteCalculator() {
                       value={area.floor_type.field}
                       onChange={(e) => handleAreaChange(index, "floor_type", e.target.value)}
                       onBlur={() => handleAreaValidate(index, "floor_type")}
-                      className={`form-control ${area.floor_type.validate === "false" ? "is-invalid" : area.floor_type.validate === "true" ? "is-valid" : ""}`}
+                      className={`selector-input selector-floor ${area.floor_type.validate === "false" ? "is-invalid" : area.floor_type.validate === "true" ? "is-valid" : ""}`}
                     >
                       <option value="">Select floor type</option>
                       {options.floorNames.map((floor) => (
                         <option key={floor.id} value={floor.id}>{floor.name}</option>
                       ))}
                     </select>
-                    {renderValidationIcon(area.floor_type.validate)}
+                    
                   </div>
                   {area.floor_type.validate === "false" && <span className="text-danger">Please select a floor type.</span>}
                 </div>

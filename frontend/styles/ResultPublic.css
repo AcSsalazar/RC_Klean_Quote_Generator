@@ -9,7 +9,7 @@ body {
   padding: 20px;
   border: 1px solid #251b47 !important;
   border-radius: 5px;
-  max-width: 500px;
+  max-width: 800px;
   margin: 20px auto;
   background-color: #fffefb !important;
   
@@ -145,6 +145,7 @@ body {
   margin: 5px 0;
   color: #4e5153;
   text-align: right;
+  font-size: 12px;
 }
 .company-name {
   font-size: 20px;

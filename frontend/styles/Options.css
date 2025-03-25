@@ -28,6 +28,8 @@ body {
  
 }
 
+
+
 .invoice-estimator {
   display: flex;
   justify-content: center;
@@ -55,6 +57,7 @@ body {
   text-align: center;
   margin-bottom: 2rem;
 }
+
 
 .form-container {
   display: flex;
@@ -93,10 +96,11 @@ h2 {
 
 label {
   display: block;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   margin-bottom: 0.5rem;
-  /* color: var(--text-color); */
+  color: #213258;
+  
 }
 
 
@@ -123,13 +127,24 @@ input[type="number"]:focus {
 }
 
 .area-item {
-  display: grid;
-  grid-template-columns: 2fr 100px auto;
-  gap: 1rem;
-  align-items: end;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-color);
+  
+      display: grid;
+      grid-template-columns: 44fr 250px auto;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      align-items: end;
+      justify-content: center;
+  }
+
+
+.label-input-area {
+  color: #213258;
+  font-size: 11px;
+
+
+
 }
 
 .equipment-item {
@@ -142,12 +157,12 @@ input[type="number"]:focus {
   border-bottom: 1px solid var(--border-color);
 }
 
-/* Hacer los inputs de texto para equipos más anchos */
+/* Hacer los inputs de texto para equipos más anchos 
 .equipment-item .input-group:first-child input,
 .equipment-item .input-group:first-child select {
   width: 100%;
 }
-
+*/
 
 button {
   font-family: "Poppins", sans-serif;
@@ -165,17 +180,55 @@ button {
   margin: 10px 0px 0px 15px;
 }
 
-.remove-btn {
-  background-color: var(--error-color);
-  color: white;
+
+
+.selector-input {
+  padding: 0.75rem;
+ 
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: #f5ffde0e;
+  color: #213258;
+  transition: border-color 0.3s ease;
+  outline: none;
+  font-family: "Poppins", sans-serif;
+}
+.selector-input:focus {
+  border-color: var(--primary-color);
 }
 
-.calculate-btn {
-  background-color: var(--primary-color);
-  color: white;
-  font-size: 1.1rem;
-  width: 100%;
-  margin-top: 2rem;
+.selector-area {
+  width: 70%;
+}
+
+.selector-squarefeet {
+  width: 40% !important;
+  align-items: center;
+}
+
+.selector-floor {
+  width: 70%;
+
+}
+
+
+.form-control-options:focus {
+  border-color: #272c74;
+  outline: none;
+}
+
+.remove-btn {
+  padding: 5px;
+  max-width: 200px;
+  background-color: #d63030e0 !important;
+  color: rgb(246, 245, 255);
+}
+
+.calculate-btn .areas {
+
+  color: #60c194;
+  background-color: #365488; 
+  margin-top: 2rem  !important;
 }
 
 button:hover {

@@ -175,7 +175,9 @@ SIMPLE_JWT = {
 AUTH_USER_MODEL = 'userauths.User'
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',  # URL del front-end
+    'http://localhost:5173',
+    'http://localhost:5175',
+    'http://localhost:5174', # URL del front-end
 ]
 
 
