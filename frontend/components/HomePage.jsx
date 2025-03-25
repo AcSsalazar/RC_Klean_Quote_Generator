@@ -36,12 +36,7 @@ const HomePage = () => {
         </section>
       </main>
 
-      <footer className="homepage-footer">
-        <p>© 2025 RC Klean. All rights reserved.</p>
-        <p>
-          Powered by <a href="https://wirkconsulting.com/">Wirk Consulting</a>
-        </p>
-      </footer>
+
     </div>
   );
 };
