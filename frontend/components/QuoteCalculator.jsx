@@ -16,7 +16,7 @@ export default function QuoteCalculator() {
   const { initialStep } = location.state || {};
   const [step, setStep] = useState(initialStep);
   const [isCalculating, setIsCalculating] = useState(false);
-  const [errors, setErrors] = useState({ general: "" });
+  const [isFormValid, setIsFormValid] = useState(null);
   const [isLoggedIn, user] = useAuthStore((state) => [state.isLoggedIn, state.user]);
 
   const initialState = {
@@ -82,13 +82,12 @@ export default function QuoteCalculator() {
 
   const handleAddArea = () => {
     if (fields.areas.length < maxAreas) {
-      console.log("Adding new area. Current areas:", fields.areas.length);
       setFields({
         ...fields,
         areas: [...fields.areas, { name: { field: "", validate: null }, square_feet: { field: "", validate: null }, floor_type: { field: "", validate: null } }],
       });
     } else {
-      setErrors({ ...errors, general: `You can only add up to ${maxAreas} areas.` });
+      setIsFormValid(false);
     }
   };
 
@@ -117,7 +116,7 @@ export default function QuoteCalculator() {
         equantity: [...fields.equantity, { name: { field: "", validate: null }, option_type: { field: "", validate: null }, option_value: { field: "", validate: null }, quantity: { field: 0, validate: null }, validOptions: [] }],
       });
     } else {
-      setErrors({ ...errors, general: `You can only add up to ${maxEquipment} equipment items.` });
+      setIsFormValid(false);
     }
   };
 
@@ -159,20 +158,25 @@ export default function QuoteCalculator() {
   };
 
   const calculateTotalPrice = async () => {
-    console.log("Calculate button clicked");
     const isRestaurant = options.businessTypes.find(type => type.id === Number(fields.businessType.field))?.name.toLowerCase() === "restaurants" || fields.businessType.field.toLowerCase() === "restaurants";
-    console.log("Is Restaurant:", isRestaurant, "Step:", step);
-    console.log("Equantity details:", fields.equantity);
-    console.log("Areas details:", fields.areas);
+    
+    // Verificar si hay al menos un área o un equipo con datos
+    const hasAreas = fields.areas.some(area => area.name.field && area.square_feet.field && area.floor_type.field);
+    const hasEquipment = fields.equantity.some(equip => equip.name.field && (equip.validOptions.length === 0 || equip.option_value.field) && equip.quantity.field > 0);
+    
+    if (!hasAreas && !hasEquipment) {
+      setIsFormValid(false);
+      return;
+    }
+
     const isValid = validateAllFields(fields, isRestaurant);
-    console.log("Validation result:", isValid, "Fields:", fields);
     if (!isValid) {
-      setErrors({ ...errors, general: "Please fill out all required fields correctly. Equipment options are required if available." });
+      setIsFormValid(false);
       return;
     }
 
     if (isLoggedIn() && (await fetchQuotes()) >= 20) {
-      setErrors({ ...errors, general: "You’ve reached the maximum of 20 saved quotes." });
+      setIsFormValid(false);
       return;
     }
 
@@ -193,7 +197,6 @@ export default function QuoteCalculator() {
           option_value: equip.option_value.field ? Number(equip.option_value.field) : null,
         })),
       };
-      console.log("Payload being sent:", payload);
       await apiInstance.patch(`invoice/${quoteId}/update/`, payload);
       setTimeout(() => {
         setIsCalculating(false);
@@ -201,7 +204,7 @@ export default function QuoteCalculator() {
       }, 4000);
     } catch (error) {
       console.error("Error updating invoice:", error);
-      setErrors({ ...errors, general: error.response?.data?.error || "Error calculating price." });
+      setIsFormValid(false);
       setIsCalculating(false);
     }
   };
@@ -219,8 +222,6 @@ export default function QuoteCalculator() {
     return 0;
   };
 
-
-
   const renderStep = () => {
     const isCalculateDisabled = fields.equantity.some(item => 
       item.name.field && item.validOptions.length > 0 && !item.option_value.field
@@ -229,9 +230,14 @@ export default function QuoteCalculator() {
       case 2:
         return (
           <div className="card">
+            {isFormValid === false && (
+              <div className="alert-warning">
+                Please provide at least one area or equipment item to proceed with the calculation.
+              </div>
+            )}
             <h2>Equipment</h2>
             {fields.equantity.map((item, index) => (
-              <div key={index} className="equantity-item">
+              <div key={index} className="equantity-selector">
                 <div className="input-group">
                   <label>Equipment <span className="text-danger">*</span></label>
                   <div className="input-wrapper">
@@ -246,7 +252,6 @@ export default function QuoteCalculator() {
                         <option key={type.id} value={type.id}>{type.name}</option>
                       ))}
                     </select>
-                   
                   </div>
                   {item.name.validate === "false" && <span className="text-danger">Please select an equipment type.</span>}
                 </div>
@@ -267,7 +272,6 @@ export default function QuoteCalculator() {
                           </option>
                         ))}
                       </select>
-                    
                     </div>
                     {item.option_value.validate === "false" && <span className="text-danger">This field is required.</span>}
                   </div>
@@ -280,19 +284,19 @@ export default function QuoteCalculator() {
                       value={item.quantity.field}
                       onChange={(e) => handleEquantityChange(index, "quantity", e.target.value)}
                       onBlur={() => handleEquantityValidate(index, "quantity")}
-                      className={`form-control ${item.quantity.validate === "false" ? "is-invalid" : item.quantity.validate === "true" ? "is-valid" : ""}`}
+                      className={`selector-input ${item.quantity.validate === "false" ? "is-invalid" : item.quantity.validate === "true" ? "is-valid" : ""}`}
                       placeholder="Enter quantity"
                     />
-                    
                   </div>
                   {item.quantity.validate === "false" && <span className="text-danger">Please enter a valid quantity (min 1).</span>}
                 </div>
-                <button onClick={() => handleEquantityRemove(index)} className="remove-btn">Remove</button>
+                <button onClick={() => handleEquantityRemove(index)} className="remove-btn remove-equipment-btn">Remove</button>
               </div>
             ))}
             <button onClick={handleEquantityAdd} className="add-btn">Add Equipment</button>
+            <span style={{marginTop: '2px'}}></span>
 
-            <h2>Areas (Optional)</h2>
+            <h2>Areas</h2>
             {fields.areas.map((area, index) => (
               <div key={index} className="area-item">
                 <div className="input-group">
@@ -309,7 +313,6 @@ export default function QuoteCalculator() {
                         <option key={areaOption.id} value={areaOption.id}>{areaOption.name}</option>
                       ))}
                     </select>
-                   
                   </div>
                   {area.name.validate === "false" && <span className="text-danger">Please select an area.</span>}
                 </div>
@@ -327,7 +330,6 @@ export default function QuoteCalculator() {
                         <option key={sizeOption.value} value={sizeOption.value}>{sizeOption.label}</option>
                       ))}
                     </select>
-                    
                   </div>
                   {area.square_feet.validate === "false" && <span className="text-danger">Please select a size range.</span>}
                 </div>
@@ -345,7 +347,6 @@ export default function QuoteCalculator() {
                         <option key={floor.id} value={floor.id}>{floor.name}</option>
                       ))}
                     </select>
-                   
                   </div>
                   {area.floor_type.validate === "false" && <span className="text-danger">Please select a floor type.</span>}
                 </div>
@@ -353,18 +354,26 @@ export default function QuoteCalculator() {
               </div>
             ))}
             <button onClick={handleAddArea} className="add-btn">Add Area</button>
-            <button 
-              onClick={calculateTotalPrice} 
-              className="calculate-btn areas" 
-              disabled={isCalculateDisabled}
-            >
-              Calculate
-            </button>
+            <p></p>
+            <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+              <button 
+                onClick={calculateTotalPrice} 
+                className="calculate-button" 
+                disabled={isCalculateDisabled}
+              >
+                Calculate
+              </button>
+            </div>
           </div>
         );
       case 3:
         return (
           <div className="selector-card">
+            {isFormValid === false && (
+              <div className="alert-warning">
+                Please provide at least one area to proceed with the calculation.
+              </div>
+            )}
             <h2>Areas</h2>
             {fields.areas.map((area, index) => (
               <div key={index} className="area-item">
@@ -382,7 +391,6 @@ export default function QuoteCalculator() {
                         <option key={areaOption.id} value={areaOption.id}>{areaOption.name}</option>
                       ))}
                     </select>
-                   
                   </div>
                   {area.name.validate === "false" && <span className="text-danger">Please select an area.</span>}
                 </div>
@@ -400,7 +408,6 @@ export default function QuoteCalculator() {
                         <option key={sizeOption.value} value={sizeOption.value}>{sizeOption.label}</option>
                       ))}
                     </select>
-                    
                   </div>
                   {area.square_feet.validate === "false" && <span className="text-danger">Please select a size range.</span>}
                 </div>
@@ -418,7 +425,6 @@ export default function QuoteCalculator() {
                         <option key={floor.id} value={floor.id}>{floor.name}</option>
                       ))}
                     </select>
-                    
                   </div>
                   {area.floor_type.validate === "false" && <span className="text-danger">Please select a floor type.</span>}
                 </div>
@@ -426,7 +432,7 @@ export default function QuoteCalculator() {
               </div>
             ))}
             <button onClick={handleAddArea} className="add-btn">Add Area</button>
-            <button onClick={calculateTotalPrice} className="calculate-btn">Calculate</button>
+            <button onClick={calculateTotalPrice} className="calculate-btn areas">Calculate</button>
           </div>
         );
       default:
@@ -442,7 +448,6 @@ export default function QuoteCalculator() {
           <p>Calculating Price...</p>
         </div>
       )}
-      {errors.general && <p className="error">{errors.general}</p>}
       {renderStep()}
     </div>
   );

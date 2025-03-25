@@ -57,6 +57,7 @@ function RCFooter() {
       </div>
       <div className="footer-bottom">
         <p>© {new Date().getFullYear()} RC Klean. All rights reserved.</p>
+        <a href="https://lordicon.com/">Icons by Lordicon.com</a>
         <p>Powered by <a href="https://wirkconsulting.com" target="_blank" rel="noopener noreferrer">Wirk Consulting SAS</a></p>
       </div>
     </footer>

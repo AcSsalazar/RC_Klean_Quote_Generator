@@ -183,14 +183,14 @@ button {
 
 
 .selector-input {
-  padding: 0.75rem;
+
  
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background-color: #f5ffde0e;
-  color: #213258;
+
+  background-color: #f5ffde0e !important;
+  color: #213258 !important;
   transition: border-color 0.3s ease;
-  outline: none;
+
   font-family: "Poppins", sans-serif;
 }
 .selector-input:focus {
@@ -211,21 +211,44 @@ button {
 
 }
 
+.equantity-selector {
+  max-width: 720px;
+  min-width: 100px;
+  display: flex
+;
+  justify-content: space-between;
+  align-items: stretch;
+
+
+}
+
 
 .form-control-options:focus {
   border-color: #272c74;
   outline: none;
 }
 
-.remove-btn {
+.remove-btn  {
   padding: 5px;
   max-width: 200px;
   background-color: #d63030e0 !important;
   color: rgb(246, 245, 255);
 }
 
-.calculate-btn .areas {
+.remove-equipment-btn {
 
+  height: 36px;
+  margin-top: 36px;
+
+
+}
+
+
+.calculate-button {
+  width: 40%;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
   color: #60c194;
   background-color: #365488; 
   margin-top: 2rem  !important;
