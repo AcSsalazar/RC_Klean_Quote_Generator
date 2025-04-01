@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'api',
 
     #Thirt party apps 
- 
+
     'rest_framework_simplejwt.token_blacklist', 
     'drf_yasg',
 
@@ -219,7 +219,7 @@ JAZZMIN_SETTINGS = {
         "api.Invoice": "fas fa-cart-plus",
         "api.BusinessType": "fas fa-shopping-basket",
         "api.AreaType": "fas fa-check-circle"
-       ''' "store.productfaq": "fas fa-question",
+        ''' "store.productfaq": "fas fa-question",
         "store.Review": "fas fa-star fa-beat",
         "store.Category": "fas fa-tag",
         "store.Coupon": "fas fa-percentage",
