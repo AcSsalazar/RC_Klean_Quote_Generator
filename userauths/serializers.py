@@ -6,7 +6,6 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-
 # Define a custom serializer that inherits from TokenObtainPairSerializer
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     '''
@@ -37,7 +36,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
 
-
     class Meta:
         # Specify the model that this serializer is associated with
         model = User
@@ -64,7 +62,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             address=validated_data['address'],
             business_type=validated_data['business_type'],
             zip_code = validated_data['zip_code'],
-
         )
         email_username, mobile = user.email.split('@')
         user.username = email_username
@@ -75,14 +72,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         # Return the created user
         return user
-    
 
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
         fields = '__all__'
-
 
 class ProfileSerializer(serializers.ModelSerializer):
 
@@ -107,7 +102,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response['user'] = UserSerializer(instance.user).data
         return response
-    
 
 class PasswordResetSerializer(serializers.Serializer):
     email = serializers.EmailField()                                                                                                             

@@ -1,8 +1,6 @@
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
-
-
 # Restframework
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -12,18 +10,13 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.tokens import RefreshToken
-
 # Others
 import json
 import random
-
 # Serializers
 from userauths.serializers import MyTokenObtainPairSerializer, ProfileSerializer, RegisterSerializer, UserSerializer
-
-
 # Models
 from userauths.models import Profile, User
-
 
 # Clase para interacion con MyTokenObtainPairView, La cual se hereda desde MyTokenObtainPair.
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -39,8 +32,6 @@ class RegisterView(generics.CreateAPIView):
     # Configura el serializer para ser usado en esta vista.
     serializer_class = RegisterSerializer
 
-
-
 # Vista definida como funcion de py  @api_view decorator.
 @api_view(['GET'])
 def getRoutes(request):
@@ -53,7 +44,6 @@ def getRoutes(request):
     ]
     # Retorna un response con todas las rutas.
     return Response(routes)
-
 
 # This is another DRF view defined as a Python function using the @api_view decorator.
 # It is decorated with the @permission_classes decorator specifying that only authenticated users can access this view.
@@ -87,7 +77,6 @@ def testEndPoint(request):
     # If the request method is neither GET nor POST, it returns a response with an error message and an HTTP status of 400 (Bad Request).
     return Response("Invalid JSON data", status=status.HTTP_400_BAD_REQUEST)
 
-
 # This code defines another DRF View class called ProfileView, which inherits from generics.RetrieveAPIView and used to show user profile view.
 class ProfileView(generics.RetrieveAPIView):
     permission_classes = (AllowAny,)
@@ -99,7 +88,6 @@ class ProfileView(generics.RetrieveAPIView):
         user = User.objects.get(id=user_id)
         profile = Profile.objects.get(user=user)
         return profile
-    
 
 def generate_numeric_otp(length=7):
         # Generate a random 7-digit OTP
@@ -118,7 +106,7 @@ class PasswordEmailVerify(generics.RetrieveAPIView):
             user.otp = generate_numeric_otp()
             uidb64 = user.pk
             
-             # Generate a token and include it in the reset link sent via email
+            # Generate a token and include it in the reset link sent via email
             refresh = RefreshToken.for_user(user)
             reset_token = str(refresh.access_token)
 
@@ -143,7 +131,6 @@ class PasswordEmailVerify(generics.RetrieveAPIView):
             msg.attach_alternative(html_body, "text/html")
             msg.send()
         return user
-    
 
 class PasswordChangeView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
@@ -168,7 +155,6 @@ class PasswordChangeView(generics.CreateAPIView):
             user.otp = ""
             user.reset_token = ""
             user.save()
-
             
             return Response( {"message": "Contraseña cambiada con exito"}, status=status.HTTP_201_CREATED)
         else:

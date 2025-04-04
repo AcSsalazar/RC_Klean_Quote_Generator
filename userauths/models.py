@@ -4,7 +4,6 @@ from django.db.models.signals import post_save
 from shortuuid.django_fields import ShortUUIDField
 from api.models import BusinessType 
 
-
 class User(AbstractUser):
     business_type = models.ForeignKey(BusinessType, null=True, blank=True, on_delete=models.SET_NULL)  # Relación con BusinessType
     username = models.CharField(max_length=500, null=True, blank=True)
@@ -63,11 +62,10 @@ class Profile(models.Model):
     
     def save(self, *args, **kwargs):
         if self.full_name == "" or self.full_name == None:
-             self.full_name = self.user.full_name
+            self.full_name = self.user.full_name
         
         super(Profile, self).save(*args, **kwargs)
 
-   
 def create_user_profile(sender, instance, created, **kwargs):
 	if created:
 		Profile.objects.create(user=instance)

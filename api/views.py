@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from .permissions import IsAuthorizedClientOrAuthenticated
 from .models import Invoice, Area, Equipment, BusinessType, AreaType, EquipmentType, FloorType, QuantityOption
 from .helpers import calculate_price
 from .serializers import BusinessTypeSerializer, AreaTypeSerializer, FloorTypeSerializer, EquipmentTypeSerializer, InvoiceSerializer, QuantityOptionSerializer
@@ -10,7 +11,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from userauths.models import User
 from rest_framework.permissions import IsAuthenticated
-
 
 class InvoiceCalculateView(APIView):
     permission_classes = [AllowAny]
@@ -81,7 +81,6 @@ class InvoiceCalculateView(APIView):
         invoice.save()
 
         return Response({"total_price": total_price, "id": invoice.id, "quote_id": invoice.quote_id}, status=status.HTTP_200_OK)
-    
 
 class OptionsView(APIView):
     def get(self, request):
@@ -116,7 +115,6 @@ class InvoiceDetailView(APIView):
         serializer = InvoiceSerializer(invoice)  # Define this serializer
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    
 class SavedQuotesView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
