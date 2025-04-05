@@ -27,6 +27,14 @@ else:
 # --------------------------------------------------------------------------------------
 # APPLICATIONS
 # --------------------------------------------------------------------------------------
+THIRD_PARTY_APPS = [
+    'jazzmin',
+    'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
+    'corsheaders',
+    'drf_yasg',
+]
+
 DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,15 +49,7 @@ PROJECT_APPS = [
     'api',
 ]
 
-THIRD_PARTY_APPS = [
-    'jazzmin',
-    'rest_framework',
-    'rest_framework_simplejwt.token_blacklist',
-    'corsheaders',
-    'drf_yasg',
-]
-
-INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + PROJECT_APPS
 
 # --------------------------------------------------------------------------------------
 # MIDDLEWARE
@@ -254,8 +254,8 @@ JAZZMIN_SETTINGS = {
     "site_title": "RC Klean Admin",
     "site_header": "RC Klean",
     "site_brand": "Invoice Estimator",
-    "site_icon": "images/favicon.ico",
-    "site_logo": "images/logos/logo.jpg",
+    "site_icon": "wirk-logo-DSs3kRsd.png",
+    "site_logo": "wirk-logo-DSs3kRsd.png",
     "welcome_sign": "Wlcome to admin dashboard",
     "copyright": "All rights reserved",
     "show_sidebar": True,
