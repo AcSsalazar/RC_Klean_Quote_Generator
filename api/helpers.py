@@ -48,5 +48,3 @@ def calculate_price(invoice):
             total_price += Decimal(str(area.floor_type.price or '0.00'))
 
     return total_price.quantize(Decimal('0.01'))
-
-

@@ -6,7 +6,6 @@ class BusinessTypeSerializer(serializers.ModelSerializer):
         model = BusinessType
         fields = ['id', 'name']
 
-
 class QuantityOptionSerializer(serializers.ModelSerializer):
     equipment_type = serializers.PrimaryKeyRelatedField(read_only=True)
     option_type_display = serializers.CharField(source='get_option_type_display', read_only=True)
@@ -16,8 +15,6 @@ class QuantityOptionSerializer(serializers.ModelSerializer):
         model = QuantityOption
         fields = ['id', 'equipment_type', 'option_type', 'option_type_display', 'option_value', 'option_value_display', 'price']
         #read_only_fields = ['option_type_display', 'option_value_display']
-
-     
 
 class AreaTypeSerializer(serializers.ModelSerializer):
 
@@ -31,8 +28,6 @@ class EquipmentTypeSerializer(serializers.ModelSerializer):
         model = EquipmentType
         fields = ['id', 'name']
 
-
-
 # Serializador para las áreas (Area)
 class AreaSerializer(serializers.ModelSerializer):
     name = serializers.PrimaryKeyRelatedField(queryset=AreaType.objects.all())
@@ -41,7 +36,6 @@ class AreaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Area
         fields = ['name', 'square_feet', 'floor_type']
-
 
 class FloorTypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -56,9 +50,6 @@ class EquipmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Equipment
         fields = ['name', 'quantity', 'option_type', 'option_value']
-
-
-        
 
 # Serializer for Invoice
 class InvoiceSerializer(serializers.ModelSerializer):

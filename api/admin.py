@@ -1,22 +1,14 @@
 from django.contrib import admin
-
 from .models import (BusinessType, AreaType, EquipmentType, 
-                     Invoice, Area, Equipment, FloorType,
+                    Invoice, Area, Equipment, FloorType,
                     QuantityOption)
-
-from userauths.models import User
-
-# Los inlines permiten agregar, editar y eliminar instancias de modelos relacionados dentro de un formulario de administración: 
+from .forms import QuantityOptionForm
 
 # Registra los nuevos modelos en el admin
 admin.site.register(BusinessType)
 admin.site.register(AreaType)
 admin.site.register(EquipmentType)
-admin.site.register(Area)
-admin.site.register(Equipment)
 admin.site.register(FloorType)
-
-
 
 class AreaInline(admin.TabularInline):
     model = Area
@@ -47,15 +39,6 @@ class InvoiceAdmin(admin.ModelAdmin):
         return ", ".join(equipment_list)
     get_equipment.short_description = 'Equipos'
 
-
-
-
-
-
-
-
-from .forms import QuantityOptionForm
-
 @admin.register(QuantityOption)
 class QuantityOptionAdmin(admin.ModelAdmin):
     form = QuantityOptionForm
@@ -66,6 +49,3 @@ class QuantityOptionAdmin(admin.ModelAdmin):
 
     def option_value_display(self, obj):
         return obj.get_option_value_display()
-
-
-

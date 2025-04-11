@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
-
-
 const InputInvoiceManager = ({
   state,
   setState,

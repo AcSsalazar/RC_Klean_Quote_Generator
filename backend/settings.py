@@ -166,7 +166,6 @@ REST_FRAMEWORK = {
 
 # --------------------------------------------------------------------------------------
 # SIMPLE JWT
-# (Se respeta tu configuración original con ACCESS_TOKEN_LIFETIME=5m, REFRESH_TOKEN_LIFETIME=50d)
 # --------------------------------------------------------------------------------------
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
@@ -208,18 +207,17 @@ AUTH_USER_MODEL = 'userauths.User'
 # --------------------------------------------------------------------------------------
 # EMAIL SETTINGS (OPCIONAL, SI DESEAS USAR LO DEL .env)
 # --------------------------------------------------------------------------------------
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = config('EMAIL_HOST')
-# EMAIL_PORT = config('EMAIL_PORT', cast=int)
-# EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=True, cast=bool)
-# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-# DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=True, cast=bool)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 # --------------------------------------------------------------------------------------
 # CORS & CSRF
 # --------------------------------------------------------------------------------------
-# CORS and CSRF settings
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -244,11 +242,9 @@ CORS_ALLOW_HEADERS = [
 CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_TRUSTED_ORIGINS = config('DEV_CSRF_TRUSTED_ORIGINS', cast=Csv()) if DEBUG else config('PROD_CSRF_TRUSTED_ORIGINS', cast=Csv())
-CLIENT_TOKEN = config('CLIENT_TOKEN')
 
 # --------------------------------------------------------------------------------------
 # JAZZMIN SETTINGS
-# (Se respeta tal cual lo tenías en el original)
 # --------------------------------------------------------------------------------------
 JAZZMIN_SETTINGS = {
     "site_title": "RC Klean Admin",
