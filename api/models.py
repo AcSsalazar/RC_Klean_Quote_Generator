@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils import timezone
+from decimal import Decimal
 import random
 import string
 
@@ -92,12 +94,6 @@ class QuantityOption(models.Model):
     def __str__(self):
         return f"{self.equipment_type.name} - {self.get_option_type_display()}: {self.get_option_value_display()}"
 
-import random
-import string
-from django.db import models
-from django.conf import settings
-from django.core.mail import send_mail
-
 class Invoice(models.Model):
     business_type = models.ForeignKey('BusinessType', on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey('userauths.User', on_delete=models.SET_NULL, null=True)
@@ -108,17 +104,16 @@ class Invoice(models.Model):
     email = models.EmailField(max_length=80, null=True, blank=True)
     city = models.CharField(max_length=20, null=True, blank=True)
     zip_code = models.CharField(max_length=10, null=True, blank=True)
-    # Indicator to prevent re-sending email if it has already been sent once.
+    # Indicador para evitar el reenvío del correo si ya se envió una vez.
     email_sent = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        # Generate quote_id if it doesn't exist.
+        # Genera quote_id si no existe.
         if not self.quote_id:
             self.quote_id = self.generate_quote_id()
         super().save(*args, **kwargs)
-        
-        # Once saved, check if all information is complete and the email hasn't been sent yet.
-        # This validation allows sending the email when the invoice was initially incomplete but later updated.
+
+        # Una vez guardado, si la información está completa y el correo aún no se ha enviado, se envía.
         if self.email and self.is_complete() and not self.email_sent:
             email_context = self.build_email_context()
             send_mail(
@@ -129,7 +124,7 @@ class Invoice(models.Model):
                 html_message=email_context.get("html_content")
             )
             self.email_sent = True
-            # Save the change in email_sent without entering an infinite save loop.
+            # Guarda el cambio en email_sent sin entrar en un bucle infinito.
             super().save(update_fields=['email_sent'])
 
     def is_complete(self):
@@ -139,72 +134,103 @@ class Invoice(models.Model):
             self.city,
             self.zip_code,
             self.total_price,
-            self.areas.exists(),    # It is assumed that having at least one area is mandatory.
-            self.equipment.exists() # It is assumed that having at least one equipment is mandatory.
+            self.areas.exists(),    # Debe haber al menos un área.
+            self.equipment.exists()   # Debe haber al menos un equipo.
         ])
 
     def build_email_context(self):
+        lower_estimate = self.total_price * Decimal("0.80")
+        upper_estimate = self.total_price * Decimal("1.20")
+        today_date = timezone.now().strftime("%Y-%m-%d")
+        
         html_content = []
-        # General Invoice Information
-        html_content.append(f"<p><strong>Invoice:</strong> {self.quote_id}</p>")
-        html_content.append(f"<p><strong>Name:</strong> {self.full_name}</p>")
-        html_content.append(f"<p><strong>Date:</strong> {self.created_at.strftime('%Y-%m-%d %H:%M:%S')}</p>")
-        html_content.append(f"<p><strong>Total:</strong> {self.total_price}</p>")
-        html_content.append(f"<p><strong>Business Type:</strong> {self.business_type.name if self.business_type else 'N/A'}</p>")
-        html_content.append(f"<p><strong>City:</strong> {self.city}</p>")
-        html_content.append(f"<p><strong>Zip Code:</strong> {self.zip_code}</p>")
+        html_content.append("<div style='font-family: Arial, sans-serif; padding: 10px;'>")
+        html_content.append("<h2>Summary</h2>")
+        html_content.append(
+            f"<p class='estimated-title'>The estimated price is between: ${lower_estimate:.2f} and ${upper_estimate:.2f}</p>"
+        )
         
-        # Area Information
-        if self.areas.exists():
-            html_content.append("<h3>Areas:</h3>")
-            html_content.append("<ul>")
-            for area in self.areas.all():
-                # Get the area name (AreaType) and its prices if defined.
-                area_name = area.name.name if area.name else 'N/A'
-                price_0_to_500ft = area.name.price_0_to_500ft if area.name and area.name.price_0_to_500ft is not None else 'N/A'
-                price_500_to_1000ft = area.name.price_500_to_1000ft if area.name and area.name.price_500_to_1000ft is not None else 'N/A'
-                price_over_1000ft = area.name.price_over_to_1000ft if area.name and area.name.price_over_to_1000ft is not None else 'N/A'
-                square_feet = area.square_feet
-                # Floor type details, if available.
-                floor = f", Floor Type: {area.floor_type.name}, Floor Price: {area.floor_type.price}" if area.floor_type else ""
-                area_detail = (
-                    f"<li><strong>Area:</strong> {area_name}"
-                    f", Square Feet: {square_feet}"
-                    f", Price (0 to 500ft): {price_0_to_500ft}"
-                    f", Price (500 to 1000ft): {price_500_to_1000ft}"
-                    f", Price (over 1000ft): {price_over_1000ft}{floor}</li>"
+        # Detalles de la cotización
+        html_content.append("<div class='invoice-header'>")
+        html_content.append("<h3>Service Quote Details:</h3>")
+        html_content.append(f"<p><strong>Invoice No:</strong> {self.quote_id}</p>")
+        full_name = self.full_name if self.full_name else "Anonymous User"
+        html_content.append(f"<p><strong>Issued to:</strong> {full_name}</p>")
+        html_content.append(f"<p><strong>Due Date:</strong> {today_date}</p>")
+        html_content.append("</div>")
+        
+        # Construcción de la tabla con los ítems
+        html_content.append(
+            "<table class='invoice-table' border='1' cellspacing='0' cellpadding='5' style='border-collapse: collapse; width: 100%;'>"
+        )
+        html_content.append("<thead>")
+        html_content.append("<tr><th>DESCRIPTION</th><th>QTY</th><th>PRICE</th><th>SUBTOTAL</th></tr>")
+        html_content.append("</thead>")
+        html_content.append("<tbody>")
+        
+        # Fila 1: Business Type (tipo de servicio) con precio 0
+        business_type_name = self.business_type.name if self.business_type else "Unknown"
+        html_content.append(
+            f"<tr><td>{business_type_name}</td><td>1</td><td>$0.00</td><td>$0.00</td></tr>"
+        )
+        
+        # Filas: Equipos
+        equipment_items = list(self.equipment.all())
+        if equipment_items:
+            for equip in equipment_items:
+                equip_type = equip.name.name if equip.name else "Unknown"
+                # Agrega una descripción extra si se cuenta con option_type.
+                if equip.option_type:
+                    description = f"{equip_type} - {equip.option_type} {equip.option_value}"
+                else:
+                    description = equip_type
+                qty = equip.quantity
+                # Se utiliza el precio base definido en EquipmentType.
+                equipment_unit_price = (equip.name.base_price_unity 
+                                        if equip.name and equip.name.base_price_unity is not None 
+                                        else Decimal("0.00"))
+                subtotal = equipment_unit_price * qty
+                html_content.append(
+                    f"<tr><td>{description}</td><td>{qty}</td><td>${equipment_unit_price:.2f}</td><td>${subtotal:.2f}</td></tr>"
                 )
-                html_content.append(area_detail)
-            html_content.append("</ul>")
-        else:
-            html_content.append("<p><strong>Areas:</strong> No associated areas found.</p>")
         
-        # Equipment Information
-        if self.equipment.exists():
-            html_content.append("<h3>Equipment:</h3>")
-            html_content.append("<ul>")
-            for equip in self.equipment.all():
-                equip_type = equip.name.name if equip.name else 'N/A'
-                quantity = equip.quantity
-                option = equip.option_type if equip.option_type else 'N/A'
-                value = equip.option_value if equip.option_value is not None else 'N/A'
-                equip_detail = (
-                    f"<li><strong>Equipment:</strong> {equip_type}"
-                    f", Quantity: {quantity}"
-                    f", Option: {option}"
-                    f", Value: {value}</li>"
+        # Filas: Áreas
+        area_items = list(self.areas.all())
+        if area_items:
+            for area in area_items:
+                area_name = area.name.name if area.name else "Unknown"
+                # Se muestra el tamaño del área.
+                sq_ft = f"{area.square_feet}" if area.square_feet is not None else "N/A"
+                floor_name = area.floor_type.name if area.floor_type else ""
+                description = f"{area_name} ({sq_ft} sq ft)"
+                if floor_name:
+                    description += f" - {floor_name}"
+                # Se obtiene el precio base del área según los square feet utilizando los campos de AreaType.
+                if area.name:
+                    if area.square_feet <= 500:
+                        base_price = area.name.price_0_to_500ft or Decimal("0.00")
+                    elif area.square_feet <= 1000:
+                        base_price = area.name.price_500_to_1000ft or Decimal("0.00")
+                    else:
+                        base_price = area.name.price_over_to_1000ft or Decimal("0.00")
+                else:
+                    base_price = Decimal("0.00")
+                # Se suma el precio del piso, si existe, definido en FloorType.
+                floor_price = (area.floor_type.price 
+                               if area.floor_type and area.floor_type.price is not None 
+                               else Decimal("0.00"))
+                final_area_price = (base_price * 0.5) + floor_price
+                html_content.append(
+                    f"<tr><td>{description}</td><td>1</td><td>${final_area_price:.2f}</td><td>${final_area_price:.2f}</td></tr>"
                 )
-                html_content.append(equip_detail)
-            html_content.append("</ul>")
-        else:
-            html_content.append("<p><strong>Equipment:</strong> No associated equipment found.</p>")
         
-        return {
-            'html_content': "".join(html_content)
-        }
-    
+        html_content.append("</tbody></table>")
+        html_content.append("</div>")  # Cierre del contenedor principal
+
+        return {"html_content": "".join(html_content)}
+
     def generate_quote_id(self):
-        """Generates a unique ID composed of 3 letters and 2 digits."""
+        """Genera un ID único compuesto de 3 letras y 2 dígitos."""
         while True:
             letters = ''.join(random.choices(string.ascii_uppercase, k=3))
             numbers = ''.join(random.choices(string.digits, k=2))
