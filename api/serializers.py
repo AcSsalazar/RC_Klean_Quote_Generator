@@ -68,7 +68,9 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Invoice
-        fields = ['id', 'quote_id', 'business_type', 'areas', 'equipment', 'total_price', 'full_name', 'city', 'zip_code', 'email', 'created_at']
+        fields = ['id', 'quote_id', 'business_type', 'areas', 'equipment', 
+                  'total_price', 'full_name', 'city', 'zip_code', 'phone', 'address',
+                  'email', 'created_at']
 
     def create(self, validated_data):
         areas_data = validated_data.pop('areas', [])

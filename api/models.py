@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 import random
 import string
+import datetime
 # Modelo para BusinessType
 class BusinessType(models.Model):
     name = models.CharField(max_length=100)
@@ -105,10 +106,12 @@ class Invoice(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)  
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     quote_id = models.CharField(max_length=5, unique=True, null=True, blank=True)  
-    full_name = models.CharField(max_length=80, null=True, blank=True)  # New now we pass the full name from user-info form
-    email = models.EmailField(max_length=80, null=True, blank=True)     # New
+    full_name = models.CharField(max_length=80, null=True, blank=True)  
+    email = models.EmailField(max_length=80, null=True, blank=True) 
     city = models.CharField(max_length=20, null=True, blank=True)  
     zip_code = models.CharField(max_length=10, null=True, blank=True)
+    phone = models.CharField(max_length=15, null=True, blank=True)  
+    address = models.CharField(max_length=80, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.quote_id:

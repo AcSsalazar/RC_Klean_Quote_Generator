@@ -24,6 +24,8 @@ class InvoiceCalculateView(APIView):
         email = request.data.get("email")
         city = request.data.get("city")
         zip_code = request.data.get("zip_code")
+        phone = request.data.get("phone")
+        address = request.data.get("address")
 
         if not business_type:
             return Response({"error": "Business type is required."}, status=status.HTTP_400_BAD_REQUEST)
@@ -45,6 +47,8 @@ class InvoiceCalculateView(APIView):
             email=email,
             city=city,
             zip_code=zip_code,
+            phone = phone,
+            address = address,
         )
 
         for area in areas_data:

@@ -14,6 +14,8 @@ function UserInfoForm() {
   const [city, setCity] = useState("");
   const [zipError, setZipError] = useState("");
   const [options, setOptions] = useState({ businessTypes: [] });
+  const [phone, setPhone] = useState({ field: "", validate: null });
+  const [address, setAddress] = useState({ field: "", validate: null }); 
   const [validForm, setValidForm] = useState(null);
 
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ function UserInfoForm() {
     name: /^[a-zA-ZÀ-ÿ\s]{1,40}$/,
     email: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
     phone: /^\d{7,14}$/,
+    address: /^[a-zA-Z0-9\s,.'-]{3,}$/, // Adjusted regex for address validation
     zipcode: /^\d{4,7}$/,
   };
 
@@ -62,6 +65,8 @@ function UserInfoForm() {
       email.validate === "true" &&
       business.validate === "true" &&
       zipCode.validate === "true" &&
+      phone.validate === "true" &&
+      address.validate === "true" &&
       city
     ) {
       setIsLoading(true);
@@ -72,6 +77,8 @@ function UserInfoForm() {
           email: email.field,
           city: city,
           zip_code: zipCode.field,
+          phone_number: phone.field,
+          address: address.field,
           areas: [],
           equipment: [],
         };
@@ -102,6 +109,8 @@ function UserInfoForm() {
     setEmail({ field: "", validate: null });
     setBusiness({ field: "", validate: null });
     setZipCode({ field: "", validate: null });
+    setPhone({ field: "", validate: null });
+    setAddress({ field: "", validate: null });
     setCity("");
     setZipError("");
   };
@@ -148,6 +157,30 @@ function UserInfoForm() {
                 ))}
               </select>
             </div>
+
+            <InputField
+              state={phone}
+              setState={setPhone}
+              label="Phone Number"
+              name="phone"
+              placeholder="Enter your phone number"
+              regex={regexPatterns.phone}
+              errorMessage="Invalid phone number."  
+            />
+
+            <InputField
+              state={address}
+              setState={setAddress}
+              label="Address"
+              name="address"
+              placeholder="Enter your address"
+              regex={regexPatterns.address}
+              errorMessage="Invalid address format."
+
+            />
+
+
+
             <InputField
               state={zipCode}
               setState={setZipCode}
