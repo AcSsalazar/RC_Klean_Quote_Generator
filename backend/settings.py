@@ -13,6 +13,9 @@ from pathlib import Path
 from datetime import timedelta
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()  # <-- Esto lee el .env automáticamente
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,6 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-y(k+bf(%^c0_=w1*2%!91zh5+1=v6olxy^qb85wjcs(fpmn4u!'
+MAILERSEND_API_TOKEN = os.getenv("MAILERSEND_API_TOKEN")
+MAILERSEND_FROM_EMAIL = os.getenv("MAILERSEND_FROM_EMAIL")
+MAILERSEND_FROM_NAME = os.getenv("MAILERSEND_FROM_NAME")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

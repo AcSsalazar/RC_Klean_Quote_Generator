@@ -77,7 +77,7 @@ function UserInfoForm() {
           email: email.field,
           city: city,
           zip_code: zipCode.field,
-          phone_number: phone.field,
+          phone: phone.field,
           address: address.field,
           areas: [],
           equipment: [],
@@ -119,7 +119,7 @@ function UserInfoForm() {
     <div className="start-info-container">
       <div className="start-info-card">
         <h2 className="start-info-title">Get Started</h2>
-        <p style={{color: '#00aaff96', textAlign: 'center', marginBottom: '4px'}}>We need some information</p>
+        <p style={{color: '#00aaff96', textAlign: 'center', marginBottom: '4px', fontSize: '16px'}}>We need some information</p>
         <form onSubmit={handleSubmit}>
           <div className="form-grid">
             <InputField

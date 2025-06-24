@@ -12,7 +12,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2px;
+  padding: 20px;
   font-family: "Poppins", sans-serif;
 
 }
@@ -150,7 +150,16 @@
 @media (max-width: 480px) {
   .start-info-card {
     padding: 1rem;
+    max-width: 100%;
   }
+
+  .error-text {
+  font-size: 0.7rem;
+  color: #e74c3c;
+  margin-top: 0.25rem;
+}
+  .start-info-container {
+  min-height: 60vh; }
 
   .start-info-title {
     font-size: 1.25rem;

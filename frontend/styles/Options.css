@@ -4,7 +4,7 @@
   --primary-color: #42a01a;
   --secondary-color: #393571;
   --backdrop-filter: blur(10px);
-  --background: linear-gradient(180deg, rgb(36, 54, 88) 14%, rgb(92, 75, 129) 85%);
+  --background: linear-gradient(180deg, rgb(36, 54, 88) 14%, rgb(75 109 129));
   --text-color: #c9e4ec;
   --input-bg: rgba(36, 36, 36, 0.8);
   --border-color: #dfe6e9;
@@ -187,7 +187,7 @@ button {
  
   border: 1px solid var(--border-color);
 
-  background-color: #f5ffde0e !important;
+  /* background-color: #f5ffde0e !important; */
   color: #213258 !important;
   transition: border-color 0.3s ease;
 
@@ -289,6 +289,59 @@ button:hover {
   .equipment-item {
     grid-template-columns: 1fr;
   }
+
+@media (max-width: 480px) {
+
+
+
+.remove-equipment-btn {
+
+  height: 36px;
+  margin-top: 4px;
+  max-width: 80px;
+
+
+}
+.invoice-estimator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  padding: 1rem;
+  width: 100%;
+}
+
+.equantity-selector {
+  max-width: 720px;
+  min-width: 100px;
+  display: flex;
+  flex-direction: column;
+  
+
+}
+
+.add-btn {
+  background-color: var(--secondary-color);
+  color: white;
+  
+  
+}
+
+/* End media 480*/
+}
+
+
+  h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+.selector-card {
+  width: 100%;
+  max-width: 1000px;
+
+}
 }
 
 

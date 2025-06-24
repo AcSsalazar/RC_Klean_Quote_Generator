@@ -2,26 +2,18 @@ from django.urls import path
 from userauths import views as userauths_views
 from rest_framework_simplejwt.views import TokenRefreshView
 from .views import (InvoiceCalculateView, OptionsView, 
-                    SavedQuotesView, InvoiceDetailView)
+                    SavedQuotesView, InvoiceDetailView, InvoiceUpdateView)
 
 
 urlpatterns = [
     # Invoice calculator API end points: para obtener las opciones de negocio, áreas, y equipos
 
-    path('invoice/', InvoiceCalculateView.as_view(), name='invoice-calculate'),
-    path('invoice/<str:identifier>/', InvoiceDetailView.as_view(), name='invoice_detail'),
-    path('options/', OptionsView.as_view(), name='options' ),
-
-    
-
 
     path('invoice/', InvoiceCalculateView.as_view(), name='invoice-calculate'),  # POST
-    path('invoice/<str:identifier>/update/', InvoiceCalculateView.as_view(), name='invoice-update'),  # PATCH
+    path('invoice/<str:identifier>/update/', InvoiceUpdateView.as_view(), name='invoice-update'),  # PATCH
     path('invoice/<str:identifier>/', InvoiceDetailView.as_view(), name='invoice-detail'),  # GET
-
-
+    path('options/', OptionsView.as_view(), name='options'),
     path('saved-quotes/', SavedQuotesView.as_view(), name='saved_quotes'),
-
 
 
    

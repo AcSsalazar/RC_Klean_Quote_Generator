@@ -3,10 +3,6 @@ import { Link } from "react-router-dom";
 import "../../styles/footer.css";
 
 function RCFooter() {
-  const handleNewsletterSubmit = (e) => {
-    e.preventDefault();
-    alert("Thank you for subscribing! (This is a placeholder—newsletter functionality coming soon.)");
-  };
 
   return (
     <footer className="rc-footer">
@@ -46,19 +42,11 @@ function RCFooter() {
             <li><Link to="/terms">Terms of Service</Link></li>
           </ul>
         </div>
-        <div className="footer-section">
-          <h3>Newsletter</h3>
-          <p>Get updates on cleaning tips and special offers.</p>
-          <form className="newsletter-form" onSubmit={handleNewsletterSubmit}>
-            <input type="email" placeholder="Your email address" required />
-            <button type="submit">Subscribe</button>
-          </form>
-        </div>
-      </div>
       <div className="footer-bottom">
         <p>© {new Date().getFullYear()} RC Klean. All rights reserved.</p>
         <a href="https://lordicon.com/">Icons by Lordicon.com</a>
         <p>Powered by <a href="https://wirkconsulting.com" target="_blank" rel="noopener noreferrer">Wirk Consulting SAS</a></p>
+      </div>
       </div>
     </footer>
   );

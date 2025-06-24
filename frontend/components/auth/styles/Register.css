@@ -167,4 +167,10 @@ a:hover {
   margin-top: 15px;
   border: 1px solid #ffeeba;
   border-radius: 5px;
+
 }
+ @media (max-width: 480px) {
+  .text-danger {
+    font-size: 0.75rem;
+
+  }}

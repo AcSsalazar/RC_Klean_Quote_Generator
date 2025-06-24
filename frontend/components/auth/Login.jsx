@@ -39,7 +39,7 @@ const Login = () => {
 
   return (
     <section>
-      <main className="" style={{ marginBottom: 100, marginTop: 50 }}>
+      <main >
         <div className="container">
           <section className="">
             <div className="row d-flex justify-content-center">

@@ -8,6 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import useValidation from "./useValidator";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
+import QtySelector from "./QtySelector";
+
 
 export default function QuoteCalculator() {
   const navigate = useNavigate();
@@ -237,6 +239,7 @@ export default function QuoteCalculator() {
             )}
             <h2>Equipment</h2>
             {fields.equantity.map((item, index) => (
+              
               <div key={index} className="equantity-selector">
                 <div className="input-group">
                   <label>Equipment <span className="text-danger">*</span></label>
@@ -279,14 +282,18 @@ export default function QuoteCalculator() {
                 <div className="input-group">
                   <label>Quantity <span className="text-danger">*</span></label>
                   <div className="input-wrapper">
-                    <input
-                      type="number"
-                      value={item.quantity.field}
-                      onChange={(e) => handleEquantityChange(index, "quantity", e.target.value)}
-                      onBlur={() => handleEquantityValidate(index, "quantity")}
-                      className={`selector-input ${item.quantity.validate === "false" ? "is-invalid" : item.quantity.validate === "true" ? "is-valid" : ""}`}
-                      placeholder="Enter quantity"
-                    />
+<QtySelector
+  initial={item.quantity.field || 1}
+  min={1}
+  max={10}   // o el tope que tú quieras
+  onChange={(value) => {
+    handleEquantityChange(index, "quantity", value);
+    handleEquantityValidate(index, "quantity");
+  }}
+/>
+{item.quantity.validate === "false" && (
+  <span className="text-danger">Please enter a valid quantity (min 1).</span>
+)}
                   </div>
                   {item.quantity.validate === "false" && <span className="text-danger">Please enter a valid quantity (min 1).</span>}
                 </div>

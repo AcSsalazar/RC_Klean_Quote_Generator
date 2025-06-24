@@ -111,12 +111,13 @@ const QuoteResult = () => {
           ${(total_price * 0.8).toFixed(2)} to ${(total_price * 1.2).toFixed(2)}
         </p>
         <div className="invoice-details">
-          <p>Quote ID: {quoteId} </p>
+          <b><p> Quote ID: {quoteId} </p> </b>
           <p>Business Type: {business_type}</p>
           <p>Issued to: {full_name}</p>
           <p>Email: {email}</p>
           <p>City: {city}</p>
           <p>Due Date: {new Date().toISOString().split("T")[0].split("-").reverse().join("/")}</p>
+          <span></span>
         </div>
         <div className="invoice-footer">
           <p style={{ fontWeight: "500" }}>Terms and Conditions:</p>
@@ -133,7 +134,7 @@ other defense costs) which are caused by the actions of RC Klean or any of its e
         <div className="invoice-footer-credits">
           <div>
             <Link to="https://rcklean.com/">
-              <img src={logo} alt="Company Logo" style={{ height: "100px", marginRight: "1px" }} />
+              <img src={logo} alt="Company Logo" className="logo-rck" />
             </Link>
             <p className="slogan-bottom">
               Restaurant Cleaning / Ceiling Commercial Cleaning
@@ -141,14 +142,14 @@ other defense costs) which are caused by the actions of RC Klean or any of its e
               "Floors to Ceiling We Got You Covered"
             </p>
           </div>
-          <div>
+{/*           <div>
             <p>
-              <img src={logo2} alt="Company Logo" style={{ height: "30px", marginRight: "8px" }} />
+              <img src={logo2} alt="Company Logo" className="logo-wc" />
               <Link to="https://wirkconsulting.com/" style={{ color: "#4e5153", fontSize: "10px" }}>
                 Powered by Wirk Consulting
               </Link>
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
       <button onClick={downloadPDF} className="download-btn">Download PDF</button>
