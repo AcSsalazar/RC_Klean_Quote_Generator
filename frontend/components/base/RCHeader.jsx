@@ -66,7 +66,7 @@ function RCHeader() {
 
             {/* Dropdown independiente */}
             <div className="dropdown">
-              <p className='dropdown-button' onClick={ToggleDropDown}>Options ▽</p>
+              <p className='dropdown-button' onClick={ToggleDropDown}>Options ▼</p>
               {isOpen && (
                 <ul className="dropdown-menu">
                   <li><a href="/user-info-form">Quote Calculator</a></li>

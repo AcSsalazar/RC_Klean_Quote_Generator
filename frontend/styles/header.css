@@ -3,15 +3,13 @@
 :root {
   --primary-color: #1e40af;
   --secondary-color: #3b82f6;
-  --text-primary: #1f2937;
+  --text-primary: #73d531f0;
   --text-secondary: #6b7280;
-  --background-white: #ffffff;
-  --border-color: #e5e7eb;
+  --background-white: #333335;
 }
 
 .app-header {
   background: var(--background-white);
-  border-bottom: 1px solid var(--border-color);
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
   color: var(--text-primary);
   padding: 0.75rem 0;
@@ -31,7 +29,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 2rem;
   font-family: "Inter", sans-serif;
@@ -40,7 +38,7 @@
 
 .main-nav {
   display: flex;
-  gap: 2rem;
+  gap: 3rem;
 }
 
 .main-nav a {
@@ -72,7 +70,7 @@
 .headerbtn {
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
-  background: var(--primary-color);
+  background: #61616175;
   color: white;
   text-decoration: none;
   cursor: pointer;
@@ -86,21 +84,31 @@
 .headerbtn:hover {
   background: var(--secondary-color);
   transform: translateY(-1px);
+  color: #e5e7eb;
 }
 
 .logo {
-  height: 45px;
+  height: 47px;
   margin-right: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+  border-radius: 23px;
+  box-shadow: 1px 1px 9px 2px rgb(155 155 155 / 66%);
+}
+.logo:hover {
+  transform: scale(1.07);
+  transition: transform 0.35s ease;
+  
 }
 
 .header-text {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #e5e7eb;
   text-decoration: none;
   margin-left: 0.5rem;
+}
+
+.header-text:hover {
+  color: #eef2ff;
 }
 
 .logo-section {
@@ -110,7 +118,7 @@
 
 .header-toggle-section {
   display: flex;
-  gap: 3rem;
+  gap: 5rem;
   align-items: center;
 }
 
@@ -123,9 +131,9 @@
 .dropdown-button {
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
-  color: var(--text-primary);
+  color: #f3f4f6;
   background: none;
-  border: 1px solid var(--border-color);
+
   cursor: pointer;
   border-radius: 6px;
   font-weight: 500;
@@ -141,8 +149,8 @@
   position: absolute;
   top: 100%;
   left: 0;
-  background: var(--background-white);
-  border: 1px solid var(--border-color);
+  background: #383838f2;
+  border: 1px solid var(--text-secondary);
   border-radius: 8px;
   padding: 0.5rem 0;
   margin: 0;
@@ -209,6 +217,7 @@
     align-items: stretch;
     width: 100%;
     gap: 0.5rem;
+    margin-left: 70px;
   }
 
   .main-nav a,

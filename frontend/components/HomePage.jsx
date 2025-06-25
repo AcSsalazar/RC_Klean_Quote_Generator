@@ -9,9 +9,7 @@ const HomePage = () => {
   return (
     <div className="homepage-container">
       <header className="homepage-header">
-        <img src={logo} alt="RC Klean Logo" className="homepage-logo" />
         <h1>Welcome to RC Klean Quote Tool</h1>
-        <p>"Floors to Ceiling, We’ve Got You Covered"</p>
       </header>
 
       <main className="homepage-main">
@@ -36,6 +34,11 @@ const HomePage = () => {
         </section>
       </main>
 
+      <footer className="homepage-footer">
+        
+        
+      <h3>Floors to Ceiling, We’ve Got You Covered</h3>
+      </footer>
 
     </div>
   );
