@@ -1,36 +1,41 @@
+/* Quote Calculator Component - Scoped Styles */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
 
-:root {
-  --primary-color: #42a01a;
-  --secondary-color: #393571;
-  --backdrop-filter: blur(10px);
-  --background: linear-gradient(180deg, rgb(36, 54, 88) 14%, rgb(75 109 129));
-  --text-color: #c9e4ec;
-  --input-bg: rgba(36, 36, 36, 0.8);
-  --border-color: #dfe6e9;
-  --success-color: #00b894;
-  --error-color: #d63031;
-  --section: #30303bcc;
-  
+/* Component-specific CSS variables */
+.quote-calculator {
+  --qc-primary-color: #42a01a;
+  --qc-secondary-color: #393571;
+  --qc-background: radial-gradient(circle, rgba(32, 102, 138, 1) 0%, rgba(31, 31, 36, 1) 63%);
+  --qc-text-color: #213258;
+  /*--qc-input-bg: rgba(36, 36, 36, 0.8);*/
+  --qc-border-color: #dfe6e9;
+  --qc-success-color: #00b894;
+  --qc-error-color: #d63031;
+  --qc-section-bg: #25242c0d;
+  --qc-icon-color: #179773;
+  --qc-label-color: #213258;
+  --qc-remove-btn-bg: #d63030be;
+  --qc-calculate-btn-bg: #365488;
+  --qc-calculate-btn-color: #60c194;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
+/* Main container with scoped styles */
+.quote-calculator {
   font-family: "Poppins", sans-serif;
-  background: var(--background);
-  color: var(--text-color);
+  background: var(--qc-background);
+  color: var(--qc-text-color);
   line-height: 1.6;
- 
+  box-sizing: border-box;
 }
 
+.quote-calculator *,
+.quote-calculator *::before,
+.quote-calculator *::after {
+  box-sizing: border-box;
+}
 
-
-.invoice-estimator {
+/* Invoice estimator section */
+.quote-calculator .qc-invoice-estimator {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -39,9 +44,9 @@ body {
   width: 100%;
 }
 
-.estimator-container {
+.quote-calculator .qc-estimator-container {
   border: 2px solid #502c74;
-  background-color: var(--input-bg);
+  background-color: var(--qc-input-bg);
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(222, 211, 211, 0.1);
   padding: 2rem;
@@ -50,121 +55,111 @@ body {
   margin: 0 auto;
 }
 
-.title {
+.quote-calculator .qc-title {
   font-size: 2.2rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--qc-primary-color);
   text-align: center;
   margin-bottom: 2rem;
 }
 
-
-.form-container {
+/* Form container styles */
+.quote-calculator .qc-form-container {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-.form-row {
+.quote-calculator .qc-form-row {
   display: flex;
   gap: 2rem;
 }
 
-.form-section {
-  background-color: var(--section);
+.quote-calculator .qc-form-section {
+  background-color: var(--qc-section-bg);
   border-radius: 10px;
   padding: 1.5rem;
   flex: 1;
 }
 
-.icons-form {
-  color: #179773;
+.quote-calculator .qc-icons-form {
+  color: var(--qc-icon-color);
   font-size: 30px;
   margin-bottom: 1rem;
 }
 
-h2 {
+.quote-calculator .qc-section-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--primary-color);
+  color: var(--qc-primary-color);
   margin-bottom: 1rem;
 }
 
-.input-group {
+/* Input group styles */
+.quote-calculator .qc-input-group {
   margin-bottom: 1rem;
 }
 
-label {
+.quote-calculator .qc-input-group .qc-label {
   display: block;
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 0.5rem;
-  color: #213258;
-  
+  color: var(--qc-label-color);
 }
 
+.quote-calculator .qc-input-wrapper {
+  position: relative;
+}
 
-input[type="number"] {
-  width: 100%;
+/* Input field styles */
+.quote-calculator .qc-input-number {
+  width: 100px;
   padding: 0.75rem;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--qc-border-color);
   border-radius: 8px;
   font-size: 1rem;
-  background-color: var(--input-bg);
-  color: var(--text-color);
+  background-color: var(--qc-input-bg);
+  color: var(--qc-text-color);
   transition: border-color 0.3s ease;
+  font-family: "Poppins", sans-serif;
 }
 
-/* Hacer los inputs numéricos más estrechos */
-input[type="number"] {
-  width: 100px;
-}
-
-select:focus,
-input[type="number"]:focus {
+.quote-calculator .qc-input-number:focus {
   outline: none;
-  border-color: var(--primary-color);
+  border-color: var(--qc-primary-color);
 }
 
-.area-item {
-  
-      display: grid;
-      grid-template-columns: 44fr 250px auto;
-      gap: 1rem;
-      margin-bottom: 1rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border-color);
-      align-items: end;
-      justify-content: center;
-  }
+/* Area item layout */
+.quote-calculator .qc-area-item {
+  display: grid;
+  grid-template-columns: 44fr 250px auto;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--qc-border-color);
+  align-items: end;
+  justify-content: center;
+}
 
-
-.label-input-area {
-  color: #213258;
+.quote-calculator .qc-label-input-area {
+  color: var(--qc-label-color);
   font-size: 11px;
-
-
-
 }
 
-.equipment-item {
+/* Equipment item layout */
+.quote-calculator .qc-equipment-item {
   display: grid;
   grid-template-columns: 2fr 100px auto;
   gap: 1rem;
   align-items: end;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--qc-border-color);
 }
 
-/* Hacer los inputs de texto para equipos más anchos 
-.equipment-item .input-group:first-child input,
-.equipment-item .input-group:first-child select {
-  width: 100%;
-}
-*/
-
-button {
+/* Button styles */
+.quote-calculator .qc-btn {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   padding: 0.75rem 1.5rem;
@@ -174,190 +169,146 @@ button {
   transition: all 0.3s ease;
 }
 
-.add-btn {
-  background-color: var(--secondary-color);
-  color: white;
-  margin: 10px 0px 0px 15px;
-}
-
-
-
-.selector-input {
-
- 
-  border: 1px solid var(--border-color);
-
-  /* background-color: #f5ffde0e !important; */
-  color: #213258 !important;
-  transition: border-color 0.3s ease;
-
-  font-family: "Poppins", sans-serif;
-}
-.selector-input:focus {
-  border-color: var(--primary-color);
-}
-
-.selector-area {
-  width: 70%;
-}
-
-.selector-squarefeet {
-  width: 40% !important;
-  align-items: center;
-}
-
-.selector-floor {
-  width: 70%;
-
-}
-
-.equantity-selector {
-  max-width: 720px;
-  min-width: 100px;
-  display: flex
-;
-  justify-content: space-between;
-  align-items: stretch;
-
-
-}
-
-
-.form-control-options:focus {
-  border-color: #272c74;
-  outline: none;
-}
-
-.remove-btn  {
-  padding: 5px;
-  max-width: 200px;
-  background-color: #d63030e0 !important;
-  color: rgb(246, 245, 255);
-}
-
-.remove-equipment-btn {
-
-  height: 36px;
-  margin-top: 36px;
-
-
-}
-
-
-.calculate-button {
-  width: 40%;
-  padding: 0.5rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #60c194;
-  background-color: #365488; 
-  margin-top: 2rem  !important;
-}
-
-button:hover {
+.quote-calculator .qc-btn:hover {
   opacity: 0.9;
   transform: translateY(-2px);
 }
 
-.total-price {
-  background-color: var(--success-color);
+.quote-calculator .qc-add-btn {
+  background-color: var(--qc-secondary-color);
   color: white;
-  border-radius: 10px;
-  padding: 1.5rem;
-  margin-top: 2rem;
-  text-align: center;
+  margin: 10px 0px 0px 15px;
 }
 
-.total-price h2 {
-  color: white;
-  margin-bottom: 0.5rem;
+.quote-calculator .qc-remove-btn {
+  padding: 5px;
+  max-width: 200px;
+  background-color: var(--qc-remove-btn-bg);
+  color: rgb(246, 245, 255);
 }
 
-.total-price p {
-  font-size: 2rem;
-  font-weight: 700;
-}
-
-@media (max-width: 1024px) {
-  .form-row {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 768px) {
-  .area-item,
-  .equipment-item {
-    grid-template-columns: 1fr;
-  }
-
-@media (max-width: 480px) {
-
-
-
-.remove-equipment-btn {
-
+.quote-calculator .qc-remove-equipment-btn {
   height: 36px;
-  margin-top: 4px;
-  max-width: 80px;
-
-
+  margin-top: 36px;
 }
-.invoice-estimator {
-  display: flex;
-  justify-content: center;
+
+.quote-calculator .qc-calculate-button {
+  width: 40%;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--qc-calculate-btn-color);
+  background-color: var(--qc-calculate-btn-bg);
+  margin-top: 2rem;
+}
+
+/* Selector styles */
+.quote-calculator .qc-selector-input {
+  font-size: 1.1rem;
+  border-radius: 5px;
+  border: 1px solid var(--qc-border-color);
+  color: var(--qc-label-color);
+  transition: border-color 0.3s ease;
+  font-family: "Poppins", sans-serif;
+  padding: 0.75rem;
+}
+
+.quote-calculator .qc-selector-input:focus {
+  border-color: var(--qc-primary-color);
+  outline: none;
+}
+
+.quote-calculator .qc-selector-area {
+  width: 70%;
+}
+
+.quote-calculator .qc-selector-squarefeet {
+
   align-items: center;
-  min-height: 70vh;
-  padding: 1rem;
-  width: 100%;
 }
 
-.equantity-selector {
+.quote-calculator .qc-selector-floor {
+  width: 70%;
+}
+
+.quote-calculator .qc-equantity-selector {
   max-width: 720px;
   min-width: 100px;
   display: flex;
-  flex-direction: column;
-  
-
-}
-
-.add-btn {
-  background-color: var(--secondary-color);
-  color: white;
-  
-  
-}
-
-/* End media 480*/
-}
-
-
-  h2 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--primary-color);
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 1rem;
   margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: var(--qc-section-bg);
+  border-radius: 10px;
 }
-.selector-card {
+
+.quote-calculator .qc-form-control-options {
+  
+  padding: 0.75rem;
+  border: 2px solid var(--qc-border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  
+  color: var(--qc-text-color);
+  font-family: "Poppins", sans-serif;
+}
+
+.quote-calculator .qc-form-control-options:focus {
+  border-color: var(--qc-primary-color);
+  outline: none;
+}
+
+/* Validation states */
+.quote-calculator .qc-is-valid {
+  border-color: var(--qc-success-color);
+}
+
+.quote-calculator .qc-is-invalid {
+  border-color: var(--qc-error-color);
+}
+
+.quote-calculator .qc-text-danger {
+  color: var(--qc-error-color);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Card styles */
+.quote-calculator .qc-card {
   width: 100%;
-  max-width: 1000px;
-
-}
-}
-
-
-
-.selector-card {
-  width: 100%;
-  max-width: 800px;
-  /* backdrop-filter: blur(10px); */
+  max-width: 820px;
   border: 2px solid #2c1348e3;
-  padding: 8px;
+  padding: 15px;
   border-radius: 10px;
   box-shadow: 8px 6px 7px 1px rgba(0, 0, 0, 0.1), -1px 1px 10px 1px #213258;
   background-color: #f8fcff;
 }
 
-.loading-overlay {
+.quote-calculator .qc-selector-card {
+  width: 100%;
+  max-width: 800px;
+  border: 2px solid #2c1348e3;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 8px 6px 7px 1px rgba(0, 0, 0, 0.1), -1px 1px 10px 1px #213258;
+  background-color: #f8fcff;
+}
+
+/* Alert styles */
+.quote-calculator .qc-alert-warning {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  color: #856404;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+/* Loading overlay */
+.quote-calculator .qc-loading-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -371,6 +322,84 @@ button:hover {
   z-index: 1000;
 }
 
-.loading-overlay img {
+.quote-calculator .qc-loading-overlay img {
   width: 100px;
+}
+
+.quote-calculator .qc-loading-overlay p {
+  color: white;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+}
+
+/* Total price section */
+.quote-calculator .qc-total-price {
+  background-color: var(--qc-success-color);
+  color: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.quote-calculator .qc-total-price .qc-section-title {
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.quote-calculator .qc-total-price p {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .quote-calculator .qc-form-row {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .quote-calculator .qc-area-item,
+  .quote-calculator .qc-equipment-item {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .quote-calculator .qc-equantity-selector {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 480px) {
+  .quote-calculator .qc-remove-equipment-btn {
+    height: 36px;
+    margin-top: 4px;
+    max-width: 80px;
+  }
+
+  .quote-calculator .qc-invoice-estimator {
+    padding: 1rem;
+  }
+
+  .quote-calculator .qc-equantity-selector {
+    flex-direction: column;
+  }
+
+  .quote-calculator .qc-add-btn {
+    margin: 10px 0;
+  }
+
+  .quote-calculator .qc-section-title {
+    font-size: 1.2rem;
+  }
+
+  .quote-calculator .qc-selector-card {
+    max-width: 1000px;
+  }
+
+  .quote-calculator .qc-calculate-button {
+    width: 100%;
+  }
 }

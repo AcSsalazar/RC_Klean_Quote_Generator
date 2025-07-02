@@ -46,7 +46,7 @@ function RCHeader() {
           <nav className="main-nav">
             <Link to="/">Home</Link>
             <Link to="/quote-searcher">Quote Searcher</Link>
-            <Link to="/clients">Our Clients</Link>
+            <Link to="/user-info-form">Generator</Link>
             <Link to="/coverage">Coverage</Link>
           </nav>
 

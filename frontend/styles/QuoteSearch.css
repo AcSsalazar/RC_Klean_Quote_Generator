@@ -7,6 +7,8 @@
     justify-content: center;
     align-items: center;
     padding: 20px;
+    background-size: cover;
+    background-position: center;
   }
   .search-card{
     background-color: rgba(255, 255, 255, 0.95); 
@@ -22,13 +24,13 @@
 
   .search-quote-container h1 {
     font-size: 2rem;
-    color:#73d531f0;
+    color: #499b5e;
     margin-bottom: 10px;
   }
   
   .search-quote-container p {
     font-size: 1.1rem;
-    color: #9ac4c7;
+    color: #416491;
     margin-bottom: 20px;
   }
   

@@ -7,7 +7,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    
+    background: #20668a;
+    background: radial-gradient(circle, rgba(32, 102, 138, 1) 0%, rgba(31, 31, 36, 1) 63%);
     padding: 40px 20px;
     font-family: 'Poppins' sans-serif;
 

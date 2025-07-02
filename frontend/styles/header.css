@@ -156,7 +156,7 @@
   margin: 0;
   list-style: none;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-  min-width: 180px;
+  min-width: 130px;
   z-index: 1000;
 }
 
@@ -217,7 +217,7 @@
     align-items: stretch;
     width: 100%;
     gap: 0.5rem;
-    margin-left: 70px;
+    
   }
 
   .main-nav a,
@@ -244,11 +244,35 @@
 }
 
 @media (max-width: 480px) {
+
+  .logo-section {
+
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        width: 70%;
+  }
   .header-content {
     padding: 0 1rem;
   }
 
   .header-text {
+
     font-size: 1.1rem;
   }
+
+    .user-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.4rem;
+    
+  }
+
+  .header-toggle-section.open {
+        display: flex;
+        align-items: center;
+        align-content: center;
+        flex-direction: row-reverse;
+    }
 }
