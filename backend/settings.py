@@ -12,8 +12,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # --------------------------------------------------------------------------------------
 # SECURITY & DEBUG
 # --------------------------------------------------------------------------------------
+
+
+
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
+MAILERSEND_API_TOKEN = os.getenv("MAILERSEND_API_TOKEN")
+MAILERSEND_FROM_EMAIL = os.getenv("MAILERSEND_FROM_EMAIL")
+MAILERSEND_FROM_NAME = os.getenv("MAILERSEND_FROM_NAME")
 
 if DEBUG:
     ALLOWED_HOSTS = config('DEV_ALLOWED_HOSTS', cast=Csv())
@@ -23,6 +29,11 @@ else:
     ALLOWED_HOSTS = config('PROD_ALLOWED_HOSTS', cast=Csv())
     CORS_ALLOW_ORIGINS = config('PROD_CORS_ALLOW_ORIGINS', cast=Csv())
     CSRF_TRUSTED_ORIGINS = config('PROD_CSRF_TRUSTED_ORIGINS', cast=Csv())
+
+
+# --------------------------------------------------------------------------------------
+# MAILERSEND SETTINGS
+# --------------------------------------------------------------------------------------
 
 # --------------------------------------------------------------------------------------
 # APPLICATIONS
@@ -204,16 +215,6 @@ SIMPLE_JWT = {
 # --------------------------------------------------------------------------------------
 AUTH_USER_MODEL = 'userauths.User'
 
-# --------------------------------------------------------------------------------------
-# EMAIL SETTINGS (OPCIONAL, SI DESEAS USAR LO DEL .env)
-# --------------------------------------------------------------------------------------
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=True, cast=bool)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 # --------------------------------------------------------------------------------------
 # CORS & CSRF

@@ -1,16 +1,15 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .permissions import IsAuthorizedClientOrAuthenticated
 from .models import Invoice, Area, Equipment, BusinessType, AreaType, EquipmentType, FloorType, QuantityOption
 from .helpers import calculate_price
 from .serializers import BusinessTypeSerializer, AreaTypeSerializer, FloorTypeSerializer, EquipmentTypeSerializer, InvoiceSerializer, QuantityOptionSerializer
-from django.http import HttpResponse
 from django.http import HttpResponse
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from userauths.models import User
 from rest_framework.permissions import IsAuthenticated
+from .email_utils import send_mailersend_email
 
 class InvoiceCalculateView(APIView):
     permission_classes = [AllowAny]
@@ -24,6 +23,8 @@ class InvoiceCalculateView(APIView):
         email = request.data.get("email")
         city = request.data.get("city")
         zip_code = request.data.get("zip_code")
+        phone = request.data.get("phone")
+        address = request.data.get("address")
 
         if not business_type:
             return Response({"error": "Business type is required."}, status=status.HTTP_400_BAD_REQUEST)
@@ -45,6 +46,8 @@ class InvoiceCalculateView(APIView):
             email=email,
             city=city,
             zip_code=zip_code,
+            phone=phone,
+            address=address,
         )
 
         for area in areas_data:
@@ -58,7 +61,13 @@ class InvoiceCalculateView(APIView):
 
         return Response({"total_price": total_price, "id": invoice.id, "quote_id": invoice.quote_id}, status=status.HTTP_200_OK)
 
+class InvoiceUpdateView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = [JWTAuthentication]
+
     def patch(self, request, identifier):
+        
+
         try:
             invoice = Invoice.objects.get(quote_id=identifier)
         except Invoice.DoesNotExist:
@@ -67,20 +76,101 @@ class InvoiceCalculateView(APIView):
         areas_data = request.data.get("areas", [])
         equipment_data = request.data.get("equipment", [])
 
-        # Clear existing areas/equipment if needed, or append
+        # Clear existing areas/equipment
         Area.objects.filter(invoice=invoice).delete()
         Equipment.objects.filter(invoice=invoice).delete()
 
         for area in areas_data:
-            Area.objects.create(invoice=invoice, name_id=area['name'], square_feet=area['square_feet'], floor_type_id=area.get('floor_type'))
+            Area.objects.create(
+                invoice=invoice,
+                name_id=area['name'],
+                square_feet=area['square_feet'],
+                floor_type_id=area.get('floor_type')
+            )
+
         for equip in equipment_data:
-            Equipment.objects.create(invoice=invoice, name_id=equip['name'], quantity=equip['quantity'], option_type=equip.get('option_type'), option_value=equip.get('option_value'))
+            Equipment.objects.create(
+                invoice=invoice,
+                name_id=equip['name'],
+                quantity=equip['quantity'],
+                option_type=equip.get('option_type'),
+                option_value=equip.get('option_value')
+            )
 
         total_price = calculate_price(invoice)
         invoice.total_price = total_price
         invoice.save()
 
-        return Response({"total_price": total_price, "id": invoice.id, "quote_id": invoice.quote_id}, status=status.HTTP_200_OK)
+        # === Email to client ===
+        quote_url = f"https://rcklean.wirkconsulting.com/results/{invoice.quote_id}"
+        subject_client = "Thanks for using our estimator!"
+        text_client = f"""
+        Hello {invoice.full_name},
+
+        Thanks for using our estimation tool! We’ll contact you very soon 😊
+
+        Quote ID: {invoice.quote_id}
+        Estimated Total: ${invoice.total_price}
+        City: {invoice.city}
+
+        You can view your estimate here: {quote_url}
+        """
+
+        html_client = f"""
+        <html><body style="font-family: Arial;">
+          <h2>Thank you, {invoice.full_name}!</h2>
+          <p>We’ll contact you very soon 😊</p>
+          <p><strong>Quote ID:</strong> {invoice.quote_id}</p>
+          <p><strong>Estimated Total:</strong> ${invoice.total_price}</p>
+          <p><strong>City:</strong> {invoice.city}</p>
+          <a href="{quote_url}" style="display:inline-block;padding:10px 20px;background-color:#28a745;color:#fff;text-decoration:none;border-radius:4px;">
+            View Your Estimate
+          </a>
+          <p style="margin-top:20px;font-size:12px;color:#888;">RC Klean · rcklean@rcklean.com · 212-878-7611</p>
+        </body></html>
+        """
+
+        send_mailersend_email(invoice.email, subject_client, text_client, html_client)
+
+        # === Email to business ===
+        subject_admin = "🚨 New Quote Request Received"
+        text_admin = f"""
+        New client request:
+
+        Name: {invoice.full_name}
+        Email: {invoice.email}
+        Phone: {invoice.phone}
+        City: {invoice.city}
+        Business Type: {invoice.business_type}
+        Total Estimated: ${invoice.total_price}
+
+        Quote ID: {invoice.quote_id}
+        View it: {quote_url}
+        """
+
+        html_admin = f"""
+        <html><body style="font-family: Arial;">
+          <h2>🚨 New Quote Request Received</h2>
+          <p><strong>Name:</strong> {invoice.full_name}</p>
+          <p><strong>Email:</strong> {invoice.email}</p>
+          <p><strong>Phone:</strong> {invoice.phone}</p>
+          <p><strong>City:</strong> {invoice.city}</p>
+          <p><strong>Business Type:</strong> {invoice.business_type}</p>
+          <p><strong>Total Estimated:</strong> ${invoice.total_price}</p>
+          <p><strong>Quote ID:</strong> {invoice.quote_id}</p>
+          <a href="{quote_url}" style="display:inline-block;padding:10px 20px;background-color:#007bff;color:#fff;text-decoration:none;border-radius:4px;">View Estimate</a>
+        </body></html>
+        """
+
+        send_mailersend_email("rcklean.info@gmail.com", subject_admin, text_admin, html_admin)
+
+        return Response({
+            "total_price": total_price,
+            "id": invoice.id,
+            "quote_id": invoice.quote_id
+        }, status=status.HTTP_200_OK)
+
+
 
 class OptionsView(APIView):
     def get(self, request):
@@ -115,6 +205,7 @@ class InvoiceDetailView(APIView):
         serializer = InvoiceSerializer(invoice)  # Define this serializer
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    
 class SavedQuotesView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
