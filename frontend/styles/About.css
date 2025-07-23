@@ -1,37 +1,61 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
 /* src/styles/AboutService.css */
+
+
 .about-service-container {
-    min-height: 100vh;
+    background-image: url("/img/14.jpg");
+    backdrop-filter: opacity(0.4);
+    min-height: 80vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: #20668a;
-    background: radial-gradient(circle, rgba(32, 102, 138, 1) 0%, rgba(31, 31, 36, 1) 63%);
     padding: 40px 20px;
-    font-family: 'Poppins' sans-serif;
+    background-size: cover;
+    background-position: center;
+
+  }
+
+
+  
+  .about-service-container h1 {
+    align-items: center;
+    font-size: 2rem;
+    color: #28881f;
+    margin-bottom: 20px;
 
   }
   
-  .about-service-container h1 {
-    font-size: 2rem;
-    color: #eeffea;
-    margin-bottom: 20px;
-  }
+.text-container {
+
+
   
+    border: #4a55685c 1px solid;
+    font-family: 'Poppins', sans-serif;
+    backdrop-filter: blur(35px);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+
   .description {
     font-size: 1.1rem;
-    color: #eafeff;
+    color: #242424;
     max-width: 900px;
     text-align: center;
     line-height: 1.5;
-    font-weight: 300;
+    font-weight: 500;
+    margin-bottom: 4px;
   }
   
   .back-link {
     margin-top: 20px;
-    color: #3498db;
+    color: #3460db;
     text-decoration: none;
     font-size: 1rem;
   }
@@ -40,3 +64,46 @@
     color: #83ca73;
     text-decoration: underline;
   }
+
+
+  @media (max-width: 768px) {
+  .about-service-container {
+    padding: 20px 10px;
+    min-height: 70vh;
+  }
+
+  .about-service-container h1 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .text-container {
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  .description {
+    font-size: 0.95rem;
+    padding: 0 10px;
+    line-height: 1.4;
+  }
+
+  .back-link {
+    font-size: 0.9rem;
+    text-align: center;
+  }
+}
+
+  @media (max-width: 480px) {
+  .about-service-container h1 {
+    font-size: 1.2rem;
+  }
+
+  .description {
+    font-size: 0.85rem;
+  }
+
+  .text-container {
+    padding: 8px;
+  }
+}

@@ -4,7 +4,6 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "../components/auth/Login";
 import Logout from "../components/auth/Logout";
-import Invoices from "../components/Invoices";
 import Register from "../components/auth/Register";
 import RCFooter from "../components/base/RCFooter";
 import ForgotPassword from "../components/auth/ForgotPassword";
@@ -19,7 +18,7 @@ import QuoteCalculator from "../components/QuoteCalculator";
 import HomePage from "../components/HomePage";
 import SearchQuote from "../components/SearchQuote";
 import AboutService from "../components/About";
-import Clients from "../components/Clients";
+
 
 const App = () => {
 
@@ -38,10 +37,8 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPassword />}></Route>
         <Route path="/create-new-password" element={<CreatePassword />}></Route>
         <Route path="/register" element={<Register />}></Route>
-        <Route path="/clients" element={<Clients />}> </Route>
-
         {/* Renderiza InvoiceCalculator solo en la ruta raíz */}
-        <Route path="/invoices" element={<Invoices />}> </Route>  {/* Poner PrivateRoute */}
+
         <Route path="/quote-calculator" element={<QuoteCalculator />} />
 
         {/*   Home Route */}

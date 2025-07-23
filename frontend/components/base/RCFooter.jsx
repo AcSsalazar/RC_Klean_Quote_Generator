@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import "../../styles/footer.css";
@@ -29,7 +28,7 @@ function RCFooter() {
             <li><Link to="/">Home</Link></li>
             <li><Link to="/about-service">About this tool</Link></li>
             <li><Link to="https://rcklean.com/commercial-restaurant-cleaning/">Services</Link></li>
-            <li><Link to="/user-info-form">Get a Quote</Link></li>
+            <li><Link to="/user-info-form/">Get a Quote</Link></li>
             <li><Link to="https://rcklean.com/contact-us/">Contact</Link></li>
           </ul>
         </div>
