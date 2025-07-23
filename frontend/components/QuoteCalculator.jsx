@@ -9,6 +9,7 @@ import "../styles/Options.css" // Updated CSS file name
 import useValidation from "./useValidator"
 import { useNavigate, useLocation, useParams } from "react-router-dom"
 import QtySelector from "./QtySelector"
+import loagingGif from "../src/assets/3.gif"
 
 export default function QuoteCalculator() {
   const navigate = useNavigate()
@@ -568,7 +569,7 @@ export default function QuoteCalculator() {
     <div className="quote-calculator">
       {isCalculating && (
         <div className="qc-loading-overlay">
-          <img src="../src/assets/3.gif" alt="Calculating" />
+          <img src={loagingGif} alt="Calculating" />
           <p>Calculating Price...</p>
         </div>
       )}
