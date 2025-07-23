@@ -61,6 +61,12 @@
   margin-top: 1rem;
 }
 
+.credits-links{
+
+  color: #56aa5a63 !important;
+  font-size: 10px;
+
+}
 .social-links a {
   display: flex;
   align-items: center;

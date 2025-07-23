@@ -1,7 +1,7 @@
 /* src/styles/SearchQuote.css */
 .search-quote-container  {
   background-image: url("/img/13.jpg");
-    min-height: 70vh;
+    min-height: 80vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
