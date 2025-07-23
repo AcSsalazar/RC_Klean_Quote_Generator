@@ -36,7 +36,7 @@ const SearchQuote = () => {
     <div className="search-quote-container">
       <div className='search-card'> 
       <h1>Search Your Quote</h1>
-      <p>Enter your Quote ID to view your estimate.</p>
+      <p>Enter your Quote ID to view your estimate PDF file</p>
       <form onSubmit={handleSearch} className="search-form">
         <input
           type="text"

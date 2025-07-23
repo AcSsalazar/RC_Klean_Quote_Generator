@@ -3,17 +3,13 @@ import { Link } from "react-router-dom";
 import "../../styles/footer.css";
 
 function RCFooter() {
-  const handleNewsletterSubmit = (e) => {
-    e.preventDefault();
-    alert("Thank you for subscribing! (This is a placeholder—newsletter functionality coming soon.)");
-  };
 
   return (
     <footer className="rc-footer">
       <div className="footer-content">
         <div className="footer-section">
           <h3>RC Klean</h3>
-          <p>Floors to Ceiling, We’ve Got You Covered. Professional cleaning services for restaurants and commercial spaces.</p>
+          <p>Floors to Ceiling, We&apos;ve Got You Covered. Professional cleaning services for restaurants and commercial spaces.</p>
           <div className="social-links">
             <a href="https://facebook.com/rcklean" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
               <i className="fab fa-facebook-f"></i>
@@ -30,10 +26,10 @@ function RCFooter() {
           <h3>Quick Links</h3>
           <ul>
             <li><Link to="/">Home</Link></li>
-            <li><Link to="/about">About Us</Link></li>
-            <li><Link to="/services">Services</Link></li>
-            <li><Link to="/quote-calculator">Get a Quote</Link></li>
-            <li><Link to="/contact">Contact</Link></li>
+            <li><Link to="/about-service">About this tool</Link></li>
+            <li><Link to="https://rcklean.com/commercial-restaurant-cleaning/">Services</Link></li>
+            <li><Link to="/user-info-form/">Get a Quote</Link></li>
+            <li><Link to="https://rcklean.com/contact-us/">Contact</Link></li>
           </ul>
         </div>
         <div className="footer-section">
@@ -42,23 +38,15 @@ function RCFooter() {
             <li><a href="mailto:rcklean@rcklean.com">rcklean@rcklean.com</a></li>
             <li><a href="tel:+12128787611">212-878-7611</a></li>
             <li>New York, NY</li>
-            <li><Link to="/faq">FAQ</Link></li>
-            <li><Link to="/terms">Terms of Service</Link></li>
+            <li><Link to="https://rcklean.com/our-work/">Our Work</Link></li>
+            <li><Link to="https://rcklean.com/our-clients/">Our Clients</Link></li>
           </ul>
         </div>
-        <div className="footer-section">
-          <h3>Newsletter</h3>
-          <p>Get updates on cleaning tips and special offers.</p>
-          <form className="newsletter-form" onSubmit={handleNewsletterSubmit}>
-            <input type="email" placeholder="Your email address" required />
-            <button type="submit">Subscribe</button>
-          </form>
-        </div>
-      </div>
       <div className="footer-bottom">
-        <p>© {new Date().getFullYear()} RC Klean. All rights reserved.</p>
-        <a href="https://lordicon.com/">Icons by Lordicon.com</a>
         <p>Powered by <a href="https://wirkconsulting.com" target="_blank" rel="noopener noreferrer">Wirk Consulting SAS</a></p>
+        <p>© {new Date().getFullYear()} RC Klean. All rights reserved.</p>
+        <a className="credits-links">Icons by Lordicon.com & Images by Freepik.com</a>
+      </div>
       </div>
     </footer>
   );

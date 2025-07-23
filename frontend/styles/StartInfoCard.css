@@ -8,11 +8,14 @@
 }
 
 .start-info-container {
+  background: #20668a;
+background: radial-gradient(circle,rgba(32, 102, 138, 1) 0%, rgba(31, 31, 36, 1) 63%);
+ 
   min-height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2px;
+  padding: 20px;
   font-family: "Poppins", sans-serif;
 
 }
@@ -37,22 +40,44 @@
 }
 
 .form-grid {
-  display: grid;
-  gap: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 4rem;
+
+
 }
 
 .input-group {
   display: flex;
+  width: 215px;
   flex-direction: column;
+  align-items: flex-start;
+}
+
+.form-group {
+  margin-bottom: 0.5rem;
+
+}
+
+.input-icon {
+  position: absolute;
+  right: 0rem;
+  top: 108%;
+  transform: translateY(-50%);
+  z-index: 2;
 }
 
 .input-label {
   font-size: 1rem;
   font-weight: 500;
-  color: #555;
+  color: #444444;
   margin-bottom: 0.5rem;
 }
 
+.form-label {
+
+  color: #333840;
+}
 .input-field {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -115,6 +140,13 @@
   transform: translateY(-2px);
 }
 
+.text-danger {
+  color: #e53e3ebb;
+  font-size: 0.6rem;
+  margin-top: 0.1rem;
+  
+}
+
 .submit-btn:active {
   transform: translateY(0);
 }
@@ -150,7 +182,16 @@
 @media (max-width: 480px) {
   .start-info-card {
     padding: 1rem;
+    max-width: 100%;
   }
+
+  .error-text {
+  font-size: 0.7rem;
+  color: #e74c3c;
+  margin-top: 0.25rem;
+}
+  .start-info-container {
+  min-height: 60vh; }
 
   .start-info-title {
     font-size: 1.25rem;

@@ -144,7 +144,7 @@ body {
 .invoice-details p {
   margin: 5px 0;
   color: #4e5153;
-  text-align: right;
+  text-align: left;
   font-size: 12px;
 }
 .company-name {
@@ -198,10 +198,30 @@ body {
 
 }
 
+.logo-wc {
+  height: 100px;
+  margin-right: 1px;
+
+}
+
 @media (max-width: 768px) {
   .invoice-table {
     overflow-x: auto;
   }
+
+  .logo-wc {
+  height: 50px;
+  
+
+}
+  .logo-rck {
+
+  height: 60px;
+  margin-right: 1px;
+
+
+  }
+
 
 }
 

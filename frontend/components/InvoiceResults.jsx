@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import logo from "../public/img/foot-logo_1.png";
 import logo2 from "../public/img/wirk-logo.png";
 
+
 const InvoiceResults = ({ result, options, SquareFeetOptions }) => {
   const { totalPrice, invoiceId, payload } = result;
   const [isLoggedIn, user] = useAuthStore((state) => [state.isLoggedIn, state.user]);
@@ -136,9 +137,9 @@ const InvoiceResults = ({ result, options, SquareFeetOptions }) => {
         <div className="invoice-footer-credits">
           <p>Thank you for choosing RCKLEAN!</p>
           <p>
-            <img src={logo2} alt="Company Logo" style={{ height: '40px', marginRight: '8px' }} />
-            <Link to="https://wirkconsulting.com/" >Power by Wirk Consulting</Link>
-          </p>
+           <img src={logo2} alt="Company Logo" style={{ height: '40px', marginRight: '8px' }} />
+           <Link to="https://wirkconsulting.com/" >Power by Wirk Consulting</Link>
+           </p>
         </div>
       </div>
       <button onClick={downloadPDF} className="download-btn">

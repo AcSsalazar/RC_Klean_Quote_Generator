@@ -1,126 +1,125 @@
-import { useEffect, useState } from "react";
-import { login } from "../../src/utils/auth";
-import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../src/RCA/auth";
-import { Link } from "react-router-dom";
+"use client"
+
+import { useEffect, useState } from "react"
+import { login } from "../../src/utils/auth"
+import { useNavigate } from "react-router-dom"
+import { useAuthStore } from "../../src/RCA/auth"
+import { Link } from "react-router-dom"
+import "./styles/login.css"
 
 const Login = () => {
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate()
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     if (isLoggedIn()) {
-      navigate("/");
+      navigate("/")
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   const resetForm = () => {
-    setUsername("");
-    setPassword("");
-  };
+    setUsername("")
+    setPassword("")
+  }
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault()
+    setIsLoading(true)
 
-    const { error } = await login(username, password);
+    const { error } = await login(username, password)
+
     if (error) {
-      alert(error);
+      alert(error)
     } else {
-      navigate("/");
-      resetForm();
+      navigate("/")
+      resetForm()
     }
-    setIsLoading(false);
-  };
+
+    setIsLoading(false)
+  }
 
   return (
-    <section>
-      <main className="" style={{ marginBottom: 100, marginTop: 50 }}>
-        <div className="container">
-          <section className="">
-            <div className="row d-flex justify-content-center">
-              <div className="col-xl-5 col-md-8">
-                <div className="card rounded-5">
-                  <div className="card-body p-4">
-                    <h3 className="text-center">Inicio de sesion</h3>
-                    <br />
-                    <div className="tab-content">
-                      <div
-                        className="tab-pane fade show active"
-                        id="pills-login"
-                        role="tabpanel"
-                        aria-labelledby="tab-login"
-                      >
-                        <form onSubmit={handleLogin}>
-                          <div className="form-outline mb-4">
-                            <label className="form-label" htmlFor="Full Name">
-                              Correo Electrónico
-                            </label>
-                            <input
-                              type="text"
-                              id="username"
-                              name="username"
-                              placeholder="Ingrese su e-mail"
-                              value={username}
-                              onChange={(e) => setUsername(e.target.value)}
-                              className="form-control"
-                            />
-                          </div>
-                          <div className="form-outline mb-4">
-                            <label
-                              className="form-label"
-                              htmlFor="loginPassword"
-                            >
-                              Contraseña
-                            </label>
-                            <input
-                              type="password"
-                              id="password"
-                              name="password"
-                              value={password}
-                              placeholder="Ingrese su contraseña"
-                              onChange={(e) => setPassword(e.target.value)}
-                              className="form-control"
-                            />
-                          </div>
-                          <button
-                            className="btn btn-primary w-100"
-                            type="submit"
-                            disabled={isLoading}
-                          >
-                            {isLoading ? (
-                              <>
-                                <span className="mr-2 ">Procesando...</span>
-                                <i className="fas fa-spinner fa-spin" />
-                              </>
-                            ) : (
-                              <>
-                                <span className="mr-2">Iniciar</span>
-                                <i className="fas fa-sign-in-alt" />
-                              </>
-                            )}
-                          </button>
-                          <div className="text-center">
-                            <p className="mt-4">
-                              No ha creado una cuenta ?{" "}
-                              <Link to="/register">Registrese ahora</Link>
-                            </p>
-                            <p className="mt-0">
-                              <Link
-                                to="/forgot-password"
-                                className="text-danger"
-                              >
-                                Olvidó su contraseña ?
-                              </Link>
-                            </p>
-                          </div>
-                        </form>
+    <section className="login-section">
+      <main>
+        <div className="login-container">
+          <section>
+            <div className="login-row">
+              <div className="login-col">
+                <div className="login-card">
+                  <div className="login-card-body">
+                    <h3 className="login-title">Login</h3>
+
+                    <form className="login-form" onSubmit={handleLogin}>
+                      <div className="form-group">
+                        <label className="form-label" htmlFor="username">
+                          Email
+                        </label>
+                        <input
+                          type="text"
+                          id="username"
+                          name="username"
+                          placeholder="Enter your email address"
+                          value={username}
+                          onChange={(e) => setUsername(e.target.value)}
+                          className="form-input"
+                          required
+                        />
                       </div>
-                    </div>
+
+                      <div className="form-group">
+                        <label className="form-label" htmlFor="password">
+                          Password
+                        </label>
+                        <input
+                          type="password"
+                          id="password"
+                          name="password"
+                          value={password}
+                          placeholder="Enter your password"
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="form-input"
+                          required
+                        />
+                      </div>
+
+                      <button className="login-button" type="submit" disabled={isLoading}>
+                        {isLoading ? (
+                          <>
+                            <span>Processing...</span>
+                            <div className="spinner" />
+                          </>
+                        ) : (
+                          <>
+                            <span>Login</span>
+                            <svg className="icon" fill="currentColor" viewBox="0 0 20 20">
+                              <path
+                                fillRule="evenodd"
+                                d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </>
+                        )}
+                      </button>
+
+                      <div className="login-links">
+                        <p>
+                          ¿You don't have an account?{" "}
+                          <Link to="/register" className="login-link">
+                            Register here
+                          </Link>
+                        </p>
+{/*                         <p>
+                          <Link to="/forgot-password" className="login-link danger">
+                            
+                          </Link>
+                        </p> */}
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -129,7 +128,8 @@ const Login = () => {
         </div>
       </main>
     </section>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
+

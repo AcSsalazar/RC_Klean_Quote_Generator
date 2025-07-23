@@ -4,7 +4,7 @@ import apiInstance from "../src/utils/axios";
 import "../styles/ResultPublic.css";
 import { Link, useParams } from "react-router-dom";
 import logo from "../public/img/foot-logo_1.png";
-import logo2 from "../public/img/wirk-logo.png";
+
 
 const QuoteResult = () => {
   const { quoteId } = useParams();
@@ -111,12 +111,13 @@ const QuoteResult = () => {
           ${(total_price * 0.8).toFixed(2)} to ${(total_price * 1.2).toFixed(2)}
         </p>
         <div className="invoice-details">
-          <p>Quote ID: {quoteId} </p>
+          <b><p> Quote ID: {quoteId} </p> </b>
           <p>Business Type: {business_type}</p>
           <p>Issued to: {full_name}</p>
           <p>Email: {email}</p>
           <p>City: {city}</p>
           <p>Due Date: {new Date().toISOString().split("T")[0].split("-").reverse().join("/")}</p>
+          <span></span>
         </div>
         <div className="invoice-footer">
           <p style={{ fontWeight: "500" }}>Terms and Conditions:</p>
@@ -124,7 +125,7 @@ const QuoteResult = () => {
 RC Klean shall perform the Services in a professional and workman-like manner in accordance with generally recognized industry standards for similar services and
 will exercise reasonable care and diligence in performing its duties. RC Klean hereby agrees to indemnify, hold harmless, and at customer request, defend and its
 affiliates, successors and assigns, and its and their officers, directors, employees, agents, successors and assigns, from and against any damages, liabilities,
-deficiencies, actions, judgments, interest, awards penalties, fines, losses costs or expenses of whatever kind of nature (including, but not limited to, attorneys’ fees and
+deficiencies, actions, judgments, interest, awards penalties, fines, losses costs or expenses of whatever kind of nature (including, but not limited to, attorneys fees and
 other defense costs) which are caused by the actions of RC Klean or any of its employees, agents, subcontractors or representatives
           </p>
           <p className="invoice-footer-info">rcklean@rcklean.com</p>
@@ -133,22 +134,15 @@ other defense costs) which are caused by the actions of RC Klean or any of its e
         <div className="invoice-footer-credits">
           <div>
             <Link to="https://rcklean.com/">
-              <img src={logo} alt="Company Logo" style={{ height: "100px", marginRight: "1px" }} />
+              <img src={logo} alt="Company Logo" className="logo-rck" />
             </Link>
             <p className="slogan-bottom">
               Restaurant Cleaning / Ceiling Commercial Cleaning
               <br />
-              "Floors to Ceiling We Got You Covered"
+              &#34;Floors to Ceiling We Got You Covered&#34;
             </p>
           </div>
-          <div>
-            <p>
-              <img src={logo2} alt="Company Logo" style={{ height: "30px", marginRight: "8px" }} />
-              <Link to="https://wirkconsulting.com/" style={{ color: "#4e5153", fontSize: "10px" }}>
-                Powered by Wirk Consulting
-              </Link>
-            </p>
-          </div>
+
         </div>
       </div>
       <button onClick={downloadPDF} className="download-btn">Download PDF</button>

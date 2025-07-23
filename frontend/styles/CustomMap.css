@@ -42,3 +42,23 @@
     background-color: #f8fffc;
     border: 1px solid #172352b0;
   }
+
+@media (max-width: 480px) {
+
+
+  .map-legend {
+    border: 1px solid #000000;
+    margin-left: 0px;
+    font-size: 11px;
+    /* color: #18112e; */
+    padding: 7px;
+    border-radius: 5px;
+    /* background-color: #ffffff; */
+    display: inline-block;
+  }
+
+  .map-container {
+    width: 100%;
+    padding: 5px;
+  }
+}
