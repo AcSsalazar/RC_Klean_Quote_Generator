@@ -37,7 +37,7 @@ const HomePage = () => {
       <footer className="homepage-footer">
         
         
-      <h3>Floors to Ceiling, We’ve Got You Covered</h3>
+      <h3>Floors to Ceiling, We&apos;ve Got You Covered</h3>
       </footer>
 
     </div>

@@ -1,6 +1,6 @@
 /* src/styles/SearchQuote.css */
 .search-quote-container  {
-  background-image: url("/img/13.jpg");
+  background-image: url("/img/7.png");
     min-height: 80vh;
     display: flex;
     flex-direction: column;
@@ -11,9 +11,11 @@
     background-position: center;
   }
   .search-card{
-    background-color: rgba(255, 255, 255, 0.95); 
+    border: 1px solid #4a686570;
+    background-color: rgb(71 68 81 / 20%);
     border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    box-shadow: inset 1px 1px 3px 0px rgb(42 45 44 / 38%);
     padding: 2rem;
     width: 100%;
     max-width: 600px;
@@ -30,7 +32,7 @@
   
   .search-quote-container p {
     font-size: 1.1rem;
-    color: #416491;
+    color: #ebebeb;
     margin-bottom: 20px;
   }
   

@@ -4,7 +4,7 @@
 
 
 .about-service-container {
-    background-image: url("/img/14.jpg");
+    background-image: url("/img/5.jpg");
     backdrop-filter: opacity(0.4);
     min-height: 80vh;
     display: flex;
@@ -22,7 +22,7 @@
   .about-service-container h1 {
     align-items: center;
     font-size: 2rem;
-    color: #28881f;
+    color: #213258;
     margin-bottom: 20px;
 
   }
@@ -31,9 +31,9 @@
 
 
   
-    border: #4a55685c 1px solid;
+    border: #4a686570 1px solid;
     font-family: 'Poppins', sans-serif;
-    backdrop-filter: blur(35px);
+    backdrop-filter: blur(30px);
     border-radius: 10px;
     padding: 10px;
     display: flex;
@@ -45,7 +45,7 @@
 
   .description {
     font-size: 1.1rem;
-    color: #242424;
+    color: #000000;
     max-width: 900px;
     text-align: center;
     line-height: 1.5;
@@ -95,6 +95,12 @@
 }
 
   @media (max-width: 480px) {
+
+  .about-service-container {
+
+    background-image: url("/img/6.png");
+
+  }
   .about-service-container h1 {
     font-size: 1.2rem;
   }
@@ -105,5 +111,6 @@
 
   .text-container {
     padding: 8px;
+    backdrop-filter: blur(10px);
   }
 }

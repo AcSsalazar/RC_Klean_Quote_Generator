@@ -69,9 +69,9 @@ function RCHeader() {
               <p className='dropdown-button' onClick={ToggleDropDown}>Options ▼</p>
               {isOpen && (
                 <ul className="dropdown-menu">
-                  <li><a href="/user-info-form">Quote Calculator</a></li>
-                  <li><a href="/quote-searcher">Searcher</a></li>
-                  <li><a href="/about-service">About the tool</a></li>
+                  <li><Link to="/user-info-form">Quote Calculator</Link></li>
+                  <li><Link to="/quote-searcher">Searcher</Link></li>
+                  <li><Link to="/about-service">About the tool</Link></li>
                 </ul>
               )}
             </div>

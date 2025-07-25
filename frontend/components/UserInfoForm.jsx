@@ -117,7 +117,9 @@ function UserInfoForm() {
 
   return (
     <div className="start-info-container">
+      <section>
       <div className="start-info-card">
+        
         <h2 className="start-info-title">Get Started</h2>
         <p style={{color: '#416491', textAlign: 'center', marginBottom: '4px', fontSize: '16px'}}>We need some information</p>
         <form onSubmit={handleSubmit}>
@@ -213,6 +215,7 @@ function UserInfoForm() {
           </button>
         </form>
       </div>
+      </section>
     </div>
   );
 }
