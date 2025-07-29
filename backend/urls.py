@@ -1,56 +1,38 @@
+# backend/urls.py
 from django.contrib import admin
 from django.urls import path, include
-from userauths import views as userauths_views
-from rest_framework_simplejwt.views import TokenRefreshView
 from django.conf.urls.static import static
 from django.conf import settings
 
-# drf-yasg imports
+# Swagger docs
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from api import views as invoiceviews
 
-
-
-#Para agilizar redaccion de documentacion del backend
 schema_view = get_schema_view(
-   openapi.Info(
-      title="RC Klean App Documentation",
-      default_version='v1.0',
-      description="Documentación Bacekend API",
-      terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="acsalazar@unal.edu.co"),
-      license=openapi.License(name="BSD License"),
-   ),
-   public=True,
-   permission_classes=(permissions.AllowAny,),
+    openapi.Info(
+        title="RC Klean App Documentation",
+        default_version='v1.0',
+        description="Documentación Backend API",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="acsalazar@unal.edu.co"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
 )
 
 urlpatterns = [
-           # Admin and documentations URL's
     path('admin/', admin.site.urls),
+
+    # Modular includes
     path('api/', include('api.urls')),
     path('userauths/', include('userauths.urls')),
-    
 
+    # Swagger UI
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-
-            # Invoice endpoints
-    path('invoice/', invoiceviews.InvoiceCalculateView.as_view(), name='invoice'),
-    path('options/', invoiceviews.OptionsView.as_view(), name='options' ),
-    path('invoice/<int:pk>/', invoiceviews.InvoiceDetailView.as_view(), name='invoice_detail'),
-
-            # Userauths API Endpoints
-    path('user/token/', userauths_views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('user/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('user/register/', userauths_views.RegisterView.as_view(), name='auth_register'),
-    path('profile/<user_id>/', userauths_views.ProfileView.as_view(), name='user_profile'),
-    path('user/test/', userauths_views.testEndPoint, name='auth_register'),
-    path('user/password-reset/<email>/', userauths_views.PasswordEmailVerify.as_view(), name='password_reset'),
-    path('user/password-change/', userauths_views.PasswordChangeView.as_view(), name='password_change'),
-
 ]
 
+# Static and media files
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

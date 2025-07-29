@@ -47,6 +47,8 @@ ngrok.exe
 .idea/
 .DS_Store
 
+/staticfiles
+
 # Test and coverage
 htmlcov/
 .tox/
