@@ -28,4 +28,3 @@ def send_mailersend_email(to_email, subject, text, html=None):
         response.raise_for_status()
     except requests.RequestException as e:
         print(f"[MailerSend] Error sending email to {to_email}: {e}")
-        print("MailerSend API Token from settings: ", settings.MAILERSEND_API_TOKEN)
