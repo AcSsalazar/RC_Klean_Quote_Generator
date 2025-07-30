@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // src/components/SavedQuotes.js
 import React, { useState, useEffect } from "react";
 import { useAuthStore } from "../../frontend/src/RCA/auth.js";

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useRef, useEffect, useState } from "react";
 import html2pdf from "html2pdf.js";
 import apiInstance from "../src/utils/axios";
