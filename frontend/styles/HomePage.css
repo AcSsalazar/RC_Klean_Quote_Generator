@@ -52,11 +52,29 @@ background: #1a526e;
   justify-content: center;
   align-items: center;
   padding: 40px 20px 50px;
-  background-image: url("/img/1.jpg");
-  background-size: cover;
-  background-position: center;
-  /* height: 100vh; */
+
+
 }
+
+.homepage-main.no-bg {
+  position: relative;
+  overflow: hidden;
+
+}
+
+
+.homepage-background {
+    position: absolute;
+    top: 0;
+    left: 0; 
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+}
+
+
 
 .homepage-options {
   display: flex;

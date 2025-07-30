@@ -33,6 +33,16 @@ const SearchQuote = () => {
   };
 
   return (
+
+   <main className="search-main no-bg">
+        <img
+          src="/img/7.png"
+          alt="Background"
+          className="search-background"
+          loading="lazy"
+          aria-hidden="true"
+        />
+
     <div className="search-quote-container">
       <div className='search-card'> 
       <h1>Search Your Quote</h1>
@@ -54,6 +64,8 @@ const SearchQuote = () => {
       <Link to="/" className="back-link">Back to Home</Link>
       </div>
     </div>
+
+  </main>
   );
 };
 

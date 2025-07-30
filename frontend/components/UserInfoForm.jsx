@@ -116,6 +116,16 @@ function UserInfoForm() {
   };
 
   return (
+
+       <main className="start-main no-bg">
+        <img
+          src="/img/8.png"
+          alt="Background"
+          className="start-background"
+          loading="lazy"
+          aria-hidden="true"
+        />
+
     <div className="start-info-container">
       <section>
       <div className="start-info-card">
@@ -217,6 +227,7 @@ function UserInfoForm() {
       </div>
       </section>
     </div>
+    </main>
   );
 }
 

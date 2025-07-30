@@ -17,9 +17,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
-MAILERSEND_API_TOKEN = os.getenv("MAILERSEND_API_TOKEN")
-MAILERSEND_FROM_EMAIL = os.getenv("MAILERSEND_FROM_EMAIL")
-MAILERSEND_FROM_NAME = os.getenv("MAILERSEND_FROM_NAME")
 
 if DEBUG:
     ALLOWED_HOSTS = config('DEV_ALLOWED_HOSTS', cast=Csv())
@@ -34,6 +31,11 @@ else:
 # --------------------------------------------------------------------------------------
 # MAILERSEND SETTINGS
 # --------------------------------------------------------------------------------------
+
+MAILERSEND_API_TOKEN = config("MAILERSEND_API_TOKEN")
+MAILERSEND_FROM_EMAIL = config("MAILERSEND_FROM_EMAIL", default="gerencia@wirkconsulting.com")
+MAILERSEND_FROM_NAME = config("MAILERSEND_FROM_NAME", default="WirkConsulting")
+MAILERSEND_REPLY_TO_EMAIL = config("MAILERSEND_REPLY_TO_EMAIL", default=MAILERSEND_FROM_EMAIL)
 
 # --------------------------------------------------------------------------------------
 # APPLICATIONS

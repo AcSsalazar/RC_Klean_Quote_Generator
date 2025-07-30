@@ -1,16 +1,15 @@
 /* src/styles/SearchQuote.css */
 .search-quote-container  {
-  background-image: url("/img/7.png");
+
     min-height: 80vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 20px;
-    background-size: cover;
-    background-position: center;
+
   }
-  .search-card{
+.search-card         {
     border: 1px solid #4a686570;
     background-color: rgb(71 68 81 / 20%);
     border-radius: 20px;
@@ -21,27 +20,44 @@
     max-width: 600px;
 
   }
+
+.search-main.no-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+
+.search-background {
+    position: absolute;
+    top: 0;
+    left: 0; 
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    pointer-events: none;
+}
   
 
 
-  .search-quote-container h1 {
+.search-quote-container h1 {
     font-size: 2rem;
     color: #499b5e;
     margin-bottom: 10px;
   }
   
-  .search-quote-container p {
+.search-quote-container p {
     font-size: 1.1rem;
     color: #ebebeb;
     margin-bottom: 20px;
   }
   
-  .search-form {
+.search-form {
     display: flex;
     gap: 10px;
   }
   
-  .search-input {
+.search-input {
     padding: 10px;
     font-size: 13px;
     border: 1px solid #5fabe9d0;
@@ -50,7 +66,7 @@
     text-transform: uppercase;
   }
   
-  .search-button {
+.search-button {
     background-color: #365488;
     color: #ffffff;
     border: 1px solid #c0bf81;
@@ -61,22 +77,22 @@
     transition: background-color 0.3s ease;
   }
   
-  .search-button:hover {
+.search-button:hover {
     background-color: #2980b9;
   }
   
-  .error-message {
+.error-message {
     color: #e74c3c !important;
     margin-top: 10px;
   }
   
-  .back-link {
+.back-link {
     margin-top: 20px;
     color: #3498db;
     text-decoration: none;
     font-size: 1rem;
   }
   
-  .back-link:hover {
+.back-link:hover {
     text-decoration: underline;
   }

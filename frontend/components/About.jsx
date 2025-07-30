@@ -5,6 +5,15 @@ import "../styles/About.css";
 
 const AboutService = () => {
   return (
+
+    <main className="about-main no-bg">
+        <img
+          src="/img/5-min.jpg"
+          alt="Background"
+          className="about-background"
+          loading="lazy"
+          aria-hidden="true"
+    />
     <div className="about-service-container">
       <div className="text-container">
       <h1>About Our Service</h1>
@@ -14,6 +23,8 @@ const AboutService = () => {
       <Link to="/" className="back-link">Back to Home</Link>
       </div>
     </div>
+
+    </main>
   );
 };
 
