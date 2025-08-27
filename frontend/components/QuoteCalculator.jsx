@@ -256,7 +256,7 @@ export default function QuoteCalculator() {
       setTimeout(() => {
         setIsCalculating(false)
         navigate(`/results/${quoteId}`)
-      }, 4000)
+      }, 1000)
     } catch (error) {
       console.error("Error updating invoice:", error)
       setIsFormValid(false)
@@ -568,7 +568,7 @@ export default function QuoteCalculator() {
     <div className="quote-calculator">
       {isCalculating && (
         <div className="qc-loading-overlay">
-          <img src="../src/assets/3.gif" alt="Calculating" />
+          <img src="/img/icons8-spinner.gif" alt="Calculating" />
           <p>Calculating Price...</p>
         </div>
       )}
