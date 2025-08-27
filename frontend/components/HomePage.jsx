@@ -8,7 +8,7 @@ const HomePage = () => {
   return (
     <div className="homepage-container">
       <header className="homepage-header">
-        <h1>Welcome to RCKlean Quote Generator Tool</h1>
+        <h1>Welcome to RC Klean Quote Generator Tool</h1>
       </header>
 
       {/* Fondo con <img> */}

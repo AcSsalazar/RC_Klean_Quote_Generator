@@ -568,7 +568,7 @@ export default function QuoteCalculator() {
     <div className="quote-calculator">
       {isCalculating && (
         <div className="qc-loading-overlay">
-          <img src="/img/icons8-spinner.gif" alt="Calculating" />
+          <img src="/img/3.gif" alt="Calculating" />
           <p>Calculating Price...</p>
         </div>
       )}
