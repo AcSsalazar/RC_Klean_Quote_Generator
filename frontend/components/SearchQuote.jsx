@@ -21,10 +21,10 @@ const SearchQuote = () => {
 
     try {
       await apiInstance.get(`/invoice/${quoteId}/`);
-                Swal.fire({
-                  icon: "success",
-                  title: "Quote found",
-                });  // Check if quote exists
+      Swal.fire({
+        icon: "success",
+        title: "Quote found",
+      }); // Check if quote exists
       navigate(`/results/${quoteId}`);
     } catch (error) {
       console.error("Error searching quote:", error);
@@ -33,39 +33,39 @@ const SearchQuote = () => {
   };
 
   return (
+    <main className="search-main no-bg">
+      <img
+        src="/img/7.png"
+        alt="Background"
+        className="search-background"
+        loading="lazy"
+        decoding="async"
+      />
 
-   <main className="search-main no-bg">
-        <img
-          src="/img/7.png"
-          alt="Background"
-          className="search-background"
-          loading="lazy"
-          aria-hidden="true"
-        />
-
-    <div className="search-quote-container">
-      <div className='search-card'> 
-      <h1>Search Your Quote</h1>
-      <p>Enter your Quote ID to view your estimate PDF file</p>
-      <form onSubmit={handleSearch} className="search-form">
-        <input
-          type="text"
-          value={quoteId}
-          onChange={(e) => setQuoteId(e.target.value.toUpperCase())}
-          placeholder="Example: ABC45"
-          maxLength={5}
-          className="search-input"
-        />
-        <button type="submit" className="search-button">
-          Search
-        </button>
-      </form>
-      {error && <p className="error-message">{error}</p>}
-      <Link to="/" className="back-link">Back to Home</Link>
+      <div className="search-quote-container">
+        <div className="search-card">
+          <h1>Search Your Quote</h1>
+          <p>Enter your Quote ID to view your estimate PDF file</p>
+          <form onSubmit={handleSearch} className="search-form">
+            <input
+              type="text"
+              value={quoteId}
+              onChange={(e) => setQuoteId(e.target.value.toUpperCase())}
+              placeholder="Example: ABC45"
+              maxLength={5}
+              className="search-input"
+            />
+            <button type="submit" className="search-button">
+              Search
+            </button>
+          </form>
+          {error && <p className="error-message">{error}</p>}
+          <Link to="/" className="back-link">
+            Back to Home
+          </Link>
+        </div>
       </div>
-    </div>
-
-  </main>
+    </main>
   );
 };
 

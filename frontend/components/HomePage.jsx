@@ -3,7 +3,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/HomePage.css";
 
-
 const HomePage = () => {
   return (
     <div className="homepage-container">
@@ -18,7 +17,7 @@ const HomePage = () => {
           alt="Background"
           className="homepage-background"
           loading="lazy"
-          aria-hidden="true"
+          decoding="async"
         />
 
         <section className="homepage-options">

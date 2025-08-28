@@ -9,10 +9,12 @@ import { Link } from "react-router-dom";
 import logo from "../public/img/foot-logo_1.png";
 import logo2 from "../public/img/wirk-logo.png";
 
-
 const InvoiceResults = ({ result, options, SquareFeetOptions }) => {
   const { totalPrice, invoiceId, payload } = result;
-  const [isLoggedIn, user] = useAuthStore((state) => [state.isLoggedIn, state.user]);
+  const [isLoggedIn, user] = useAuthStore((state) => [
+    state.isLoggedIn,
+    state.user,
+  ]);
   const invoiceRef = useRef(null);
 
   const downloadPDF = () => {
@@ -62,21 +64,33 @@ const InvoiceResults = ({ result, options, SquareFeetOptions }) => {
     document.body.removeChild(link);
   };
 
-  const businessTypeName = options.businessTypes.find((type) => type.id === Number(payload.business_type))?.name || "Unknown";
+  const businessTypeName =
+    options.businessTypes.find(
+      (type) => type.id === Number(payload.business_type)
+    )?.name || "Unknown";
 
   return (
     <div className="card">
       <h2 className="main-title">Summary</h2>
-      <p className="estimated-title">The estimated price is between: ${((totalPrice * 0.80).toFixed(2))} and ${((totalPrice * 1.20).toFixed(2))}</p>
+      <p className="estimated-title">
+        The estimated price is between: ${(totalPrice * 0.8).toFixed(2)} and $
+        {(totalPrice * 1.2).toFixed(2)}
+      </p>
       <div ref={invoiceRef} className="invoice-preview">
         <div className="invoice-header">
           <h1>Service Quote Details:</h1>
           <div className="invoice-details">
             <p>Invoice No: {invoiceId}</p>
-            <p>Issued to: {isLoggedIn() ? user().full_name : "Anonymous User"}</p>
+            <p>
+              Issued to: {isLoggedIn() ? user().full_name : "Anonymous User"}
+            </p>
             <p>Due Date: {new Date().toISOString().split("T")[0]}</p>
           </div>
-          <img src={logo} alt="Company Logo" style={{ height: '100px', marginRight: '1px' }} />
+          <img
+            src={logo}
+            alt="Company Logo"
+            style={{ height: "100px", marginRight: "1px" }}
+          />
           <Link to="https://rcklean.com/"></Link>
         </div>
         <table className="invoice-table">
@@ -97,12 +111,23 @@ const InvoiceResults = ({ result, options, SquareFeetOptions }) => {
             </tr>
             {payload.equipment.length > 0 &&
               payload.equipment.map((item, index) => {
-                const equipName = options.equipmentTypes.find((type) => type.id === Number(item.name))?.name || "Unknown";
+                const equipName =
+                  options.equipmentTypes.find(
+                    (type) => type.id === Number(item.name)
+                  )?.name || "Unknown";
                 const option = options.bus_qty.find(
-                  (opt) => opt.equipment_type === Number(item.name) && opt.option_value === Number(item.option_value)
+                  (opt) =>
+                    opt.equipment_type === Number(item.name) &&
+                    opt.option_value === Number(item.option_value)
                 );
-                const desc = `${equipName}${option ? ` - ${option.option_type_display} ${option.option_value_display}` : ""}`;
-                const price = totalPrice / payload.equipment.reduce((sum, e) => sum + e.quantity, 0);
+                const desc = `${equipName}${
+                  option
+                    ? ` - ${option.option_type_display} ${option.option_value_display}`
+                    : ""
+                }`;
+                const price =
+                  totalPrice /
+                  payload.equipment.reduce((sum, e) => sum + e.quantity, 0);
                 return (
                   <tr key={index}>
                     <td>{desc}</td>
@@ -114,12 +139,21 @@ const InvoiceResults = ({ result, options, SquareFeetOptions }) => {
               })}
             {payload.areas.length > 0 &&
               payload.areas.map((area, index) => {
-                const areaName = options.areaNames.find((a) => a.id === Number(area.name))?.name || "Unknown";
-                const floorName = options.floorNames.find((f) => f.id === Number(area.floor_type))?.name || "";
+                const areaName =
+                  options.areaNames.find((a) => a.id === Number(area.name))
+                    ?.name || "Unknown";
+                const floorName =
+                  options.floorNames.find(
+                    (f) => f.id === Number(area.floor_type)
+                  )?.name || "";
                 const price = totalPrice / payload.areas.length;
                 return (
                   <tr key={index}>
-                    <td>{`${areaName} (${SquareFeetOptions.find((s) => s.value === Number(area.square_feet))?.label || ""} sq ft) - ${floorName}`}</td>
+                    <td>{`${areaName} (${
+                      SquareFeetOptions.find(
+                        (s) => s.value === Number(area.square_feet)
+                      )?.label || ""
+                    } sq ft) - ${floorName}`}</td>
                     <td>1</td>
                     <td>${price.toFixed(2)}</td>
                     <td>${price.toFixed(2)}</td>
@@ -130,16 +164,26 @@ const InvoiceResults = ({ result, options, SquareFeetOptions }) => {
         </table>
         <div className="invoice-footer">
           <p>Disclaimer ⚠️:</p>
-          <p>Prices shown here are subject to change and are primarily a guide to our standard pricing, for a personalized and accurate quote please contact us through our direct channels:</p>
+          <p>
+            Prices shown here are subject to change and are primarily a guide to
+            our standard pricing, for a personalized and accurate quote please
+            contact us through our direct channels:
+          </p>
           <p className="invoice-footer-info">Email: example@hotmail.com</p>
           <p className="invoice-footer-info">Phone: 3333333333</p>
         </div>
         <div className="invoice-footer-credits">
           <p>Thank you for choosing RCKLEAN!</p>
           <p>
-           <img src={logo2} alt="Company Logo" style={{ height: '40px', marginRight: '8px' }} />
-           <Link to="https://wirkconsulting.com/" >Power by Wirk Consulting</Link>
-           </p>
+            <img
+              src={logo2}
+              alt="Company Logo"
+              style={{ height: "40px", marginRight: "8px" }}
+            />
+            <Link to="https://wirkconsulting.com/">
+              Power by Wirk Consulting
+            </Link>
+          </p>
         </div>
       </div>
       <button onClick={downloadPDF} className="download-btn">

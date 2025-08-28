@@ -29,7 +29,6 @@
     "simple-zustand-devtools": "1.0.1",
     "styled-components": "^6.1.15",
     "sweetalert2": "^11.12.4",
-    "tailwind": "^4.0.0",
     "zustand": "4.5.2"
   },
   "devDependencies": {

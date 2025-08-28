@@ -1,15 +1,13 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
-import { USAMap } from '@mirawision/usa-map-react';
-import styled from 'styled-components'; // Make sure to install styled-components
-import '../styles/CustomMap.css';
+import React from "react";
+import { USAMap } from "@mirawision/usa-map-react";
+import styled from "styled-components"; // Make sure to install styled-components
+import "../styles/CustomMap.css";
 
 const CoverageMap = () => {
   return (
     <div className="map-container">
-      
       <div className="map-legend">
-        
         <div className="legend-item">
           <div className="color-box coverage"></div>
           <span>Service Coverage Area</span>
@@ -20,7 +18,6 @@ const CoverageMap = () => {
         </div>
       </div>
       <StyledUSAMap />
-
     </div>
   );
 };
@@ -59,7 +56,7 @@ const StyledUSAMap = styled(USAMap)`
       color: #172352;
       padding: 5px 10px;
       border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       white-space: nowrap;
       z-index: 1000;
       pointer-events: none;
@@ -72,7 +69,6 @@ const StyledUSAMap = styled(USAMap)`
     fill: rgba(38, 16, 88, 0.774);
     stroke: rgb(24, 158, 113);
     stroke-width: 2px;
-    
   }
 
   .usa-state.ny:hover,
@@ -85,9 +81,7 @@ const StyledUSAMap = styled(USAMap)`
   .usa-state.ny,
   .usa-state.ca,
   .usa-state.fl {
-
     &[data-tooltip="We work here!"] {
-      
       /* background-image: url('../public/img/foot-logo_1.png'); */
       /* background-size: 20px 20px; */
       /* background-repeat: no-repeat; */

@@ -1,11 +1,11 @@
 import requests
-from django.conf import settings  # ✅ Usa settings de Django
+from django.conf import settings
 
 MAILERSEND_API_URL = "https://api.mailersend.com/v1/email"
 
 def send_mailersend_email(to_email, subject, text, html=None):
     headers = {
-        "Authorization": f"Bearer {settings.MAILERSEND_API_TOKEN}",  # ✅ Usa settings
+        "Authorization": f"Bearer {settings.MAILERSEND_API_TOKEN}",
         "Content-Type": "application/json",
     }
 
@@ -28,3 +28,4 @@ def send_mailersend_email(to_email, subject, text, html=None):
         response.raise_for_status()
     except requests.RequestException as e:
         print(f"[MailerSend] Error sending email to {to_email}: {e}")
+            

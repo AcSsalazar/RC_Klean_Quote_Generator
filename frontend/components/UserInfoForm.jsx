@@ -15,7 +15,7 @@ function UserInfoForm() {
   const [zipError, setZipError] = useState("");
   const [options, setOptions] = useState({ businessTypes: [] });
   const [phone, setPhone] = useState({ field: "", validate: null });
-  const [address, setAddress] = useState({ field: "", validate: null }); 
+  const [address, setAddress] = useState({ field: "", validate: null });
   const [validForm, setValidForm] = useState(null);
 
   const navigate = useNavigate();
@@ -89,7 +89,8 @@ function UserInfoForm() {
         const selectedBusiness = options.businessTypes.find(
           (type) => type.id === Number(business.field)
         );
-        const initialStep = selectedBusiness?.name.toLowerCase() === "restaurants" ? 2 : 3;
+        const initialStep =
+          selectedBusiness?.name.toLowerCase() === "restaurants" ? 2 : 3;
 
         navigate(`/quote-calculator/${quoteId}`, { state: { initialStep } });
         resetForm();
@@ -116,117 +117,132 @@ function UserInfoForm() {
   };
 
   return (
+    <main className="start-main no-bg">
+      <img
+        src="/img/8.png"
+        alt="Background"
+        className="start-background"
+        loading="lazy"
+        aria-hidden="true"
+      />
 
-       <main className="start-main no-bg">
-        <img
-          src="/img/8.png"
-          alt="Background"
-          className="start-background"
-          loading="lazy"
-          aria-hidden="true"
-        />
-
-    <div className="start-info-container">
-      <section>
-      <div className="start-info-card">
-        
-        <h2 className="start-info-title">Get Started</h2>
-        <p style={{color: '#416491', textAlign: 'center', marginBottom: '4px', fontSize: '16px'}}>We need some information</p>
-        <form onSubmit={handleSubmit}>
-          <div className="form-grid">
-            <InputField
-              state={fullname}
-              setState={setFullname}
-              label="Full Name"
-              name="fullname"
-              placeholder="Enter your full name"
-              regex={regexPatterns.name}
-              errorMessage="Name must only contain letters and spaces."
-            />
-            <InputField
-              state={email}
-              setState={setEmail}
-              label="Email"
-              name="email"
-              type="email"
-              placeholder="Enter your email"
-              regex={regexPatterns.email}
-              errorMessage="Invalid email format."
-            />
-            <div className="input-group">
-              <label className="input-label">Business Type</label>
-              <select
-                id="business"
-                value={business.field}
-                onChange={(e) => setBusiness({ field: e.target.value, validate: e.target.value ? "true" : "false" })}
-                className={`input-field ${business.validate === "false" ? "is-invalid" : business.validate === "true" ? "is-valid" : ""}`}
-              >
-                <option value="">Select business type</option>
-                {options.businessTypes.map((type) => (
-                  <option key={type.id} value={type.id}>
-                    {type.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <InputField
-              state={phone}
-              setState={setPhone}
-              label="Phone Number"
-              name="phone"
-              placeholder="Enter your phone number"
-              regex={regexPatterns.phone}
-              errorMessage="Invalid phone number."  
-            />
-
-            <InputField
-              state={address}
-              setState={setAddress}
-              label="Address"
-              name="address"
-              placeholder="Enter your address"
-              regex={regexPatterns.address}
-              errorMessage="Invalid address format."
-
-            />
-
-
-
-            <InputField
-              state={zipCode}
-              setState={setZipCode}
-              label="Zip Code"
-              name="zip_code"
-              placeholder="Enter your zip code"
-              customValidation={handleZipCodeChange}
-              errorMessage="Invalid zip code."
-            />
-            {city && (
-              <div className="input-group">
-                <label className="input-label">City</label>
-                <input
-                  type="text"
-                  value={city}
-                  readOnly
-                  className="input-field"
+      <div className="start-info-container">
+        <section>
+          <div className="start-info-card">
+            <h2 className="start-info-title">Get Started</h2>
+            <p
+              style={{
+                color: "#416491",
+                textAlign: "center",
+                marginBottom: "4px",
+                fontSize: "16px",
+              }}
+            >
+              We need some information
+            </p>
+            <form onSubmit={handleSubmit}>
+              <div className="form-grid">
+                <InputField
+                  state={fullname}
+                  setState={setFullname}
+                  label="Full Name"
+                  name="fullname"
+                  placeholder="Enter your full name"
+                  regex={regexPatterns.name}
+                  errorMessage="Name must only contain letters and spaces."
                 />
+                <InputField
+                  state={email}
+                  setState={setEmail}
+                  label="Email"
+                  name="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  regex={regexPatterns.email}
+                  errorMessage="Invalid email format."
+                />
+                <div className="input-group">
+                  <label className="input-label">Business Type</label>
+                  <select
+                    id="business"
+                    value={business.field}
+                    onChange={(e) =>
+                      setBusiness({
+                        field: e.target.value,
+                        validate: e.target.value ? "true" : "false",
+                      })
+                    }
+                    className={`input-field ${
+                      business.validate === "false"
+                        ? "is-invalid"
+                        : business.validate === "true"
+                        ? "is-valid"
+                        : ""
+                    }`}
+                  >
+                    <option value="">Select business type</option>
+                    {options.businessTypes.map((type) => (
+                      <option key={type.id} value={type.id}>
+                        {type.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <InputField
+                  state={phone}
+                  setState={setPhone}
+                  label="Phone Number"
+                  name="phone"
+                  placeholder="Enter your phone number"
+                  regex={regexPatterns.phone}
+                  errorMessage="Invalid phone number."
+                />
+
+                <InputField
+                  state={address}
+                  setState={setAddress}
+                  label="Address"
+                  name="address"
+                  placeholder="Enter your address"
+                  regex={regexPatterns.address}
+                  errorMessage="Invalid address format."
+                />
+
+                <InputField
+                  state={zipCode}
+                  setState={setZipCode}
+                  label="Zip Code"
+                  name="zip_code"
+                  placeholder="Enter your zip code"
+                  customValidation={handleZipCodeChange}
+                  errorMessage="Invalid zip code."
+                />
+                {city && (
+                  <div className="input-group">
+                    <label className="input-label">City</label>
+                    <input
+                      type="text"
+                      value={city}
+                      readOnly
+                      className="input-field"
+                    />
+                  </div>
+                )}
+                {zipError && <p className="error-text">{zipError}</p>}
               </div>
-            )}
-            {zipError && <p className="error-text">{zipError}</p>}
+              {validForm === false && (
+                <div className="alert-warning">
+                  Please complete all fields correctly before continuing.
+                </div>
+              )}
+              <button className="submit-btn" type="submit" disabled={isLoading}>
+                {isLoading ? "Processing..." : "Submit"}
+              </button>
+            </form>
           </div>
-          {validForm === false && (
-            <div className="alert-warning">
-              Please complete all fields correctly before continuing.
-            </div>
-          )}
-          <button className="submit-btn" type="submit" disabled={isLoading}>
-            {isLoading ? "Processing..." : "Submit"}
-          </button>
-        </form>
+        </section>
       </div>
-      </section>
-    </div>
     </main>
   );
 }

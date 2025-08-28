@@ -6,7 +6,10 @@ import apiInstance from "../../frontend/src/utils/axios.js";
 import { useNavigate } from "react-router-dom";
 
 export default function SavedQuotes() {
-  const [isLoggedIn, user] = useAuthStore((state) => [state.isLoggedIn, state.user]);
+  const [isLoggedIn, user] = useAuthStore((state) => [
+    state.isLoggedIn,
+    state.user,
+  ]);
   const [quotes, setQuotes] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -40,7 +43,9 @@ export default function SavedQuotes() {
         <ul>
           {quotes.map((quote) => (
             <li key={quote.id}>
-              <p>Invoice #{quote.id} - ${quote.total_price}</p>
+              <p>
+                Invoice #{quote.id} - ${quote.total_price}
+              </p>
               <p>Business Type: {quote.business_type.name}</p>
             </li>
           ))}
