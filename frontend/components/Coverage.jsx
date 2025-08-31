@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-import React from 'react';
 import { USAMap } from '@mirawision/usa-map-react';
 import styled from 'styled-components'; // Make sure to install styled-components
 import '../styles/CustomMap.css';

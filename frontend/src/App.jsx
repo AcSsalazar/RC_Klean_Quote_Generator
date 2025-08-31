@@ -1,11 +1,10 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
-//import { useEffect, useState } from "react";
+
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "../components/auth/Login";
 import Logout from "../components/auth/Logout";
 import Register from "../components/auth/Register";
 import RCFooter from "../components/base/RCFooter";
+import NotFound from "../components/NotFound";
 import ForgotPassword from "../components/auth/ForgotPassword";
 import CreatePassword from "../components/auth/CreatePassword";
 import MainWrapper from '../src/layouts/MainWrapper'; 
@@ -46,10 +45,9 @@ const App = () => {
 
         {/* Start info form before the calculator */}
         <Route path="/user-info-form" element={<UserInfoForm />}> </Route>
-
-
         {/* Unique ID quote Rute with user info  */}
         <Route path="/quote-calculator/:quoteId" element={<QuoteCalculator />} />
+        <Route path='*' element={<NotFound />} />
 
       {/* Quote Searcher by QuoteID*/}
 

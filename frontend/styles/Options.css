@@ -132,14 +132,18 @@
 
 /* Area item layout */
 .quote-calculator .qc-area-item {
-  display: grid;
-  grid-template-columns: 44fr 250px auto;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--qc-border-color);
-  align-items: end;
-  justify-content: center;
+  
+    background-color: #909f5705;
+    border-radius: 10px;
+    display: flex;
+    padding: 1rem;
+    border: 1px solid #6765bf1f;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
 }
 
 .quote-calculator .qc-label-input-area {
@@ -232,16 +236,17 @@
 }
 
 .quote-calculator .qc-equantity-selector {
-  max-width: 720px;
-  min-width: 100px;
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  background-color: var(--qc-section-bg);
-  border-radius: 10px;
+    max-width: 1080px;
+    min-width: 100px;
+    border: 1px solid #6765bf1f;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #5e76a10d;
+    border-radius: 10px;
+    align-items: center;
 }
 
 .quote-calculator .qc-form-control-options {

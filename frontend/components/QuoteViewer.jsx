@@ -1,5 +1,5 @@
 // src/components/SavedQuotes.js
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { useAuthStore } from "../../frontend/src/RCA/auth.js";
 import apiInstance from "../../frontend/src/utils/axios.js";
 import { useNavigate } from "react-router-dom";

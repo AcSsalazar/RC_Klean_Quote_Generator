@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import apiInstance from "../src/utils/axios";
 import '../styles/StartForm.css'; 
 import { Link } from 'react-router-dom';

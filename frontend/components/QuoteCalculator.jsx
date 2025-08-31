@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react"
 import { useAuthStore } from "../src/RCA/auth"
 import apiInstance from "../src/utils/axios"
-import "../styles/Options.css" // Updated CSS file name
+import "../styles/Options.css"
 import useValidation from "./useValidator"
 import { useNavigate, useLocation, useParams } from "react-router-dom"
 import QtySelector from "./QtySelector"
@@ -35,7 +35,7 @@ export default function QuoteCalculator() {
         name: { field: "", validate: null },
         option_type: { field: "", validate: null },
         option_value: { field: "", validate: null },
-        quantity: { field: 0, validate: null },
+        quantity: { field: 1, validate: true },
         validOptions: [],
       },
     ],
@@ -69,7 +69,7 @@ export default function QuoteCalculator() {
           const response = await apiInstance.get(`invoice/${quoteId}/`)
           setFields((prev) => ({
             ...prev,
-            businessType: { field: String(response.data.business_type), validate: "true" },
+            businessType: { field: String(response.data.business_type), validate: true },
           }))
         } catch (error) {
           console.error("Error fetching invoice:", error)
@@ -146,7 +146,7 @@ export default function QuoteCalculator() {
             name: { field: "", validate: null },
             option_type: { field: "", validate: null },
             option_value: { field: "", validate: null },
-            quantity: { field: 0, validate: null },
+            quantity: { field: 1, validate: true },
             validOptions: [],
           },
         ],
@@ -205,20 +205,16 @@ export default function QuoteCalculator() {
       options.businessTypes.find((type) => type.id === Number(fields.businessType.field))?.name.toLowerCase() ===
         "restaurants" || fields.businessType.field.toLowerCase() === "restaurants"
 
-    const hasAreas = fields.areas.some((area) => area.name.field && area.square_feet.field && area.floor_type.field)
-    const hasEquipment = fields.equantity.some(
-      (equip) =>
-        equip.name.field && (equip.validOptions.length === 0 || equip.option_value.field) && equip.quantity.field > 0,
-    )
+    // Validación más robusta
+    const validationResult = validateFormData(fields, isRestaurant)
+    
+    console.log("Validation result:", validationResult)
+    console.log("Areas:", fields.areas)
+    console.log("Equipment:", fields.equantity)
 
-    if (!hasAreas && !hasEquipment) {
+    if (!validationResult.isValid) {
       setIsFormValid(false)
-      return
-    }
-
-    const isValid = validateAllFields(fields, isRestaurant)
-    if (!isValid) {
-      setIsFormValid(false)
+      console.log("Validation failed:", validationResult.errors)
       return
     }
 
@@ -251,18 +247,20 @@ export default function QuoteCalculator() {
             option_value: equip.option_value.field ? Number(equip.option_value.field) : null,
           })),
       }
-
+      console.log("Actual Payload Is:", payload)
       await apiInstance.patch(`invoice/${quoteId}/update/`, payload)
 
       setTimeout(() => {
         setIsCalculating(false)
         navigate(`/results/${quoteId}`)
-      }, 4000)
+      }, 1000)
     } catch (error) {
       console.error("Error updating invoice:", error)
       setIsFormValid(false)
       setIsCalculating(false)
     }
+
+    console.log("Form validation completed:", validationResult.isValid)
   }
 
   const fetchQuotes = async () => {
@@ -276,6 +274,42 @@ export default function QuoteCalculator() {
       }
     }
     return 0
+  }
+
+  // Función de validación simplificada y clara
+  const validateFormData = (fields, isRestaurant) => {
+    const errors = []
+    
+    // Áreas completamente llenas
+    const completedAreas = fields.areas.filter(area => 
+      area.name.field && area.square_feet.field && area.floor_type.field &&
+      area.name.validate === true && area.square_feet.validate === true && area.floor_type.validate === true
+    )
+    
+    // Equipos completamente llenos
+    const completedEquipment = fields.equantity.filter(equip => 
+      equip.name.field && 
+      equip.name.validate === true &&
+      equip.quantity.validate === true &&
+      (equip.validOptions.length === 0 || (equip.option_value.field && equip.option_value.validate === true))
+    )
+    
+    // AMBOS tipos de negocio requieren al menos 1 área
+    if (completedAreas.length === 0) {
+      errors.push("At least one complete area must be provided")
+      return { isValid: false, errors, hasValidData: false }
+    }
+    
+    // Para restaurantes: también pueden tener equipos (opcional)
+    // Para no restaurantes: las áreas son suficientes
+    
+    return { 
+      isValid: true, 
+      errors: [], 
+      hasValidData: true,
+      validAreas: completedAreas.length,
+      validEquipment: completedEquipment.length
+    }
   }
 
   const renderStep = () => {
@@ -304,7 +338,7 @@ export default function QuoteCalculator() {
                       value={item.name.field}
                       onChange={(e) => handleEquantityChange(index, "name", e.target.value)}
                       onBlur={() => handleEquantityValidate(index, "name")}
-                      className={`qc-selector-input ${item.name.validate === "false" ? "qc-is-invalid" : item.name.validate === "true" ? "qc-is-valid" : ""}`}
+                      className={`qc-selector-input ${item.name.validate === false ? "qc-is-invalid" : item.name.validate === true ? "qc-is-valid" : ""}`}
                     >
                       <option value="">Select equipment</option>
                       {options.equipmentTypes.map((type) => (
@@ -314,7 +348,7 @@ export default function QuoteCalculator() {
                       ))}
                     </select>
                   </div>
-                  {item.name.validate === "false" && (
+                  {item.name.validate === false && (
                     <span className="qc-text-danger">Please select an equipment type.</span>
                   )}
                 </div>
@@ -329,7 +363,7 @@ export default function QuoteCalculator() {
                         value={item.option_value.field}
                         onChange={(e) => handleOptionChange(index, e.target.value)}
                         onBlur={() => handleEquantityValidate(index, "option_value")}
-                        className={`qc-form-control-options ${item.option_value.validate === "false" ? "qc-is-invalid" : item.option_value.validate === "true" ? "qc-is-valid" : ""}`}
+                        className={`qc-form-control-options ${item.option_value.validate === false ? "qc-is-invalid" : item.option_value.validate === true ? "qc-is-valid" : ""}`}
                       >
                         <option value="">Select size/quantity</option>
                         {item.validOptions.map((option) => (
@@ -339,7 +373,7 @@ export default function QuoteCalculator() {
                         ))}
                       </select>
                     </div>
-                    {item.option_value.validate === "false" && (
+                    {item.option_value.validate === false && (
                       <span className="qc-text-danger">This field is required.</span>
                     )}
                   </div>
@@ -359,8 +393,8 @@ export default function QuoteCalculator() {
                         handleEquantityValidate(index, "quantity")
                       }}
                     />
-                    {item.quantity.validate === "false" && (
-                      <span className="qc-text-danger">Please enter a valid quantity (min 1).</span>
+                    {item.quantity.validate === false && (
+                      <span className="qc-text-danger">Please enter a valid quantity.</span>
                     )}
                   </div>
                 </div>
@@ -389,7 +423,7 @@ export default function QuoteCalculator() {
                       value={area.name.field}
                       onChange={(e) => handleAreaChange(index, "name", e.target.value)}
                       onBlur={() => handleAreaValidate(index, "name")}
-                      className={`qc-selector-input qc-selector-area ${area.name.validate === "false" ? "qc-is-invalid" : area.name.validate === "true" ? "qc-is-valid" : ""}`}
+                      className={`qc-selector-input qc-selector-area ${area.name.validate === false ? "qc-is-invalid" : area.name.validate === true ? "qc-is-valid" : ""}`}
                     >
                       <option value="">Select area</option>
                       {options.areaNames.map((areaOption) => (
@@ -399,7 +433,7 @@ export default function QuoteCalculator() {
                       ))}
                     </select>
                   </div>
-                  {area.name.validate === "false" && <span className="qc-text-danger">Please select an area.</span>}
+                  {area.name.validate === false && <span className="qc-text-danger">Please select an area.</span>}
                 </div>
 
                 <div className="qc-input-group">
@@ -409,7 +443,7 @@ export default function QuoteCalculator() {
                       value={area.square_feet.field}
                       onChange={(e) => handleAreaChange(index, "square_feet", e.target.value)}
                       onBlur={() => handleAreaValidate(index, "square_feet")}
-                      className={`qc-selector-input qc-selector-squarefeet ${area.square_feet.validate === "false" ? "qc-is-invalid" : area.square_feet.validate === "true" ? "qc-is-valid" : ""}`}
+                      className={`qc-selector-input qc-selector-squarefeet ${area.square_feet.validate === false ? "qc-is-invalid" : area.square_feet.validate === true ? "qc-is-valid" : ""}`}
                     >
                       <option value="">Select size</option>
                       {SquareFeetOptions.map((sizeOption) => (
@@ -419,7 +453,7 @@ export default function QuoteCalculator() {
                       ))}
                     </select>
                   </div>
-                  {area.square_feet.validate === "false" && (
+                  {area.square_feet.validate === false && (
                     <span className="qc-text-danger">Please select a size range.</span>
                   )}
                 </div>
@@ -431,7 +465,7 @@ export default function QuoteCalculator() {
                       value={area.floor_type.field}
                       onChange={(e) => handleAreaChange(index, "floor_type", e.target.value)}
                       onBlur={() => handleAreaValidate(index, "floor_type")}
-                      className={`qc-selector-input qc-selector-floor ${area.floor_type.validate === "false" ? "qc-is-invalid" : area.floor_type.validate === "true" ? "qc-is-valid" : ""}`}
+                      className={`qc-selector-input qc-selector-floor ${area.floor_type.validate === false ? "qc-is-invalid" : area.floor_type.validate === true ? "qc-is-valid" : ""}`}
                     >
                       <option value="">Select floor type</option>
                       {options.floorNames.map((floor) => (
@@ -441,13 +475,13 @@ export default function QuoteCalculator() {
                       ))}
                     </select>
                   </div>
-                  {area.floor_type.validate === "false" && (
+                  {area.floor_type.validate === false && (
                     <span className="qc-text-danger">Please select a floor type.</span>
                   )}
                 </div>
 
                 <button onClick={() => handleRemoveArea(index)} className="qc-btn qc-remove-btn">
-                  Remove Area
+                  Remove
                 </button>
               </div>
             ))}
@@ -458,7 +492,7 @@ export default function QuoteCalculator() {
             <div style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
               <button
                 onClick={calculateTotalPrice}
-                className="qc-btn qc-calculate-button"
+                className= {"qc-btn qc-calculate-button"}
                 disabled={isCalculateDisabled}
               >
                 Calculate
@@ -485,7 +519,7 @@ export default function QuoteCalculator() {
                       value={area.name.field}
                       onChange={(e) => handleAreaChange(index, "name", e.target.value)}
                       onBlur={() => handleAreaValidate(index, "name")}
-                      className={`qc-selector-input qc-selector-area ${area.name.validate === "false" ? "qc-is-invalid" : area.name.validate === "true" ? "qc-is-valid" : ""}`}
+                      className={`qc-selector-input qc-selector-area ${area.name.validate === false ? "qc-is-invalid" : area.name.validate === true ? "qc-is-valid" : ""}`}
                     >
                       <option value="">Select area</option>
                       {options.areaNames.map((areaOption) => (
@@ -495,7 +529,7 @@ export default function QuoteCalculator() {
                       ))}
                     </select>
                   </div>
-                  {area.name.validate === "false" && <span className="qc-text-danger">Please select an area.</span>}
+                  {area.name.validate === false && <span className="qc-text-danger">Please select an area.</span>}
                 </div>
 
                 <div className="qc-input-group">
@@ -507,7 +541,7 @@ export default function QuoteCalculator() {
                       value={area.square_feet.field}
                       onChange={(e) => handleAreaChange(index, "square_feet", e.target.value)}
                       onBlur={() => handleAreaValidate(index, "square_feet")}
-                      className={`qc-selector-input qc-selector-squarefeet ${area.square_feet.validate === "false" ? "qc-is-invalid" : area.square_feet.validate === "true" ? "qc-is-valid" : ""}`}
+                      className={`qc-selector-input qc-selector-squarefeet ${area.square_feet.validate === false ? "qc-is-invalid" : area.square_feet.validate === true ? "qc-is-valid" : ""}`}
                     >
                       <option value="">Select size</option>
                       {SquareFeetOptions.map((sizeOption) => (
@@ -517,7 +551,7 @@ export default function QuoteCalculator() {
                       ))}
                     </select>
                   </div>
-                  {area.square_feet.validate === "false" && (
+                  {area.square_feet.validate === false && (
                     <span className="qc-text-danger">Please select a size range.</span>
                   )}
                 </div>
@@ -531,7 +565,7 @@ export default function QuoteCalculator() {
                       value={area.floor_type.field}
                       onChange={(e) => handleAreaChange(index, "floor_type", e.target.value)}
                       onBlur={() => handleAreaValidate(index, "floor_type")}
-                      className={`qc-selector-input qc-selector-floor ${area.floor_type.validate === "false" ? "qc-is-invalid" : area.floor_type.validate === "true" ? "qc-is-valid" : ""}`}
+                      className={`qc-selector-input qc-selector-floor ${area.floor_type.validate === false ? "qc-is-invalid" : area.floor_type.validate === true ? "qc-is-valid" : ""}`}
                     >
                       <option value="">Select floor type</option>
                       {options.floorNames.map((floor) => (
@@ -541,7 +575,7 @@ export default function QuoteCalculator() {
                       ))}
                     </select>
                   </div>
-                  {area.floor_type.validate === "false" && (
+                  {area.floor_type.validate === false && (
                     <span className="qc-text-danger">Please select a floor type.</span>
                   )}
                 </div>
