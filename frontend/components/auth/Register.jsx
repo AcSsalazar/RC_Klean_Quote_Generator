@@ -108,6 +108,7 @@ function Register() {
       terms
     ) {
       setIsLoading(true)
+      console.log(fullname, email, phone, password, password2, city, address, business, zipCode)
 
       const { error } = await register(
         fullname.field,
@@ -115,10 +116,12 @@ function Register() {
         phone.field,
         password.field,
         password2.field,
-        address.field,
         city,
+        address.field,
         business.field,
         zipCode.field,
+       
+  
       )
 
       if (error) {

@@ -6,21 +6,23 @@ import '../../styles/header.css';
 import logo from "../../public/img/foot-logo_1.png";
 
 function RCHeader() {
+
+  const [isLoggedIn, user] = useAuthStore((state) => [state.isLoggedIn, state.user]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false); // solo para dropdown "Options"
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
   const ToggleDropDown = () => setIsOpen(!isOpen);
 
-  const GetUserName = (fullName) => {
-    if (!fullName) return "";
-    return fullName.split(" ")[0];
+  const GetUserName = (full_name) => {
+    if (!full_name) return "";
+    console.log(full_name);  
+    return full_name.split(" ")[0]
+    
   };
 
-  const [isLoggedIn, user] = useAuthStore((state) => [
-    state.isLoggedIn,
-    state.user
-  ]);
+
+
 
   return (
     <header className="app-header">
