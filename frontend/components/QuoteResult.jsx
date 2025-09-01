@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import html2pdf from "html2pdf.js";
 import apiInstance from "../src/utils/axios";
 import "../styles/ResultPublic.css";
@@ -86,71 +85,112 @@ const QuoteResult = () => {
             </tr>
           </thead>
           <tbody>
-            {equipment &&
-              equipment.length > 0 &&
-              equipment.map((item, index) => {
-                const equipName =
-                  options.equipmentTypes.find((type) => type.id === item.name)
-                    ?.name || item.name;
-                const option = options.bus_qty.find(
-                  (opt) =>
-                    opt.equipment_type === item.name &&
-                    opt.option_value === item.option_value
-                );
-                const desc = option
-                  ? `${equipName} - ${option.option_type_display} ${option.option_value_display}`
-                  : equipName;
-                return (
-                  <tr key={`equip-${index}`}>
-                    <td>{desc}</td>
-                    <td>{item.quantity}</td>
-                  </tr>
-                );
-              })}
-            {areas &&
-              areas.length > 0 &&
-              areas.map((area, index) => (
-                <tr key={`area-${index}`}>
-                  <td>
-                    {`${
-                      options.areaNames.find((a) => a.id === area.name)?.name ||
-                      area.name
-                    } (${
-                      SquareFeetOptions.find(
-                        (s) => s.value === area.square_feet
-                      )?.label || area.square_feet
-                    } sq ft) - ${
-                      options.floorNames.find((f) => f.id === area.floor_type)
-                        ?.name || area.floor_type
-                    }`}
+            {/* Equipment Section */}
+            {equipment && equipment.length > 0 && (
+              <>
+                <tr className="section-header">
+                  <td
+                    colSpan="2"
+                    style={{
+                      fontWeight: "bold",
+                      backgroundColor: "#f5f5f5",
+                      padding: "10px",
+                    }}
+                  >
+                    Equipment
                   </td>
-                  <td>1</td>
                 </tr>
-              ))}
+                {equipment &&
+                  equipment.length > 0 &&
+                  equipment.map((item, index) => {
+                    const equipName =
+                      options.equipmentTypes.find(
+                        (type) => type.id === item.name
+                      )?.name || item.name;
+                    const option = options.bus_qty.find(
+                      (opt) =>
+                        opt.equipment_type === item.name &&
+                        opt.option_value === item.option_value
+                    );
+                    const desc = option
+                      ? `${equipName} - ${option.option_type_display} ${option.option_value_display}`
+                      : equipName;
+                    return (
+                      <tr key={`equip-${index}`}>
+                        <td>{desc}</td>
+
+                        <td>{item.quantity}</td>
+                      </tr>
+                    );
+                  })}
+              </>
+            )}
+
+            {/* Areas Section */}
+            {areas && areas.length > 0 && (
+              <>
+                <tr className="section-header">
+                  <td
+                    colSpan="2"
+                    style={{
+                      fontWeight: "bold",
+                      backgroundColor: "#f5f5f5",
+                      padding: "10px",
+                    }}
+                  >
+                    Areas
+                  </td>
+                </tr>
+                {areas &&
+                  areas.length > 0 &&
+                  areas.map((area, index) => (
+                    <tr key={`area-${index}`}>
+                      <td>
+                        {`${
+                          options.areaNames.find((a) => a.id === area.name)
+                            ?.name || area.name
+                        } (${
+                          SquareFeetOptions.find(
+                            (s) => s.value === area.square_feet
+                          )?.label || area.square_feet
+                        } sq ft) - ${
+                          options.floorNames.find(
+                            (f) => f.id === area.floor_type
+                          )?.name || area.floor_type
+                        }`}
+                      </td>
+                      <td>1</td>
+                    </tr>
+                  ))}
+              </>
+            )}
           </tbody>
         </table>
         <p className="estimated-title">
           Estimated total: <span style={{ paddingLeft: "20px" }} />$
           {(total_price * 0.8).toFixed(2)} to ${(total_price * 1.2).toFixed(2)}
         </p>
-        <div className="invoice-details">
-          <b>
-            <p> Quote ID: {quoteId} </p>{" "}
-          </b>
-          <p>Business Type: {business_type}</p>
-          <p>Issued to: {full_name}</p>
-          <p>Email: {email}</p>
-          <p>City: {city}</p>
-          <p>
-            Due Date:{" "}
-            {new Date()
-              .toISOString()
-              .split("T")[0]
-              .split("-")
-              .reverse()
-              .join("/")}
-          </p>
-          <span></span>
+        <div className="user-details-card">
+          <div className="invoice-details">
+            <p style={{ fontSize: "15px", color: "#251b47" }}>Client Info:</p>
+            <b>
+              <p> Quote ID: {quoteId} </p>{" "}
+            </b>
+            <p>Business Type: {business_type}</p>
+            <p>Issued to: {full_name}</p>
+            <p>Email: {email}</p>
+            <p>City: {city}</p>
+            <p>
+              Due Date:{" "}
+              {new Date()
+                .toISOString()
+                .split("T")[0]
+                .split("-")
+                .reverse()
+                .join("/")}
+            </p>
+            <span></span>
+          </div>
         </div>
         <div className="invoice-footer">
           <p style={{ fontWeight: "500" }}>Terms and Conditions:</p>

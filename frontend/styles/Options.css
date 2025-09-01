@@ -5,7 +5,11 @@
 .quote-calculator {
   --qc-primary-color: #42a01a;
   --qc-secondary-color: #393571;
-  --qc-background: radial-gradient(circle, rgba(32, 102, 138, 1) 0%, rgba(31, 31, 36, 1) 63%);
+  --qc-background: radial-gradient(
+    circle,
+    rgba(32, 102, 138, 1) 0%,
+    rgba(31, 31, 36, 1) 63%
+  );
   --qc-text-color: #213258;
   /*--qc-input-bg: rgba(36, 36, 36, 0.8);*/
   --qc-border-color: #dfe6e9;
@@ -132,14 +136,17 @@
 
 /* Area item layout */
 .quote-calculator .qc-area-item {
-  display: grid;
-  grid-template-columns: 44fr 250px auto;
+  background-color: #909f5705;
+  border-radius: 10px;
+  display: flex;
+  padding: 1rem;
+  border: 1px solid #6765bf1f;
   gap: 1rem;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--qc-border-color);
-  align-items: end;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
 }
 
 .quote-calculator .qc-label-input-area {
@@ -223,7 +230,6 @@
 }
 
 .quote-calculator .qc-selector-squarefeet {
-
   align-items: center;
 }
 
@@ -232,25 +238,25 @@
 }
 
 .quote-calculator .qc-equantity-selector {
-  max-width: 720px;
+  max-width: 1080px;
   min-width: 100px;
+  border: 1px solid #6765bf1f;
   display: flex;
   justify-content: space-between;
-  align-items: stretch;
   gap: 1rem;
   margin-bottom: 1rem;
   padding: 1rem;
-  background-color: var(--qc-section-bg);
+  background-color: #5e76a10d;
   border-radius: 10px;
+  align-items: center;
 }
 
 .quote-calculator .qc-form-control-options {
-  
   padding: 0.75rem;
   border: 2px solid var(--qc-border-color);
   border-radius: 8px;
   font-size: 1rem;
-  
+
   color: var(--qc-text-color);
   font-family: "Poppins", sans-serif;
 }

@@ -1,92 +1,73 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
 
-
-
 .about-service-container {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  background-size: cover;
+  background-position: center;
+}
 
-    
-    min-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
-    background-size: cover;
-    background-position: center;
-
-  }
-
-
-  
-  .about-service-container h1 {
-    align-items: center;
-    font-size: 2rem;
-    color: #213258;
-    margin-bottom: 20px;
-
-  }
-
-
+.about-service-container h1 {
+  align-items: center;
+  font-size: 2rem;
+  color: #213258;
+  margin-bottom: 20px;
+}
 
 .about-main.no-bg {
   position: relative;
   overflow: hidden;
-
 }
-
 
 .about-background {
-    position: absolute;
-    top: 0;
-    left: 0; 
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
-    pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
 }
-  
+
 .text-container {
-
-
-  
-    border: #4a686570 1px solid;
-    font-family: 'Poppins', sans-serif;
-    backdrop-filter: blur(30px);
-    border-radius: 10px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
+  border: #4a686570 1px solid;
+  font-family: "Poppins", sans-serif;
+  backdrop-filter: blur(30px);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+.description {
+  font-size: 1.1rem;
+  color: #000000;
+  max-width: 900px;
+  text-align: center;
+  line-height: 1.5;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
 
-  .description {
-    font-size: 1.1rem;
-    color: #000000;
-    max-width: 900px;
-    text-align: center;
-    line-height: 1.5;
-    font-weight: 500;
-    margin-bottom: 4px;
-  }
-  
-  .back-link {
-    margin-top: 20px;
-    color: #3460db;
-    text-decoration: none;
-    font-size: 1rem;
-  }
-  
-  .back-link:hover {
-    color: #83ca73;
-    text-decoration: underline;
-  }
+.back-link {
+  margin-top: 20px;
+  color: #3460db;
+  text-decoration: none;
+  font-size: 1rem;
+}
 
+.back-link:hover {
+  color: #83ca73;
+  text-decoration: underline;
+}
 
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
   .about-service-container {
     padding: 20px 10px;
     min-height: 70vh;
@@ -114,12 +95,9 @@
   }
 }
 
-  @media (max-width: 480px) {
-
+@media (max-width: 480px) {
   .about-service-container {
-
     background-image: url("/img/6.png");
-
   }
   .about-service-container h1 {
     font-size: 1.2rem;

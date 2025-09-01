@@ -1,12 +1,10 @@
 .dashboard {
   display: flex;
   flex-direction: column;
-  justify-content: center;  /* Centra verticalmente */
-  align-items: center;  /* Centra horizontalmente */
+  justify-content: center; /* Centra verticalmente */
+  align-items: center; /* Centra horizontalmente */
   min-height: 100vh;
 }
-
-
 
 .dashboard-main {
   flex-grow: 1;

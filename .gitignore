@@ -77,3 +77,4 @@ cython_debug/
 
 # Staticfiles
 staticfiles
+frontend/src/utils/constant.js

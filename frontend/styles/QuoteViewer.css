@@ -1,12 +1,6 @@
-
-
 .card-list {
-
-    padding: 20%;
-    border-radius: 12px;
-    display: flex;
-    background-color: #fbfff257
-    ;
-
-
+  padding: 20%;
+  border-radius: 12px;
+  display: flex;
+  background-color: #fbfff257;
 }

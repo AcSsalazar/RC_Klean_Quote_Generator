@@ -5,10 +5,11 @@
 import { useState, useEffect } from "react";
 import { useAuthStore } from "../src/RCA/auth";
 import apiInstance from "../src/utils/axios";
-import "../styles/Options.css"; // Updated CSS file name
+import "../styles/Options.css";
 import useValidation from "./useValidator";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import QtySelector from "./QtySelector";
+import loagingGif from "../src/assets/3.gif";
 
 export default function QuoteCalculator() {
   const navigate = useNavigate();
@@ -37,14 +38,13 @@ export default function QuoteCalculator() {
         name: { field: "", validate: null },
         option_type: { field: "", validate: null },
         option_value: { field: "", validate: null },
-        quantity: { field: 0, validate: null },
+        quantity: { field: 1, validate: true },
         validOptions: [],
       },
     ],
   };
 
-  const { fields, setFields, validateField, validateAllFields } =
-    useValidation(initialState);
+  const { fields, setFields, validateField } = useValidation(initialState);
 
   const [options, setOptions] = useState({
     businessTypes: [],
@@ -74,7 +74,7 @@ export default function QuoteCalculator() {
             ...prev,
             businessType: {
               field: String(response.data.business_type),
-              validate: "true",
+              validate: true,
             },
           }));
         } catch (error) {
@@ -154,7 +154,7 @@ export default function QuoteCalculator() {
             name: { field: "", validate: null },
             option_type: { field: "", validate: null },
             option_value: { field: "", validate: null },
-            quantity: { field: 0, validate: null },
+            quantity: { field: 1, validate: true },
             validOptions: [],
           },
         ],
@@ -221,25 +221,20 @@ export default function QuoteCalculator() {
         ?.name.toLowerCase() === "restaurants" ||
       fields.businessType.field.toLowerCase() === "restaurants";
 
-    const hasAreas = fields.areas.some(
-      (area) =>
-        area.name.field && area.square_feet.field && area.floor_type.field
-    );
-    const hasEquipment = fields.equantity.some(
-      (equip) =>
-        equip.name.field &&
-        (equip.validOptions.length === 0 || equip.option_value.field) &&
-        equip.quantity.field > 0
-    );
+    // Validación más robusta
+    const validationResult = validateFormData(fields, isRestaurant);
 
-    if (!hasAreas && !hasEquipment) {
-      setIsFormValid(false);
-      return;
-    }
+    console.log("Validation result:", validationResult);
+    console.log("Areas:", fields.areas);
+    console.log("Equipment:", fields.equantity);
 
-    const isValid = validateAllFields(fields, isRestaurant);
-    if (!isValid) {
+    if (!validationResult.isValid) {
       setIsFormValid(false);
+      console.log("Validation failed:", validationResult.errors);
+      // Mostrar errores específicos en la consola para debugging
+      validationResult.errors.forEach((error) =>
+        console.error("Validation error:", error)
+      );
       return;
     }
 
@@ -259,7 +254,9 @@ export default function QuoteCalculator() {
       const payload = {
         business_type: businessTypeId,
         areas: fields.areas
-          .filter((a) => a.name.field)
+          .filter(
+            (a) => a.name.field && a.square_feet.field && a.floor_type.field
+          )
           .map((area) => ({
             name: Number(area.name.field),
             square_feet: Number(area.square_feet.field),
@@ -276,7 +273,7 @@ export default function QuoteCalculator() {
               : null,
           })),
       };
-
+      console.log("Actual Payload Is:", payload);
       await apiInstance.patch(`invoice/${quoteId}/update/`, payload);
 
       setTimeout(() => {
@@ -288,6 +285,8 @@ export default function QuoteCalculator() {
       setIsFormValid(false);
       setIsCalculating(false);
     }
+
+    console.log("Form validation completed:", validationResult.isValid);
   };
 
   const fetchQuotes = async () => {
@@ -301,6 +300,94 @@ export default function QuoteCalculator() {
       }
     }
     return 0;
+  };
+
+  // Función de validación simplificada y clara
+  const validateFormData = (fields, isRestaurant) => {
+    const errors = [];
+
+    // Validar áreas: cada área debe estar completamente vacía O completamente llena y válida
+    const invalidAreas = [];
+    const validAreas = [];
+
+    fields.areas.forEach((area, index) => {
+      const hasAnyContent =
+        area.name.field || area.square_feet.field || area.floor_type.field;
+
+      if (hasAnyContent) {
+        // Si tiene contenido, todos los campos deben estar llenos y ser válidos
+        const isComplete =
+          area.name.field &&
+          area.name.validate === true &&
+          area.square_feet.field &&
+          area.square_feet.validate === true &&
+          area.floor_type.field &&
+          area.floor_type.validate === true;
+
+        if (isComplete) {
+          validAreas.push(area);
+        } else {
+          invalidAreas.push(index + 1);
+        }
+      }
+    });
+
+    // Validar equipos (solo para restaurantes)
+    const invalidEquipment = [];
+    const validEquipment = [];
+
+    if (isRestaurant) {
+      fields.equantity.forEach((equip, index) => {
+        const hasAnyContent = equip.name.field || equip.quantity.field > 1;
+
+        if (hasAnyContent) {
+          // Si tiene contenido, verificar campos requeridos
+          const nameValid = equip.name.field && equip.name.validate === true;
+          const quantityValid = equip.quantity.validate === true;
+          const optionValid =
+            equip.validOptions.length === 0 ||
+            (equip.option_value.field && equip.option_value.validate === true);
+
+          if (nameValid && quantityValid && optionValid) {
+            validEquipment.push(equip);
+          } else {
+            invalidEquipment.push(index + 1);
+          }
+        }
+      });
+    }
+
+    // Verificar errores
+    if (invalidAreas.length > 0) {
+      errors.push(
+        `Areas ${invalidAreas.join(
+          ", "
+        )} have incomplete information. Please fill all fields or leave them completely empty.`
+      );
+    }
+
+    if (invalidEquipment.length > 0) {
+      errors.push(
+        `Equipment items ${invalidEquipment.join(
+          ", "
+        )} have incomplete information. Please fill all required fields or leave them completely empty.`
+      );
+    }
+
+    // Al menos una área debe estar completamente llena
+    if (validAreas.length === 0) {
+      errors.push("At least one complete area must be provided");
+    }
+
+    const isValid = errors.length === 0;
+
+    return {
+      isValid,
+      errors,
+      hasValidData: isValid,
+      validAreas: validAreas.length,
+      validEquipment: validEquipment.length,
+    };
   };
 
   const renderStep = () => {
@@ -317,8 +404,9 @@ export default function QuoteCalculator() {
           <div className="qc-card">
             {isFormValid === false && (
               <div className="qc-alert-warning">
-                Please provide at least one area or equipment item to proceed
-                with the calculation.
+                Please complete all fields for each area and equipment item, or
+                leave them completely empty. At least one complete area is
+                required to proceed.
               </div>
             )}
             <h2 className="qc-section-title">Equipment</h2>
@@ -336,9 +424,9 @@ export default function QuoteCalculator() {
                       }
                       onBlur={() => handleEquantityValidate(index, "name")}
                       className={`qc-selector-input ${
-                        item.name.validate === "false"
+                        item.name.validate === false
                           ? "qc-is-invalid"
-                          : item.name.validate === "true"
+                          : item.name.validate === true
                           ? "qc-is-valid"
                           : ""
                       }`}
@@ -351,7 +439,7 @@ export default function QuoteCalculator() {
                       ))}
                     </select>
                   </div>
-                  {item.name.validate === "false" && (
+                  {item.name.validate === false && (
                     <span className="qc-text-danger">
                       Please select an equipment type.
                     </span>
@@ -373,9 +461,9 @@ export default function QuoteCalculator() {
                           handleEquantityValidate(index, "option_value")
                         }
                         className={`qc-form-control-options ${
-                          item.option_value.validate === "false"
+                          item.option_value.validate === false
                             ? "qc-is-invalid"
-                            : item.option_value.validate === "true"
+                            : item.option_value.validate === true
                             ? "qc-is-valid"
                             : ""
                         }`}
@@ -389,7 +477,7 @@ export default function QuoteCalculator() {
                         ))}
                       </select>
                     </div>
-                    {item.option_value.validate === "false" && (
+                    {item.option_value.validate === false && (
                       <span className="qc-text-danger">
                         This field is required.
                       </span>
@@ -411,9 +499,9 @@ export default function QuoteCalculator() {
                         handleEquantityValidate(index, "quantity");
                       }}
                     />
-                    {item.quantity.validate === "false" && (
+                    {item.quantity.validate === false && (
                       <span className="qc-text-danger">
-                        Please enter a valid quantity (min 1).
+                        Please enter a valid quantity.
                       </span>
                     )}
                   </div>
@@ -446,9 +534,9 @@ export default function QuoteCalculator() {
                       }
                       onBlur={() => handleAreaValidate(index, "name")}
                       className={`qc-selector-input qc-selector-area ${
-                        area.name.validate === "false"
+                        area.name.validate === false
                           ? "qc-is-invalid"
-                          : area.name.validate === "true"
+                          : area.name.validate === true
                           ? "qc-is-valid"
                           : ""
                       }`}
@@ -461,7 +549,7 @@ export default function QuoteCalculator() {
                       ))}
                     </select>
                   </div>
-                  {area.name.validate === "false" && (
+                  {area.name.validate === false && (
                     <span className="qc-text-danger">
                       Please select an area.
                     </span>
@@ -478,9 +566,9 @@ export default function QuoteCalculator() {
                       }
                       onBlur={() => handleAreaValidate(index, "square_feet")}
                       className={`qc-selector-input qc-selector-squarefeet ${
-                        area.square_feet.validate === "false"
+                        area.square_feet.validate === false
                           ? "qc-is-invalid"
-                          : area.square_feet.validate === "true"
+                          : area.square_feet.validate === true
                           ? "qc-is-valid"
                           : ""
                       }`}
@@ -493,7 +581,7 @@ export default function QuoteCalculator() {
                       ))}
                     </select>
                   </div>
-                  {area.square_feet.validate === "false" && (
+                  {area.square_feet.validate === false && (
                     <span className="qc-text-danger">
                       Please select a size range.
                     </span>
@@ -510,9 +598,9 @@ export default function QuoteCalculator() {
                       }
                       onBlur={() => handleAreaValidate(index, "floor_type")}
                       className={`qc-selector-input qc-selector-floor ${
-                        area.floor_type.validate === "false"
+                        area.floor_type.validate === false
                           ? "qc-is-invalid"
-                          : area.floor_type.validate === "true"
+                          : area.floor_type.validate === true
                           ? "qc-is-valid"
                           : ""
                       }`}
@@ -525,7 +613,7 @@ export default function QuoteCalculator() {
                       ))}
                     </select>
                   </div>
-                  {area.floor_type.validate === "false" && (
+                  {area.floor_type.validate === false && (
                     <span className="qc-text-danger">
                       Please select a floor type.
                     </span>
@@ -536,7 +624,7 @@ export default function QuoteCalculator() {
                   onClick={() => handleRemoveArea(index)}
                   className="qc-btn qc-remove-btn"
                 >
-                  Remove Area
+                  Remove
                 </button>
               </div>
             ))}
@@ -553,7 +641,7 @@ export default function QuoteCalculator() {
             >
               <button
                 onClick={calculateTotalPrice}
-                className="qc-btn qc-calculate-button"
+                className={"qc-btn qc-calculate-button"}
                 disabled={isCalculateDisabled}
               >
                 Calculate
@@ -567,8 +655,8 @@ export default function QuoteCalculator() {
           <div className="qc-selector-card">
             {isFormValid === false && (
               <div className="qc-alert-warning">
-                Please provide at least one area to proceed with the
-                calculation.
+                Please complete all fields for each area or leave them
+                completely empty. At least one complete area is required.
               </div>
             )}
             <h2 className="qc-section-title">Areas</h2>
@@ -586,9 +674,9 @@ export default function QuoteCalculator() {
                       }
                       onBlur={() => handleAreaValidate(index, "name")}
                       className={`qc-selector-input qc-selector-area ${
-                        area.name.validate === "false"
+                        area.name.validate === false
                           ? "qc-is-invalid"
-                          : area.name.validate === "true"
+                          : area.name.validate === true
                           ? "qc-is-valid"
                           : ""
                       }`}
@@ -601,7 +689,7 @@ export default function QuoteCalculator() {
                       ))}
                     </select>
                   </div>
-                  {area.name.validate === "false" && (
+                  {area.name.validate === false && (
                     <span className="qc-text-danger">
                       Please select an area.
                     </span>
@@ -620,9 +708,9 @@ export default function QuoteCalculator() {
                       }
                       onBlur={() => handleAreaValidate(index, "square_feet")}
                       className={`qc-selector-input qc-selector-squarefeet ${
-                        area.square_feet.validate === "false"
+                        area.square_feet.validate === false
                           ? "qc-is-invalid"
-                          : area.square_feet.validate === "true"
+                          : area.square_feet.validate === true
                           ? "qc-is-valid"
                           : ""
                       }`}
@@ -635,7 +723,7 @@ export default function QuoteCalculator() {
                       ))}
                     </select>
                   </div>
-                  {area.square_feet.validate === "false" && (
+                  {area.square_feet.validate === false && (
                     <span className="qc-text-danger">
                       Please select a size range.
                     </span>
@@ -654,9 +742,9 @@ export default function QuoteCalculator() {
                       }
                       onBlur={() => handleAreaValidate(index, "floor_type")}
                       className={`qc-selector-input qc-selector-floor ${
-                        area.floor_type.validate === "false"
+                        area.floor_type.validate === false
                           ? "qc-is-invalid"
-                          : area.floor_type.validate === "true"
+                          : area.floor_type.validate === true
                           ? "qc-is-valid"
                           : ""
                       }`}
@@ -669,7 +757,7 @@ export default function QuoteCalculator() {
                       ))}
                     </select>
                   </div>
-                  {area.floor_type.validate === "false" && (
+                  {area.floor_type.validate === false && (
                     <span className="qc-text-danger">
                       Please select a floor type.
                     </span>
@@ -705,7 +793,7 @@ export default function QuoteCalculator() {
     <div className="quote-calculator">
       {isCalculating && (
         <div className="qc-loading-overlay">
-          <img src="/img/3.gif" alt="Calculating" />
+          <img src={loagingGif} alt="Calculating" />
           <p>Calculating Price...</p>
         </div>
       )}

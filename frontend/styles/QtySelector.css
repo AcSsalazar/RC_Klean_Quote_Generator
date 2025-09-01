@@ -4,7 +4,6 @@
   align-items: center;
   border: 1px solid #e0e0e0;
   border-radius: 13px;
-  
 }
 
 .quantity-btn-dec {
@@ -12,7 +11,7 @@
   height: 32px;
   background-color: #f1f1f1;
   border-radius: 13px 7px 7px 13px;
-  /* background: none !important; */;
+  /* background: none !important; */
   color: #1d397a;
   font-size: 1rem;
   cursor: pointer;
@@ -20,7 +19,6 @@
 }
 
 .quantity-btn-inc {
-
   width: 32px;
   height: 32px;
   color: #1d397a;
@@ -29,7 +27,6 @@
   font-size: 0.9rem;
   cursor: pointer;
   padding: 0px !important;
-
 }
 
 .quantity-btn-dec:disabled {

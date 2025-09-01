@@ -96,7 +96,6 @@
 .logo:hover {
   transform: scale(1.07);
   transition: transform 0.35s ease;
-  
 }
 
 .header-text {
@@ -217,7 +216,6 @@
     align-items: stretch;
     width: 100%;
     gap: 0.5rem;
-    
   }
 
   .main-nav a,
@@ -244,35 +242,31 @@
 }
 
 @media (max-width: 480px) {
-
   .logo-section {
-
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        width: 70%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 70%;
   }
   .header-content {
     padding: 0 1rem;
   }
 
   .header-text {
-
     font-size: 1.1rem;
   }
 
-    .user-actions {
+  .user-actions {
     flex-direction: column;
     align-items: stretch;
     width: 100%;
     gap: 0.4rem;
-    
   }
 
   .header-toggle-section.open {
-        display: flex;
-        align-items: center;
-        align-content: center;
-        flex-direction: row-reverse;
-    }
+    display: flex;
+    align-items: center;
+    align-content: center;
+    flex-direction: row-reverse;
+  }
 }

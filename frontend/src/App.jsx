@@ -1,11 +1,9 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
-//import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "../components/auth/Login";
 import Logout from "../components/auth/Logout";
 import Register from "../components/auth/Register";
 import RCFooter from "../components/base/RCFooter";
+import NotFound from "../components/NotFound";
 import ForgotPassword from "../components/auth/ForgotPassword";
 import CreatePassword from "../components/auth/CreatePassword";
 import MainWrapper from "../src/layouts/MainWrapper";
@@ -30,6 +28,7 @@ const App = () => {
           {/* Auth Routes */}
           <Route path="/login" element={<Login />}></Route>
           <Route path="/logout" element={<Logout />}></Route>
+          <Route path="*" element={<NotFound />}></Route>
           <Route path="/forgot-password" element={<ForgotPassword />}></Route>
           <Route
             path="/create-new-password"
@@ -38,11 +37,9 @@ const App = () => {
           <Route path="/register" element={<Register />}></Route>
           {/*   Home Route */}
           <Route path="/" element={<HomePage />}>
-            {" "}
           </Route>
           {/* Start info form before the calculator */}
           <Route path="/user-info-form" element={<UserInfoForm />}>
-            {" "}
           </Route>
           {/* Equipments and areas selector */}
           <Route path="/quote-calculator" element={<QuoteCalculator />} />
@@ -55,10 +52,8 @@ const App = () => {
           <Route path="/results/:quoteId" element={<QuoteResult />} />
           {/* Header Pages */}
           <Route path="/savedqtes" element={<QuoteViewer />}>
-            {" "}
           </Route>
           <Route path="/coverage" element={<Coverage />}>
-            {" "}
           </Route>
           <Route path="/quote-searcher" element={<SearchQuote />} />
           <Route path="/about-service" element={<AboutService />} />

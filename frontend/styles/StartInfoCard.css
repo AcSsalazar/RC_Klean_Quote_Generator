@@ -8,14 +8,12 @@
 }
 
 .start-info-container {
-
   min-height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
   font-family: "Poppins", sans-serif;
-
 }
 
 .start-info-card {
@@ -29,25 +27,21 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-
-
 .start-main.no-bg {
   position: relative;
   overflow: hidden;
 }
 
-
 .start-background {
-    position: absolute;
-    top: 0;
-    left: 0; 
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
-    pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
 }
-  
 
 .start-info-title {
   font-size: 1.75rem;
@@ -61,8 +55,6 @@
   display: flex;
   flex-wrap: wrap;
   column-gap: 4rem;
-
-
 }
 
 .input-group {
@@ -74,7 +66,6 @@
 
 .form-group {
   margin-bottom: 0.5rem;
-
 }
 
 .input-icon {
@@ -93,7 +84,6 @@
 }
 
 .form-label {
-
   color: #333840;
 }
 .input-field {
@@ -145,7 +135,7 @@
   font-size: 1.2rem;
   font-weight: 600;
   color: #60c194;
-  background-color: #365488; 
+  background-color: #365488;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -162,7 +152,6 @@
   color: #e53e3ebb;
   font-size: 0.6rem;
   margin-top: 0.1rem;
-  
 }
 
 .submit-btn:active {
@@ -204,12 +193,13 @@
   }
 
   .error-text {
-  font-size: 0.7rem;
-  color: #e74c3c;
-  margin-top: 0.25rem;
-}
+    font-size: 0.7rem;
+    color: #e74c3c;
+    margin-top: 0.25rem;
+  }
   .start-info-container {
-  min-height: 60vh; }
+    min-height: 60vh;
+  }
 
   .start-info-title {
     font-size: 1.25rem;

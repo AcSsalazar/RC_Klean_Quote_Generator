@@ -1,51 +1,47 @@
 /* CustomMap.css - Keep this for non-SVG styling */
 
 .map-container {
-    position: relative;
-    width: 50%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 10px;
-  }
-  
+  position: relative;
+  width: 50%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px;
+}
 
-  .map-legend {
-    border: 1px solid #35443d;
-    margin-left: 380px;
-    font-size: 13px;
-    /* color: #18112e; */
-    padding: 7px;
-    border-radius: 5px;
-    /* background-color: #ffffff; */
-    display: inline-block;
-  }
-  
-  .legend-item {
-    display: flex;
-    align-items: center;
-    
-  }
-  
-  .color-box {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-    border-radius: 3px;
-  }
-  
-  .color-box.coverage {
-    background-color: rgba(38, 16, 88, 0.774);
-    border: 2px solid rgb(24, 158, 113);
-  }
-  
-  .color-box.default {
-    background-color: #f8fffc;
-    border: 1px solid #172352b0;
-  }
+.map-legend {
+  border: 1px solid #35443d;
+  margin-left: 380px;
+  font-size: 13px;
+  /* color: #18112e; */
+  padding: 7px;
+  border-radius: 5px;
+  /* background-color: #ffffff; */
+  display: inline-block;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+}
+
+.color-box {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border-radius: 3px;
+}
+
+.color-box.coverage {
+  background-color: rgba(38, 16, 88, 0.774);
+  border: 2px solid rgb(24, 158, 113);
+}
+
+.color-box.default {
+  background-color: #f8fffc;
+  border: 1px solid #172352b0;
+}
 
 @media (max-width: 480px) {
-
-
   .map-legend {
     border: 1px solid #000000;
     margin-left: 0px;

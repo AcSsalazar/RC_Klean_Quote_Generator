@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap");
 
 .rc-footer {
   background-color: #121213; /* Darker, sleeker gray */
   color: #ffffff;
   padding: 3rem 1rem 1rem;
-  font-family: 'Roboto Condensed', sans-serif;
+  font-family: "Roboto Condensed", sans-serif;
 }
 
 .footer-content {
@@ -61,11 +61,9 @@
   margin-top: 1rem;
 }
 
-.credits-links{
-
+.credits-links {
   color: #56aa5a63 !important;
   font-size: 10px;
-
 }
 .social-links a {
   display: flex;
@@ -120,7 +118,6 @@
 }
 
 .footer-bottom {
-
   border-top: 1px solid #333333;
 }
 
