@@ -366,15 +366,41 @@
 }
 
 @media (max-width: 768px) {
-  .quote-calculator .qc-area-item,
-  .quote-calculator .qc-equipment-item {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
+  /* Stack area & equipment blocks vertically */
+  .quote-calculator .qc-area-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
   }
 
   .quote-calculator .qc-equantity-selector {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  /* Make selectors and qty controls full width for better tap targets */
+  .quote-calculator .qc-selector-input,
+  .quote-calculator .qc-form-control-options,
+  .quote-calculator .qc-selector-area,
+  .quote-calculator .qc-selector-floor,
+  .quote-calculator .qc-selector-squarefeet {
+    width: 100% !important;
+  }
+
+  .quote-calculator .qc-input-group {
+    width: 100%;
+  }
+
+  /* Buttons full width inside stacked cards when narrow */
+  .quote-calculator .qc-remove-btn,
+  .quote-calculator .qc-add-btn {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .quote-calculator .qc-equantity-selector {
+    flex-wrap: wrap;
   }
 }
 

@@ -33,3 +33,5 @@ __pycache__/
 
 # Ignorar dependencias
 node_modules/
+/constant.js
+constant.js/

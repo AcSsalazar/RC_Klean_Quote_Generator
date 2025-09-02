@@ -36,20 +36,19 @@ urlpatterns = [
         # Admin and documentations URL's
         path('admin/', admin.site.urls),
         path('api/', include('api.urls')),
-        path('userauths/', include('userauths.urls')),
         path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-        # Invoice endpoints
-        path('invoice/', invoiceviews.InvoiceCalculateView.as_view(), name='invoice'),
-        path('options/', invoiceviews.OptionsView.as_view(), name='options' ),
-        path('invoice/<int:pk>/', invoiceviews.InvoiceDetailView.as_view(), name='invoice_detail'),
-        # Userauths API Endpoints
-        path('user/token/', userauths_views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-        path('user/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-        path('user/register/', userauths_views.RegisterView.as_view(), name='auth_register'),
-        path('profile/<user_id>/', userauths_views.ProfileView.as_view(), name='user_profile'),
-        path('user/test/', userauths_views.testEndPoint, name='auth_register'),
-        path('user/password-reset/<email>/', userauths_views.PasswordEmailVerify.as_view(), name='password_reset'),
-        path('user/password-change/', userauths_views.PasswordChangeView.as_view(), name='password_change'),
+
+
+        # User authentication URL's
+   
+        path('api/auth/token/', userauths_views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+        path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+        path('api/auth/register/', userauths_views.RegisterView.as_view(), name='auth_register'),
+        path('api/auth/profile/<int:user_id>/', userauths_views.ProfileView.as_view(), name='user_profile'),
+        path('api/auth/password-reset/<email>/', userauths_views.PasswordEmailVerify.as_view(), name='password_reset'),
+        path('api/auth/password-change/', userauths_views.PasswordChangeView.as_view(), name='password_change'),
+        path('api/auth/test/', userauths_views.testEndPoint, name='auth_test'),
+
 ]
 
 # Sirve archivos estáticos en modo DEBUG

@@ -23,7 +23,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
 
         # Add custom claims to the token
-        #token['full_name'] = user.full_name
+        token['full_name'] = user.full_name
         token['email'] = user.email
         token['username'] = user.username
 

@@ -1,178 +1,178 @@
 // Importing the useAuthStore hook from the '../store/auth' file to manage authentication state
-import { useAuthStore } from '../RCA/auth';
+import { useAuthStore } from "../RCA/auth";
 // Importing the axios library for making HTTP requests
-import axios from './axios';
+import axios from "./axios";
 // Importing jwt_decode to decode JSON Web Tokens
-import jwt_decode from 'jwt-decode';
+import jwt_decode from "jwt-decode";
 // Importing the Cookies library to handle browser cookies
-import Cookies from 'js-cookie';
-import Swal from 'sweetalert2'; 
-
+import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 
 // Configuring global toast notifications using Swal.mixin
 const Toast = Swal.mixin({
-    toast: true,
-    position: 'top',
-    showConfirmButton: false,
-    timer: 1500,
-    timerProgressBar: true,
+  toast: true,
+  position: "top",
+  showConfirmButton: false,
+  timer: 1500,
+  timerProgressBar: true,
 });
-
-
 
 // Function to handle user login
 export const login = async (email, password) => {
+  try {
+    // Making a POST request to obtain user tokens
+    const { data, status } = await axios.post("auth/token/", {
+      email,
+      password,
+    });
 
+    // If the request is successful (status code 200), set authentication user and display success toast
+    if (status === 200) {
+      setAuthUser(data.access, data.refresh);
 
-    try {
-
-        // Making a POST request to obtain user tokens
-        const { data, status } = await axios.post('user/token/', {
-
-            email,
-            password
-        });
-
-        // If the request is successful (status code 200), set authentication user and display success toast
-        if (status === 200) {
-            setAuthUser(data.access, data.refresh);
-
-            // Displaying a success toast notification
-            Toast.fire({
-                icon: 'success',
-                title: ` Nice! Welcome :) , ` 
-            });
-        }
-
-        // Returning data and error information
-        return { data, error: null };
-    } catch (error) {
-        // Handling errors and returning data and error information
-        return {
-            data: null,
-            error: error.response.data?.detail || 'Somethings was wrong',
-        };
+      // Displaying a success toast notification
+      Toast.fire({
+        icon: "success",
+        title: ` Nice! Welcome :) , `,
+      });
     }
+
+    // Returning data and error information
+    return { data, error: null };
+  } catch (error) {
+    // Handling errors and returning data and error information
+    return {
+      data: null,
+      error: error.response.data?.detail || "Somethings was wrong",
+    };
+  }
 };
 
 // Function to handle user registration
-export const register = async (full_name, email, phone, password, password2, city, address, business_type,  zip_code) => {
-    try {
-        // Making a POST request to register a new user
-        const { data } = await axios.post('user/register/', {
-            
-            full_name,
-            email,
-            phone,
-            password,
-            password2,
-            city,
-            address,
-            business_type,
-            zip_code,
+export const register = async (
+  full_name,
+  email,
+  phone,
+  password,
+  password2,
+  city,
+  address,
+  business_type,
+  zip_code
+) => {
+  try {
+    // Making a POST request to register a new user
+    const { data } = await axios.post("auth/register/", {
+      full_name,
+      email,
+      phone,
+      password,
+      password2,
+      city,
+      address,
+      business_type,
+      zip_code,
+    });
 
-        });
-        
-        console.log("Response from backend:", data);
-        // Logging in the newly registered user and displaying success toast
-        await login(email, password);
+    //console.log("Response from backend:", data);
+    // Logging in the newly registered user and displaying success toast
+    await login(email, password);
 
-        // Displaying a success toast notification
-        Toast.fire({
-            icon: 'success',
-            title: 'Successfully registered',
-            timer: 1200
-        });
+    // Displaying a success toast notification
+    Toast.fire({
+      icon: "success",
+      title: "Successfully registered",
+      timer: 1200,
+    });
 
-        // Returning data and error information
-        return { data, error: null };
-
-    } catch (error) {
-        // Handling errors and returning data and error information
-        return {
-            data: null,
-            error: error.response.data || 'Ups! Something was wrong',
-        };
-    }
+    // Returning data and error information
+    return { data, error: null };
+  } catch (error) {
+    // Handling errors and returning data and error information
+    return {
+      data: null,
+      error: error.response.data || "Ups! Something was wrong",
+    };
+  }
 };
 
 // Function to handle user logout
 export const logout = () => {
-    // Removing access and refresh tokens from cookies, resetting user state, and displaying success toast
-    Cookies.remove('access_token');
-    Cookies.remove('refresh_token');
-    useAuthStore.getState().setUser(null);
+  // Removing access and refresh tokens from cookies, resetting user state, and displaying success toast
+  Cookies.remove("access_token");
+  Cookies.remove("refresh_token");
+  useAuthStore.getState().setUser(null);
 
-    // Displaying a success toast notification
-    Toast.fire({
-        icon: 'success',
-        title: 'Logout complete'
-    });
+  // Displaying a success toast notification
+  Toast.fire({
+    icon: "success",
+    title: "Logout complete",
+  });
 };
 
 // Function to set the authenticated user on page load
 export const setUser = async () => {
-    // Retrieving access and refresh tokens from cookies
-    const accessToken = Cookies.get('access_token');
-    const refreshToken = Cookies.get('refresh_token');
+  // Retrieving access and refresh tokens from cookies
+  const accessToken = Cookies.get("access_token");
+  const refreshToken = Cookies.get("refresh_token");
 
-    // Checking if tokens are present
-    if (!accessToken || !refreshToken) {
-        return;
-    }
+  // Checking if tokens are present
+  if (!accessToken || !refreshToken) {
+    return;
+  }
 
-    // If access token is expired, refresh it; otherwise, set the authenticated user
-    if (isAccessTokenExpired(accessToken)) {
-        const response = await getRefreshToken(refreshToken);
-        setAuthUser(response.access, response.refresh);
-    } else {
-        setAuthUser(accessToken, refreshToken);
-    }
+  // If access token is expired, refresh it; otherwise, set the authenticated user
+  if (isAccessTokenExpired(accessToken)) {
+    const response = await getRefreshToken(refreshToken);
+    setAuthUser(response.access, response.refresh);
+  } else {
+    setAuthUser(accessToken, refreshToken);
+  }
 };
 
 // Function to set the authenticated user and update user state
 export const setAuthUser = (access_token, refresh_token) => {
-    // Setting access and refresh tokens in cookies with expiration dates
-    Cookies.set('access_token', access_token, {
-        expires: 1,  // Access token expires in 1 day
-        secure: true,
-    });
+  // Setting access and refresh tokens in cookies with expiration dates
+  Cookies.set("access_token", access_token, {
+    expires: 1, // Access token expires in 1 day
+    secure: true,
+  });
 
-    Cookies.set('refresh_token', refresh_token, {
-        expires: 7,  // Refresh token expires in 7 days
-        secure: true,
-    });
+  Cookies.set("refresh_token", refresh_token, {
+    expires: 7, // Refresh token expires in 7 days
+    secure: true,
+  });
 
-    // Decoding access token to get user information
-    const user = jwt_decode(access_token) ?? null;
+  // Decoding access token to get user information
+  const user = jwt_decode(access_token) ?? null;
 
-    // If user information is present, update user state; otherwise, set loading state to false
-    if (user) {
-        useAuthStore.getState().setUser(user);
-    }
-    useAuthStore.getState().setLoading(false);
+  // If user information is present, update user state; otherwise, set loading state to false
+  if (user) {
+    useAuthStore.getState().setUser(user);
+  }
+  useAuthStore.getState().setLoading(false);
 };
 
 // Function to refresh the access token using the refresh token
 export const getRefreshToken = async () => {
-    // Retrieving refresh token from cookies and making a POST request to refresh the access token
-    const refresh_token = Cookies.get('refresh_token');
-    const response = await axios.post('user/token/refresh', {
-        refresh: refresh_token,
-    });
+  // Retrieving refresh token from cookies and making a POST request to refresh the access token
+  const refresh_token = Cookies.get("refresh_token");
+  const response = await axios.post("auth/token/refresh/", {
+    refresh: refresh_token,
+  });
 
-    // Returning the refreshed access token
-    return response.data;
+  // Returning the refreshed access token
+  return response.data;
 };
 
 // Function to check if the access token is expired
 export const isAccessTokenExpired = (accessToken) => {
-    try {
-        // Decoding the access token and checking if it has expired
-        const decodedToken = jwt_decode(accessToken);
-        return decodedToken.exp < Date.now() / 1000;
-    } catch (err) {
-        // Returning true if the token is invalid or expired
-        return true;
-    }
+  try {
+    // Decoding the access token and checking if it has expired
+    const decodedToken = jwt_decode(accessToken);
+    return decodedToken.exp < Date.now() / 1000;
+  } catch (err) {
+    // Returning true if the token is invalid or expired
+    return true;
+  }
 };

@@ -5,21 +5,25 @@ import "../../styles/header.css";
 import logo from "../../public/img/foot-logo_1.png";
 
 function RCHeader() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false); // solo para dropdown "Options"
-
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-  const ToggleDropDown = () => setIsOpen(!isOpen);
-
-  const GetUserName = (fullName) => {
-    if (!fullName) return "";
-    return fullName.split(" ")[0];
-  };
-
   const [isLoggedIn, user] = useAuthStore((state) => [
     state.isLoggedIn,
     state.user,
   ]);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const ToggleDropDown = () => setIsOpen(!isOpen);
+
+  const GetUserName = (fullName) => {
+    if (!fullName) return "User";
+    return fullName.split(" ")[0];
+  };
+
+  const userData = user(); // Llamar a la función user()
+
+  // Debug: ver qué datos tienes: "Mutea" en producción no seas boludo.
+  //console.log("isLoggedIn:", isLoggedIn());
+  //console.log("userData:", userData);
 
   return (
     <header className="app-header">
@@ -51,7 +55,7 @@ function RCHeader() {
             {isLoggedIn() ? (
               <>
                 <span className="user-greeting">
-                  Hi Dear, {GetUserName(user().full_name)}
+                  Hi Dear, {GetUserName(userData?.full_name)}
                 </span>
                 <Link to="/logout" className="headerbtn">
                   Logout

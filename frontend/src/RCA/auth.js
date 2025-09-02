@@ -17,8 +17,10 @@ const useAuthStore = create((set, get) => ({
         full_name: get().allUserData?.full_name || null, 
         
 
-    }),
+        
 
+    }),
+    
     // Define a function 'setUser' that allows setting the 'allUserData' state.
     setUser: (user) => set({ allUserData: user }),
 

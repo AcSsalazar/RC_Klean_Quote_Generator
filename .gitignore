@@ -77,4 +77,9 @@ cython_debug/
 
 # Staticfiles
 staticfiles
+staticfiles.zip
 frontend/src/utils/constant.js
+constant.js
+constant.js/
+dist.zip
+build.zip/

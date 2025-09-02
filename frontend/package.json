@@ -26,7 +26,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "6.10.0",
     "react-use": "^17.6.0",
-    "simple-zustand-devtools": "1.0.1",
+    "simple-zustand-devtools": "^1.1.0",
     "styled-components": "^6.1.15",
     "sweetalert2": "^11.12.4",
     "zustand": "4.5.2"
